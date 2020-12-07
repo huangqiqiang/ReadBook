@@ -16,6 +16,6 @@ public interface HttpCompat {
     }
     HttpCompat init();//init应该没问题了
 
-    void get(String url, ParamsCompat params, HOKNetCallback callback);
-    void post(String url, ParamsCompat params, HOKNetCallback callback);
+    void get(String url, ParamsCompat params, OkNetCallback callback);
+    void post(String url, ParamsCompat params, OkNetCallback callback);
 }

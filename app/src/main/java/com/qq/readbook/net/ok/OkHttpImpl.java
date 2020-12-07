@@ -50,7 +50,7 @@ public class OkHttpImpl implements HttpCompat {
 
 
     @Override
-    public void get(String url, ParamsCompat params, final HOKNetCallback callback) {
+    public void get(String url, ParamsCompat params, final OkNetCallback callback) {
         final String realUrl;
         if (params != null) {
             realUrl = url + '?' + params.paramGet();
@@ -83,13 +83,13 @@ public class OkHttpImpl implements HttpCompat {
     }
 
     @Override
-    public void post(String url, ParamsCompat params, HOKNetCallback callback) {
+    public void post(String url, ParamsCompat params, OkNetCallback callback) {
         RequestBody body = params.paramForm();
         Request.Builder request = new Request.Builder().url(url).post(body);
         doRequest(url + '?' + params, request, callback);
     }
 
-    private void doRequest(final String allUrl, Request.Builder request, final HOKNetCallback callback) {
+    private void doRequest(final String allUrl, Request.Builder request, final OkNetCallback callback) {
 
         mOkHttpClient.newCall(request.build()).enqueue(new okhttp3.Callback() {
             @Override
@@ -110,7 +110,7 @@ public class OkHttpImpl implements HttpCompat {
         });
     }
 
-    private static void postHandler(Handler handler, final HOKNetCallback callback
+    private static void postHandler(Handler handler, final OkNetCallback callback
             , final boolean successful, final int statusCode, final String responseString) {
         handler.post(new Runnable() {
                          @Override

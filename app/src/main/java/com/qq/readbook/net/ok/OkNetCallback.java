@@ -15,8 +15,9 @@ package com.qq.readbook.net.ok;
  * Created by Administrator on 2016/12/14 15:42.
  */
 
-public  interface HOKNetCallback{
-  void onSuccess(String statusCode, String response);
-   void onFailure(String statusCode, String errMsg, String response);
+public interface OkNetCallback {
+    void onSuccess(String statusCode, String response);
+
+    void onFailure(String statusCode, String errMsg, String response);
 
 }
