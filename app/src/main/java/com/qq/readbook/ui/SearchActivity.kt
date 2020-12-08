@@ -59,7 +59,6 @@ class SearchActivity : BaseVmListActivity<SearchViewModel, ActivitySearchBinding
             holder.setText(R.id.tv_book_author, item.author)
             holder.setText(R.id.tv_book_type, item.type)
         }
-
     }
 
 

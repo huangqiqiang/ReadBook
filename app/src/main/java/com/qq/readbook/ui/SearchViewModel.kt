@@ -17,19 +17,17 @@ import java.util.*
 class SearchViewModel : BaseListViewModel() {
 
     fun onSearch(key: String) {
+        setShowLoading(true)
         SearchRepository().search(key, object : OkNetCallback {
             override fun onSuccess(statusCode: String?, response: String?) {
                 response?.let {
                     data.value = getBooksFromSearchHtml(it)
+                    setShowLoading(false)
 
                 }
-
-
             }
-
             override fun onFailure(statusCode: String?, errMsg: String?, response: String?) {
-
-
+                setShowLoading(false)
             }
 
         })

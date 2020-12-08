@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:padding="@dimen/x20"
     android:layout_height="wrap_content">
 
     <ImageView
@@ -10,7 +11,6 @@
         android:layout_height="@dimen/x250"
         android:scaleType="fitXY"
         android:src="@mipmap/no_image" />
-
 
     <LinearLayout
         android:layout_width="0dp"
@@ -62,7 +62,6 @@
                 android:textSize="14sp"/>
 
         </LinearLayout>
-
     </LinearLayout>
 
 </LinearLayout>
