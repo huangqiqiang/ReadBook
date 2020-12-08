@@ -53,24 +53,17 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-    implementation 'com.github.huangqiqiang:CoreLibrary:1.2.25'
+    implementation 'com.github.huangqiqiang:CoreLibrary:1.2.26'
 
     implementation Room.runtime
     kapt Room.compiler
 
     debugImplementation Leakcanary.leakcanary
 
-    api Gson.gson
-    api Retrofit.retrofit
-    api Retrofit.converterGson
-    api Retrofit.loggingInterceptor
     // Hilt dependencies
     implementation Hilt.daggerRuntime
-    implementation Hilt.compiler
     implementation Hilt.viewModule
     kapt Hilt.daggerCompiler
-
-    implementation Hilt.viewModule
     kapt Hilt.compiler
 
     implementation  Jsoup.jsoup

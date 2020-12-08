@@ -1,5 +1,6 @@
 package com.qq.readbook.ui
 
+import android.view.inputmethod.EditorInfo
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.hqq.core.toolbar.BaseToolBarSearch
@@ -21,26 +22,34 @@ class SearchActivity : BaseVmListActivity<SearchViewModel, ActivitySearchBinding
 
     override val adapter: BookAdapter = BookAdapter().apply {
         setOnItemClickListener { adapter, view, position ->
-
-
         }
     }
 
-    override val bindingViewModelId: Int
-        get() = BR.vm
+    override val bindingViewModelId: Int = BR.vm
 
     override fun initConfig() {
         super.initConfig()
         iCreateRootView.iRootViewImpl.iCreateToolbar = BaseToolBarSearch()
-
     }
 
     override fun initData() {
-        (iCreateRootView.iRootViewImpl.iCreateToolbar as BaseToolBarSearch).setRightTextView() {
-            var key =
-                (iCreateRootView.iRootViewImpl.iCreateToolbar as BaseToolBarSearch).searchView.text.toString()
-            viewMode.onSearch(key)
+        iCreateRootView.iRootViewImpl.iCreateToolbar as BaseToolBarSearch
+        (iCreateRootView.iRootViewImpl.iCreateToolbar as BaseToolBarSearch).searchView.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                onSearch()
+                return@setOnEditorActionListener true
+            }
+            return@setOnEditorActionListener false
         }
+        (iCreateRootView.iRootViewImpl.iCreateToolbar as BaseToolBarSearch).setRightTextView() {
+            onSearch()
+        }
+    }
+
+    private fun onSearch() {
+        var key =
+            (iCreateRootView.iRootViewImpl.iCreateToolbar as BaseToolBarSearch).searchView.text.toString()
+        viewMode.onSearch(key)
     }
 
     class BookAdapter : BaseQuickAdapter<Book, BaseViewHolder>(R.layout.item_book) {
@@ -49,7 +58,6 @@ class SearchActivity : BaseVmListActivity<SearchViewModel, ActivitySearchBinding
             holder.setText(R.id.tv_book_desc, item.desc)
             holder.setText(R.id.tv_book_author, item.author)
             holder.setText(R.id.tv_book_type, item.type)
-
         }
 
     }
