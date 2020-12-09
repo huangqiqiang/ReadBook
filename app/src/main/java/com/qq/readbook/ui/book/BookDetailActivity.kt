@@ -1,7 +1,11 @@
 package com.qq.readbook.ui.book
 
-import com.hqq.core.ui.base.BaseActivity
+import android.app.Activity
+import android.content.Intent
+import com.hqq.core.ui.base.BaseVmActivity
 import com.qq.readbook.R
+import com.qq.readbook.bean.Book
+import com.qq.readbook.databinding.ActivityBookeDetailBinding
 
 /**
  * @Author : huangqiqiang
@@ -10,12 +14,21 @@ import com.qq.readbook.R
  * @Email : qiqiang213@gmail.com
  * @Descrive :
  */
-class BookDetailActivity : BaseActivity() {
+class BookDetailActivity : BaseVmActivity<BookDetailViewModel, ActivityBookeDetailBinding>() {
+    companion object {
+        fun open(context: Activity, item: Book) {
+            context.startActivityForResult(Intent(context, BookDetailActivity::class.java).apply {
+                putExtra("book", item)
 
-
-    override val layoutViewId: Int = R.layout.activity_booke_detail
-
-    override fun initView() {
-
+            }, -1)
+        }
     }
+
+    override val layoutId: Int = R.layout.activity_booke_detail
+    override val bindingViewModelId: Int = 0
+
+
+    override fun initViews() {
+    }
+
 }

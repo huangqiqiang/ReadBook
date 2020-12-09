@@ -3,12 +3,14 @@ package com.qq.readbook.ui
 import android.view.inputmethod.EditorInfo
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
+import com.hqq.core.glide.ImageLoadUtils
 import com.hqq.core.toolbar.BaseToolBarSearch
 import com.hqq.core.ui.list.BaseVmListActivity
 import com.qq.readbook.BR
 import com.qq.readbook.R
 import com.qq.readbook.bean.Book
 import com.qq.readbook.databinding.ActivitySearchBinding
+import com.qq.readbook.ui.book.BookDetailActivity
 
 /**
  * @Author : huangqiqiang
@@ -21,7 +23,8 @@ class SearchActivity : BaseVmListActivity<SearchViewModel, ActivitySearchBinding
     override val layoutId: Int = R.layout.activity_search
 
     override val adapter: BookAdapter = BookAdapter().apply {
-        setOnItemClickListener { adapter, view, position ->
+        setOnItemClickListener { _, view, position ->
+            BookDetailActivity.open(activity, getItem(position))
         }
     }
 
@@ -58,6 +61,7 @@ class SearchActivity : BaseVmListActivity<SearchViewModel, ActivitySearchBinding
             holder.setText(R.id.tv_book_desc, item.desc)
             holder.setText(R.id.tv_book_author, item.author)
             holder.setText(R.id.tv_book_type, item.type)
+            ImageLoadUtils.with(item.imgUrl,holder.getView(R.id.iv_book_img))
         }
     }
 

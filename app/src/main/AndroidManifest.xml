@@ -32,6 +32,10 @@
         <activity
             android:name=".ui.SearchActivity"
             android:label="搜索" />
+        <activity
+            android:name=".ui.book.BookDetailActivity"
+            android:label="书籍详情" />
+
     </application>
 
 </manifest>

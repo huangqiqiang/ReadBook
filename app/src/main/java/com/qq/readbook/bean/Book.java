@@ -1,5 +1,8 @@
 package com.qq.readbook.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.annotation.Nullable;
 
 /**
@@ -9,7 +12,8 @@ import androidx.annotation.Nullable;
  * @Email : qiqiang213@gmail.com
  * @Descrive :
  */
-public class Book {
+public class Book implements Parcelable {
+   
     /**
      * 书名
      */
@@ -151,4 +155,53 @@ public class Book {
     public void setAuthor(String author) {
         this.author = author;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.name);
+        dest.writeString(this.chapterUrl);
+        dest.writeString(this.imgUrl);
+        dest.writeString(this.desc);
+        dest.writeString(this.author);
+        dest.writeString(this.type);
+        dest.writeString(this.updateDate);
+        dest.writeString(this.newestChapterId);
+        dest.writeString(this.newestChapterTitle);
+        dest.writeString(this.newestChapterUrl);
+        dest.writeString(this.source);
+    }
+
+    public Book() {
+    }
+
+    protected Book(Parcel in) {
+        this.name = in.readString();
+        this.chapterUrl = in.readString();
+        this.imgUrl = in.readString();
+        this.desc = in.readString();
+        this.author = in.readString();
+        this.type = in.readString();
+        this.updateDate = in.readString();
+        this.newestChapterId = in.readString();
+        this.newestChapterTitle = in.readString();
+        this.newestChapterUrl = in.readString();
+        this.source = in.readString();
+    }
+
+    public static final Parcelable.Creator<Book> CREATOR = new Parcelable.Creator<Book>() {
+        @Override
+        public Book createFromParcel(Parcel source) {
+            return new Book(source);
+        }
+
+        @Override
+        public Book[] newArray(int size) {
+            return new Book[size];
+        }
+    };
 }
