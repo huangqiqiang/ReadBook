@@ -38,7 +38,7 @@ public class OkHttpImpl implements HttpCompat {
     private static String TAG = "OkHttpImpl";
 
     @Override
-    public HttpCompat init() {
+    public HttpCompat create() {
         mOkHttpClient = new OkHttpClient.Builder()
                 .readTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)//设置读取超时时间
                 .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)//设置写的超时时

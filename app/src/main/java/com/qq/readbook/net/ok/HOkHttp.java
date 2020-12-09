@@ -12,14 +12,13 @@ public class HOkHttp {
 
     public synchronized static HttpCompat newHttpCompat() {
         if (mOkHttp == null) {
-            mOkHttp = new OkHttpImpl()
-                    .init();
+            mOkHttp = new OkHttpImpl().create();
         }
         return mOkHttp;
     }
 
     public static HttpCompat.ParamsCompat newParamsCompat() {
-        return new OKParamsImpl();
+        return new OkParamsImpl();
     }
 
     public static HttpCompat.ParamsCompat newParamsCompat(String key, Object values) {
