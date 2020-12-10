@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Read Book</string>
+
+
+    <string name="pic_loading">插图加载中...</string>
+
+
+
 </resources>

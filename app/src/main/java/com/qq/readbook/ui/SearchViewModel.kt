@@ -1,8 +1,8 @@
 package com.qq.readbook.ui
 
+import com.hqq.core.net.ok.OkNetCallback
 import com.hqq.core.ui.list.BaseListViewModel
 import com.qq.readbook.bean.Book
-import com.qq.readbook.net.ok.OkNetCallback
 import com.qq.readbook.repository.SearchRepository
 import org.jsoup.Jsoup
 import java.util.*
@@ -23,7 +23,6 @@ class SearchViewModel : BaseListViewModel() {
                 response?.let {
                     data.value = getBooksFromSearchHtml(it)
                     setShowLoading(false)
-
                 }
             }
             override fun onFailure(statusCode: String?, errMsg: String?, response: String?) {

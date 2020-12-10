@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout>
-        <data>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="com.qq.readbook.ui.book.BookDetailViewModel" />
 
 
+    </data>
 
-        </data>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:context=".ui.book.BookDetailActivity">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -26,7 +32,8 @@
                 android:layout_marginRight="10dp"
                 android:contentDescription="@null"
                 android:scaleType="centerCrop"
-                android:src="@mipmap/cover_default" />
+                android:src="@mipmap/cover_default"
+                app:url="@{vm.book.imgUrl}" />
 
             <TextView
                 android:id="@+id/tvBookListTitle"
@@ -37,6 +44,7 @@
                 android:layout_toRightOf="@+id/ivBookCover"
                 android:ellipsize="end"
                 android:singleLine="true"
+                android:text="@{vm.book.name}"
                 android:textSize="16sp"
                 tools:text="武侠世界自由行" />
 
@@ -48,6 +56,7 @@
                 android:layout_toRightOf="@+id/ivBookCover"
                 android:ellipsize="end"
                 android:singleLine="true"
+                android:text='@{vm.book.author+"    "}'
                 android:textSize="13sp"
                 tools:text="w风雪 | " />
 
@@ -59,7 +68,7 @@
                 android:layout_toRightOf="@id/tvBookListAuthor"
                 android:ellipsize="end"
                 android:singleLine="true"
-
+                android:text='@{vm.book.type+"|"}'
                 android:textSize="13sp"
                 tools:text="仙侠 | " />
 
@@ -71,7 +80,6 @@
                 android:layout_toRightOf="@id/tvCatgory"
                 android:ellipsize="end"
                 android:singleLine="true"
-
                 android:textSize="13sp"
                 tools:text="594万字" />
 
@@ -94,7 +102,7 @@
                 android:layout_below="@id/ivBookCover"
                 android:layout_marginTop="10dp">
 
-                <Button
+                <com.qq.readbook.weight.DrawableCenterButton
                     android:id="@+id/btnJoinCollection"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -108,7 +116,7 @@
                     android:text="追更新"
                     android:textColor="@color/white" />
 
-                <Button
+                <com.qq.readbook.weight.DrawableCenterButton
                     android:id="@+id/btnRead"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

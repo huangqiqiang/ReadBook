@@ -21,7 +21,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ReadBook">
-        <activity android:name=".MainActivity">
+        <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -35,7 +35,8 @@
         <activity
             android:name=".ui.book.BookDetailActivity"
             android:label="书籍详情" />
-
+        <activity android:name=".ui.book.ReadBookActivity"
+            android:label="阅读"/>
     </application>
 
 </manifest>
