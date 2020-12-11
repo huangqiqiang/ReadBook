@@ -53,10 +53,8 @@ object StringUtils {
     fun convertCC(input: String): String {
         return input;
         //        val convertType = SpUtil.getIntValue(SHARED_READ_CONVERT_TYPE, 0)
-//
 //        if (input.isEmpty())
 //            return ""
-//
 //        return if (convertType != 0) ZHConverter.getInstance(ZHConverter.TRADITIONAL).convert(input) else input
     }
 

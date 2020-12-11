@@ -96,7 +96,6 @@ public class PageView extends View {
         if (mViewWidth == 0 || mViewHeight == 0) {
             return;
         }
-
         switch (mPageMode) {
             case SIMULATION:
                 mPageAnim = new SimulationPageAnim(mViewWidth, mViewHeight, this, mPageAnimListener);
@@ -252,6 +251,7 @@ public class PageView extends View {
                 }
                 mPageAnim.onTouchEvent(event);
                 break;
+            default:
         }
         return true;
     }

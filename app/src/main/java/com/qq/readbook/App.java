@@ -3,6 +3,8 @@ package com.qq.readbook;
 import android.app.Application;
 import android.util.Log;
 
+import com.qq.readbook.weight.page.SpUtil;
+
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -25,6 +27,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        SpUtil.init(this);
         handleSSLHandshake();
     }
 
@@ -32,11 +35,11 @@ public class App extends Application {
     public static void handleSSLHandshake() {
         final String TAG = "trustAllHosts";
         // Create a trust manager that does not validate certificate chains
-        TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+        TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
 
             @Override
             public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                return new java.security.cert.X509Certificate[] {};
+                return new java.security.cert.X509Certificate[]{};
             }
 
             @Override
@@ -48,7 +51,7 @@ public class App extends Application {
             public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
                 Log.i(TAG, "checkServerTrusted");
             }
-        } };
+        }};
 
         // Install the all-trusting trust manager
         try {

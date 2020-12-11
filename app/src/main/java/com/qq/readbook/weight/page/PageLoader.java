@@ -190,8 +190,10 @@ public abstract class PageLoader {
         // 绘制提示的画笔
         mTipPaint = new Paint();
         mTipPaint.setColor(mTextColor);
-        mTipPaint.setTextAlign(Paint.Align.LEFT); // 绘制的起始点
-        mTipPaint.setTextSize(ScreenUtils.spToPx(DEFAULT_TIP_SIZE)); // Tip默认的字体大小
+        // 绘制的起始点
+        mTipPaint.setTextAlign(Paint.Align.LEFT);
+        // Tip默认的字体大小
+        mTipPaint.setTextSize(ScreenUtils.spToPx(DEFAULT_TIP_SIZE));
         mTipPaint.setAntiAlias(true);
         mTipPaint.setSubpixelText(true);
 
@@ -803,7 +805,7 @@ public abstract class PageLoader {
         //绘制当前时间
         //底部的字显示的位置Y
         float y = mDisplayHeight - mTipPaint.getFontMetrics().bottom - tipMarginHeight;
-        String time = DateUtli.INSTANCE.dateConvert(System.currentTimeMillis(), Constant.FORMAT_TIME);
+        String time = DateUtli.INSTANCE.dateConvert(System.currentTimeMillis(), "HH:mm");
         float x = outFrameLeft - mTipPaint.measureText(time) - ScreenUtils.dip2px(4);
         canvas.drawText(time, x, y, mTipPaint);
     }
@@ -838,6 +840,7 @@ public abstract class PageLoader {
                 case STATUS_CATEGORY_EMPTY:
                     tip = "目录列表为空";
                     break;
+                default:
             }
 
             //将提示语句放到正中间
@@ -1105,7 +1108,7 @@ public abstract class PageLoader {
     /**
      * 解析下一章数据
      *
-     * @return:返回解析成功还是失败
+     * @return : 返回解析成功还是失败
      */
     boolean parseNextChapter() {
         int nextChapter = mCurChapterPos + 1;
@@ -1167,7 +1170,9 @@ public abstract class PageLoader {
         }
     }
 
-    // 预加载下一章
+    /**
+     * 预加载下一章
+     */
     private void preLoadNextChapter() {
         int nextChapter = mCurChapterPos + 1;
 
@@ -1210,9 +1215,12 @@ public abstract class PageLoader {
 //                });
     }
 
-    // 取消翻页
+    /**
+     * 取消翻页
+     */
     void pageCancel() {
-        if (mCurPage.position == 0 && mCurChapterPos > mLastChapterPos) { // 加载到下一章取消了
+        if (mCurPage.position == 0 && mCurChapterPos > mLastChapterPos) {
+            // 加载到下一章取消了
             if (mPrePageList != null) {
                 cancelNextChapter();
             } else {
@@ -1287,8 +1295,10 @@ public abstract class PageLoader {
         List<String> lines = new ArrayList<>();
         int rHeight = mVisibleHeight;
         int titleLinesCount = 0;
-        boolean showTitle = true; // 是否展示标题
-        String paragraph = chapter.getTitle();//默认展示标题
+        // 是否展示标题
+        boolean showTitle = true;
+        //默认展示标题
+        String paragraph = chapter.getTitle();
         String title = StringUtils.INSTANCE.convertCC(chapter.getTitle());
         String half;
         try {
@@ -1398,8 +1408,6 @@ public abstract class PageLoader {
                 }
             }
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -1408,7 +1416,7 @@ public abstract class PageLoader {
         return pages;
     }
 
-
+    Pattern pattern = Pattern.compile("src\\s*=\\s*\"?(.*?)(\"|>|\\s+)");
     private List<String> getImgs(String content) {
         String img;
         Pattern p_image;
@@ -1419,8 +1427,7 @@ public abstract class PageLoader {
         m_image = p_image.matcher(content);
         while (m_image.find()) {
             img = m_image.group();
-            Matcher m;
-            m = Pattern.compile("src\\s*=\\s*\"?(.*?)(\"|>|\\s+)").matcher(img);
+            Matcher m =pattern.matcher(img);
             while (m.find()) {
                 String tempSelected = m.group(1);
                 images.add(tempSelected);
