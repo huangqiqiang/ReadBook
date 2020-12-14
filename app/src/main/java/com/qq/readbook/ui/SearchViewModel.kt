@@ -4,6 +4,7 @@ import com.hqq.core.net.ok.OkNetCallback
 import com.hqq.core.ui.list.BaseListViewModel
 import com.qq.readbook.bean.Book
 import com.qq.readbook.repository.SearchRepository
+import com.qq.readbook.utils.MD5Utils
 import org.jsoup.Jsoup
 import java.util.*
 
@@ -71,7 +72,10 @@ class SearchViewModel : BaseListViewModel() {
                 }
             }
             book.setSource("天籁小说")
+            book.setBookId(MD5Utils.getStringMD5(book.name+book.author))
             books.add(book)
+
+
         }
         return books
     }

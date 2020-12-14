@@ -22,10 +22,10 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.hqq.core.utils.ScreenUtils;
 import com.qq.readbook.R;
+import com.qq.readbook.bean.Book;
 import com.qq.readbook.bean.Chapter;
 import com.qq.readbook.repository.ReadRepository;
 import com.qq.readbook.weight.page.BookRecordBean;
-import com.qq.readbook.weight.page.CollBookBean;
 import com.qq.readbook.weight.page.DateUtli;
 import com.qq.readbook.weight.page.IOUtils;
 import com.qq.readbook.weight.page.PageMode;
@@ -67,7 +67,7 @@ public abstract class PageLoader {
     // 当前章节列表
     protected List<Chapter> mChapterList;
     // 书本对象
-    protected CollBookBean mCollBook;
+    protected Book mCollBook;
     // 监听器
     protected OnPageChangeListener mPageChangeListener;
 
@@ -150,7 +150,7 @@ public abstract class PageLoader {
     private int mLastChapterPos = 0;
 
     /*****************************init params*******************************/
-    public PageLoader(PageView pageView, CollBookBean collBook) {
+    public PageLoader(PageView pageView, Book collBook) {
         mPageView = pageView;
         mContext = pageView.getContext();
         mCollBook = collBook;
@@ -508,7 +508,7 @@ public abstract class PageLoader {
      *
      * @return
      */
-    public CollBookBean getCollBook() {
+    public Book getCollBook() {
         return mCollBook;
     }
 

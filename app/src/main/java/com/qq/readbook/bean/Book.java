@@ -5,7 +5,11 @@ import android.os.Parcelable;
 
 import androidx.annotation.Nullable;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Author : huangqiqiang
@@ -18,6 +22,10 @@ import androidx.room.PrimaryKey;
 public class Book implements Parcelable {
     @PrimaryKey(autoGenerate = true)
     public int id = 0;
+    /**
+     *  书籍id
+     */
+    private String bookId;
 
     /**
      * 书名
@@ -68,6 +76,51 @@ public class Book implements Parcelable {
     @Nullable
     private String source;
 
+    /**
+     * 最新阅读日期
+     */
+    String lastRead = "";
+    /**
+     * 是否更新或未阅读
+     */
+    boolean isUpdate = true;
+    @Ignore
+    List<Chapter> bookChapterList =new ArrayList();
+
+    public List<Chapter> getBookChapterList() {
+        if (bookChapterList == null) {
+            return new ArrayList<>();
+        }
+        return bookChapterList;
+    }
+
+    public void setBookChapterList(List<Chapter> bookChapterList) {
+        this.bookChapterList = bookChapterList;
+    }
+
+    public String getLastRead() {
+        return lastRead == null ? "" : lastRead;
+    }
+
+    public void setLastRead(String lastRead) {
+        this.lastRead = lastRead;
+    }
+
+    public boolean isUpdate() {
+        return isUpdate;
+    }
+
+    public void setUpdate(boolean update) {
+        isUpdate = update;
+    }
+
+    public String getBookId() {
+        return bookId == null ? "" : bookId;
+    }
+
+    public void setBookId(String bookId) {
+        this.bookId = bookId;
+    }
 
     public String getNewestChapterUrl() {
         return newestChapterUrl;

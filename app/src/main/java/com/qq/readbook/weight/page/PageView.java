@@ -15,6 +15,7 @@ import com.novel.read.widget.page.anim.NonePageAnim;
 import com.novel.read.widget.page.anim.ScrollPageAnim;
 import com.novel.read.widget.page.anim.SimulationPageAnim;
 import com.novel.read.widget.page.anim.SlidePageAnim;
+import com.qq.readbook.bean.Book;
 import com.qq.readbook.weight.page.animation.PageAnimation;
 import com.qq.readbook.weight.page.loader.NetPageLoader;
 import com.qq.readbook.weight.page.loader.PageLoader;
@@ -347,7 +348,7 @@ public class PageView extends View {
     /**
      * 获取 PageLoader
      */
-    public PageLoader getPageLoader(CollBookBean collBook) {
+    public PageLoader getPageLoader(Book collBook) {
         // 判是否已经存在
         if (mPageLoader != null) {
             return mPageLoader;

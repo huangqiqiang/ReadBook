@@ -1,8 +1,8 @@
 package com.qq.readbook.repository
 
+import com.qq.readbook.bean.Book
 import com.qq.readbook.utils.room.RoomUtils
 import com.qq.readbook.weight.page.BookRecordBean
-import com.qq.readbook.weight.page.CollBookBean
 
 /**
  * @Author : huangqiqiang
@@ -13,9 +13,9 @@ import com.qq.readbook.weight.page.CollBookBean
  */
 object ReadRepository {
     @JvmStatic
-    fun getBookRecord(book: CollBookBean, bookId: String): BookRecordBean? {
+    fun getBookRecord(book: Book, bookId: String): BookRecordBean? {
 
-        var list = RoomUtils.getChapterDataBase(book.title + "_" + book.author).bookRecordBeanDao()
+        var list = RoomUtils.getChapterDataBase(book.name + "_" + book.author).bookRecordBeanDao()
             .getAll()
 
         if (list.isNotEmpty()) {
@@ -26,10 +26,10 @@ object ReadRepository {
 
     @JvmStatic
     fun saveBookRecord(
-        book: CollBookBean,
+        book: Book,
         mBookRecord: BookRecordBean
     ) {
-        RoomUtils.getChapterDataBase(book.title + "_" + book.author).bookRecordBeanDao().apply {
+        RoomUtils.getChapterDataBase(book.name + "_" + book.author).bookRecordBeanDao().apply {
             if (mBookRecord.id > -1) {
                 update(mBookRecord)
             } else {

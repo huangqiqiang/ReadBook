@@ -20,6 +20,5 @@ class SearchRepository {
         OkHttp.newHttpCompat().get(
             "https://www.23txt.com/search.php", OkHttp.newParamsCompat("q", key), callback
         )
-
     }
 }

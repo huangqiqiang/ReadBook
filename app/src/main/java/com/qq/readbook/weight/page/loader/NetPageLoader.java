@@ -4,8 +4,8 @@ package com.qq.readbook.weight.page.loader;
 import android.content.Context;
 
 
+import com.qq.readbook.bean.Book;
 import com.qq.readbook.bean.Chapter;
-import com.qq.readbook.weight.page.CollBookBean;
 import com.qq.readbook.weight.page.PageView;
 
 import java.io.BufferedReader;
@@ -22,7 +22,7 @@ public class NetPageLoader extends PageLoader {
     private static final String TAG = "PageFactory";
     private Context mContext;
 
-    public NetPageLoader(PageView pageView, CollBookBean collBook) {
+    public NetPageLoader(PageView pageView, Book collBook) {
         super(pageView, collBook);
         mContext = pageView.getContext();
     }
@@ -42,13 +42,13 @@ public class NetPageLoader extends PageLoader {
 
     @Override
     public void refreshChapterList() {
-        if (mCollBook.getBookChapters() == null) {
+        if (mCollBook.getBookChapterList() == null) {
             return;
         }
 
         // 将 BookChapter 转换成当前可用的 Chapter
 //        mChapterList = convertTxtChapter(mCollBook.getBookChapters());
-        mChapterList = mCollBook.getBookChapters();
+        mChapterList = mCollBook.getBookChapterList();
         isChapterListPrepare = true;
 
         // 目录加载完成，执行回调操作。
@@ -223,7 +223,7 @@ public class NetPageLoader extends PageLoader {
         super.saveRecord();
         if (mCollBook != null && isChapterListPrepare) {
             //表示当前CollBook已经阅读
-            mCollBook.setIsUpdate(false);
+            mCollBook.setUpdate(false);
             mCollBook.setLastRead(String.valueOf(System.currentTimeMillis()));
             //直接更新
             //  BookRepository.getInstance().saveCollBook(mCollBook);

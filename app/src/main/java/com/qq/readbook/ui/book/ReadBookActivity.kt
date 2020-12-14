@@ -3,7 +3,6 @@ package com.qq.readbook.ui.book
 import android.app.Activity
 import android.content.Intent
 import com.hqq.core.ui.base.BaseVmActivity
-import com.hqq.core.utils.GsonUtil
 import com.hqq.core.utils.log.LogUtils
 import com.qq.readbook.BR
 import com.qq.readbook.R
@@ -12,9 +11,8 @@ import com.qq.readbook.bean.Chapter
 import com.qq.readbook.databinding.ActivityReadBookBinding
 import com.qq.readbook.repository.BookArticleRepository
 import com.qq.readbook.utils.room.RoomUtils
-import com.qq.readbook.weight.page.CollBookBean
-import com.qq.readbook.weight.page.loader.OnPageChangeListener
 import com.qq.readbook.weight.page.PageView
+import com.qq.readbook.weight.page.loader.OnPageChangeListener
 
 /**
  * @Author : huangqiqiang
@@ -38,21 +36,18 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
 
     override val layoutId: Int = R.layout.activity_read_book
     override val bindingViewModelId: Int = BR.vm
-
+    override fun initConfig() {
+        super.initConfig()
+        rootViewImpl.iToolBarBuilder.showToolBar = false
+    }
 
     override fun initViews() {
-
-
-        var mCollBook = CollBookBean()
-        mCollBook.bookId = "sdfsdfsdfsdfsdfsd"
         var book = intent.getParcelableExtra<Book>("book")
-        mCollBook?.author = book?.author
-        mCollBook?.title = book?.name
         var charpters =
             RoomUtils.getChapterDataBase(book!!.name + "_" + book.author).chapterDao().getAll()
-        mCollBook?.bookChapterList = (charpters)
+        book.bookChapterList = (charpters)
 
-        var loader = binding.pageView.getPageLoader(mCollBook)
+        var loader = binding.pageView.getPageLoader(book)
 
         binding.pageView.post {
             loader.refreshChapterList()
