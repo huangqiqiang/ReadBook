@@ -16,6 +16,8 @@ import com.novel.read.widget.page.anim.ScrollPageAnim;
 import com.novel.read.widget.page.anim.SimulationPageAnim;
 import com.novel.read.widget.page.anim.SlidePageAnim;
 import com.qq.readbook.weight.page.animation.PageAnimation;
+import com.qq.readbook.weight.page.loader.NetPageLoader;
+import com.qq.readbook.weight.page.loader.PageLoader;
 
 /**
  * Created by Administrator on 2016/8/29 0029.
@@ -90,7 +92,7 @@ public class PageView extends View {
     }
 
     //设置翻页的模式
-    void setPageMode(PageMode pageMode) {
+    public void setPageMode(PageMode pageMode) {
         mPageMode = pageMode;
         //视图未初始化的时候，禁止调用
         if (mViewWidth == 0 || mViewHeight == 0) {

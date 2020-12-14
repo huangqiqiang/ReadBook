@@ -1,4 +1,4 @@
-package com.qq.readbook.weight.page;
+package com.qq.readbook.weight.page.loader;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -22,9 +22,20 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.hqq.core.utils.ScreenUtils;
 import com.qq.readbook.R;
+import com.qq.readbook.bean.Chapter;
+import com.qq.readbook.repository.ReadRepository;
+import com.qq.readbook.weight.page.BookRecordBean;
+import com.qq.readbook.weight.page.CollBookBean;
+import com.qq.readbook.weight.page.DateUtli;
+import com.qq.readbook.weight.page.IOUtils;
+import com.qq.readbook.weight.page.PageMode;
+import com.qq.readbook.weight.page.PageStyle;
+import com.qq.readbook.weight.page.PageView;
+import com.qq.readbook.weight.page.ReadSettingManager;
+import com.qq.readbook.weight.page.StringUtils;
+import com.qq.readbook.weight.page.TxtPage;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -54,7 +65,7 @@ public abstract class PageLoader {
     private static final int EXTRA_TITLE_SIZE = 4;
 
     // 当前章节列表
-    protected List<TxtChapter> mChapterList;
+    protected List<Chapter> mChapterList;
     // 书本对象
     protected CollBookBean mCollBook;
     // 监听器
@@ -89,7 +100,6 @@ public abstract class PageLoader {
     private TxtPage mCancelPage;
     // 存储阅读记录类
     private BookRecordBean mBookRecord;
-
 
     /*****************params**************************/
     // 当前的状态
@@ -379,7 +389,7 @@ public abstract class PageLoader {
             dealLoadPageList(mCurChapterPos);
 
             // 防止在最后一页，通过修改字体，以至于页面数减少导致崩溃的问题
-            if (mCurPage.position >= mCurPageList.size()) {
+            if (mCurPage.getPosition() >= mCurPageList.size()) {
                 mCurPage.position = mCurPageList.size() - 1;
             }
 
@@ -507,7 +517,7 @@ public abstract class PageLoader {
      *
      * @return
      */
-    public List<TxtChapter> getChapterCategory() {
+    public List<Chapter> getChapterCategory() {
         return mChapterList;
     }
 
@@ -573,7 +583,7 @@ public abstract class PageLoader {
         }
 
         //存储到数据库
-        //     BookRepository.getInstance().saveBookRecord(mBookRecord);
+        ReadRepository.saveBookRecord(mCollBook,mBookRecord);
     }
 
     /**
@@ -581,8 +591,7 @@ public abstract class PageLoader {
      */
     private void prepareBook() {
         //todo 获取阅读记录
-//        mBookRecord = BookRepository.getInstance()
-//                .getBookRecord(mCollBook.getBookId());
+        mBookRecord = ReadRepository.getBookRecord(mCollBook,mCollBook.getBookId());
 
         if (mBookRecord == null) {
             mBookRecord = new BookRecordBean();
@@ -686,15 +695,13 @@ public abstract class PageLoader {
      */
     private List<TxtPage> loadPageList(int chapterPos) throws Exception {
         // 获取章节
-        TxtChapter chapter = mChapterList.get(chapterPos);
+        Chapter chapter = mChapterList.get(chapterPos);
         // 判断章节是否存在
         if (!hasChapterData(chapter)) {
             return null;
         }
         // 获取章节的文本流
         BufferedReader reader = getChapterReader(chapter);
-        StringReader stringReader = new StringReader("为了确保庭审顺利，南京中院也做足了准备：除了疫情期间的消杀工作、技术支持外，因为被害人母亲年纪较大，被告人在今年年初因脑梗住院，法医鉴定部门就和120急救中心沟通，庭审期间，救护车在楼下随时待命……为了确保庭审顺利，南京中院也做足了准备：除了疫情期间的消杀工作、技术支持外，因为被害人母亲年纪较大，被告人在今年年初因脑梗住院，法医鉴定部门就和120急救中心沟通，庭审期间，救护车在楼下随时待命……为了确保庭审顺利，南京中院也做足了准备：除了疫情期间的消杀工作、技术支持外，因为被害人母亲年纪较大，被告人在今年年初因脑梗住院，法医鉴定部门就和120急救中心沟通，庭审期间，救护车在楼下随时待命……为了确保庭审顺利，南京中院也做足了准备：除了疫情期间的消杀工作、技术支持外，因为被害人母亲年纪较大，被告人在今年年初因脑梗住院，法医鉴定部门就和120急救中心沟通，庭审期间，救护车在楼下随时待命……为了确保庭审顺利，南京中院也做足了准备：除了疫情期间的消杀工作、技术支持外，因为被害人母亲年纪较大，被告人在今年年初因脑梗住院，法医鉴定部门就和120急救中心沟通，庭审期间，救护车在楼下随时待命……为了确保庭审顺利，南京中院也做足了准备：除了疫情期间的消杀工作、技术支持外，因为被害人母亲年纪较大，被告人在今年年初因脑梗住院，法医鉴定部门就和120急救中心沟通，庭审期间，救护车在楼下随时待命……为了确保庭审顺利，南京中院也做足了准备：除了疫情期间的消杀工作、技术支持外，因为被害人母亲年纪较大，被告人在今年年初因脑梗住院，法医鉴定部门就和120急救中心沟通，庭审期间，救护车在楼下随时待命……为了确保庭审顺利，南京中院也做足了准备：除了疫情期间的消杀工作、技术支持外，因为被害人母亲年纪较大，被告人在今年年初因脑梗住院，法医鉴定部门就和120急救中心沟通，庭审期间，救护车在楼下随时待命……为了确保庭审顺利，南京中院也做足了准备：除了疫情期间的消杀工作、技术支持外，因为被害人母亲年纪较大，被告人在今年年初因脑梗住院，法医鉴定部门就和120急救中心沟通，庭审期间，救护车在楼下随时待命……为了确保庭审顺利，南京中院也做足了准备：除了疫情期间的消杀工作、技术支持外，因为被害人母亲年纪较大，被告人在今年年初因脑梗住院，法医鉴定部门就和120急救中心沟通，庭审期间，救护车在楼下随时待命……为了确保庭审顺利，南京中院也做足了准备：除了疫情期间的消杀工作、技术支持外，因为被害人母亲年纪较大，被告人在今年年初因脑梗住院，法医鉴定部门就和120急救中心沟通，庭审期间，救护车在楼下随时待命……为了确保庭审顺利，南京中院也做足了准备：除了疫情期间的消杀工作、技术支持外，因为被害人母亲年纪较大，被告人在今年年初因脑梗住院，法医鉴定部门就和120急救中心沟通，庭审期间，救护车在楼下随时待命……");
-        reader = new BufferedReader(stringReader);
         return loadPages(chapter, reader);
     }
 
@@ -706,16 +713,16 @@ public abstract class PageLoader {
     /**
      * 获取章节的文本流
      */
-    protected abstract BufferedReader getChapterReader(TxtChapter chapter) throws Exception;
+    protected abstract BufferedReader getChapterReader(Chapter chapter) throws Exception;
 
     /**
      * 章节数据是否存在
      */
-    protected abstract boolean hasChapterData(TxtChapter chapter);
+    protected abstract boolean hasChapterData(Chapter chapter);
 
     /***********************************default method***********************************************/
 
-    void drawPage(Bitmap bitmap, boolean isUpdate) {
+    public void drawPage(Bitmap bitmap, boolean isUpdate) {
         drawBackground(mPageView.getBgBitmap(), isUpdate);
         if (!isUpdate) {
             drawContent(bitmap);
@@ -956,7 +963,7 @@ public abstract class PageLoader {
         return newBM;
     }
 
-    void prepareDisplay(int w, int h) {
+    public void prepareDisplay(int w, int h) {
         // 获取PageView的宽高
         mDisplayWidth = w;
         mDisplayHeight = h;
@@ -991,7 +998,7 @@ public abstract class PageLoader {
     /**
      * 翻阅上一页
      */
-    boolean prev() {
+    public boolean prev() {
         // 以下情况禁止翻页
         if (!canTurnPage()) {
             return false;
@@ -1060,7 +1067,7 @@ public abstract class PageLoader {
      *
      * @return :是否允许翻页
      */
-    boolean next() {
+    public boolean next() {
         // 以下情况禁止翻页
         if (!canTurnPage()) {
             return false;
@@ -1218,7 +1225,7 @@ public abstract class PageLoader {
     /**
      * 取消翻页
      */
-    void pageCancel() {
+    public void pageCancel() {
         if (mCurPage.position == 0 && mCurChapterPos > mLastChapterPos) {
             // 加载到下一章取消了
             if (mPrePageList != null) {
@@ -1287,7 +1294,7 @@ public abstract class PageLoader {
      */
     private List<String> pics = new ArrayList<>();
 
-    private List<TxtPage> loadPages(TxtChapter chapter, BufferedReader br) {
+    private List<TxtPage> loadPages(Chapter chapter, BufferedReader br) {
 
         //生成的页面
         List<TxtPage> pages = new ArrayList<>();
@@ -1417,6 +1424,7 @@ public abstract class PageLoader {
     }
 
     Pattern pattern = Pattern.compile("src\\s*=\\s*\"?(.*?)(\"|>|\\s+)");
+
     private List<String> getImgs(String content) {
         String img;
         Pattern p_image;
@@ -1427,7 +1435,7 @@ public abstract class PageLoader {
         m_image = p_image.matcher(content);
         while (m_image.find()) {
             img = m_image.group();
-            Matcher m =pattern.matcher(img);
+            Matcher m = pattern.matcher(img);
             while (m.find()) {
                 String tempSelected = m.group(1);
                 images.add(tempSelected);
@@ -1507,45 +1515,6 @@ public abstract class PageLoader {
             mStatus = STATUS_LOADING;
         }
         return true;
-    }
-
-    /*****************************************interface*****************************************/
-
-    public interface OnPageChangeListener {
-        /**
-         * 作用：章节切换的时候进行回调
-         *
-         * @param pos:切换章节的序号
-         */
-        void onChapterChange(int pos);
-
-        /**
-         * 作用：请求加载章节内容
-         *
-         * @param requestChapters:需要下载的章节列表
-         */
-        void requestChapters(List<TxtChapter> requestChapters);
-
-        /**
-         * 作用：章节目录加载完成时候回调
-         *
-         * @param chapters：返回章节目录
-         */
-        void onCategoryFinish(List<TxtChapter> chapters);
-
-        /**
-         * 作用：章节页码数量改变之后的回调。==> 字体大小的调整，或者是否关闭虚拟按钮功能都会改变页面的数量。
-         *
-         * @param count:页面的数量
-         */
-        void onPageCountChange(int count);
-
-        /**
-         * 作用：当页面改变的时候回调
-         *
-         * @param pos:当前的页面的序号
-         */
-        void onPageChange(int pos);
     }
 
 

@@ -1,29 +1,31 @@
 package com.qq.readbook.ui
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.widget.Button
-import com.hqq.core.ui.base.BaseActivity
+import android.view.View
+import com.hqq.core.toolbar.DefToolBar
+import com.hqq.core.ui.list.BaseVmListActivity
+import com.qq.readbook.BR
 import com.qq.readbook.R
+import com.qq.readbook.adapter.BookAdapter
+import com.qq.readbook.databinding.ActivityMainBinding
 import com.qq.readbook.ui.book.ReadBookActivity
-import com.qq.readbook.weight.page.SpUtil
 
-class MainActivity : BaseActivity() {
-    override val layoutViewId: Int=R.layout.activity_main
+class MainActivity : BaseVmListActivity<MainViewModel, ActivityMainBinding>() {
 
+    override val layoutId: Int = R.layout.activity_main
 
-    override fun initConfig() {
-        super.initConfig()
-        iCreateRootView.iRootViewImpl.iToolBarBuilder.showToolBar=false
+    override val bindingViewModelId: Int = BR.vm
 
+    override val adapter: BookAdapter = BookAdapter().apply {
+        setOnItemClickListener { _, _, position ->
+            ReadBookActivity.open(activity, getItem(position))
+        }
     }
 
-    override fun initView() {
-        findViewById<Button>(R.id.button1).setOnClickListener() {
-            // startActivity(Intent(this@MainActivity, SearchActivity::class.java))
-            ReadBookActivity.open(this)
-
+    override fun initData() {
+        (iToolBar as DefToolBar).leftView.visibility = View.GONE
+        (iToolBar as DefToolBar).addRightImageView(R.mipmap.ic_search) {
+            startActivity(Intent(this@MainActivity, SearchActivity::class.java))
         }
     }
 

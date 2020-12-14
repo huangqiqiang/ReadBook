@@ -4,6 +4,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    id 'kotlin-android-extensions'
     id 'dagger.hilt.android.plugin'
 }
 
@@ -52,7 +53,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-    implementation 'com.github.huangqiqiang:CoreLibrary:1.2.30'
+    implementation 'com.github.huangqiqiang:CoreLibrary:1.2.32'
 
     implementation Room.runtime
     kapt Room.compiler

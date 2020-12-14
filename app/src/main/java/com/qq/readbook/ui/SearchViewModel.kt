@@ -32,7 +32,6 @@ class SearchViewModel : BaseListViewModel() {
         })
     }
 
-
     /**
      * 从搜索html中得到书列表
      *

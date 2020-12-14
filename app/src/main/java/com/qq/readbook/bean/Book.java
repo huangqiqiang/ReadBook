@@ -4,6 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.Nullable;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 /**
  * @Author : huangqiqiang
@@ -12,8 +14,11 @@ import androidx.annotation.Nullable;
  * @Email : qiqiang213@gmail.com
  * @Descrive :
  */
+@Entity
 public class Book implements Parcelable {
-   
+    @PrimaryKey(autoGenerate = true)
+    public int id = 0;
+
     /**
      * 书名
      */

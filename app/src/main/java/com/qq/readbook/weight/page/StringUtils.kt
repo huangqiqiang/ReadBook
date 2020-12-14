@@ -48,6 +48,14 @@ object StringUtils {
         text = text.trim { it <= ' ' }
         return text
     }
+    @JvmStatic
+    fun isEmpty(str: String?): Boolean {
+        var str = str
+        if (str != null) {
+            str = str.replace(" ", "")
+        }
+        return str == null || str == ""
+    }
 
     //繁簡轉換
     fun convertCC(input: String): String {

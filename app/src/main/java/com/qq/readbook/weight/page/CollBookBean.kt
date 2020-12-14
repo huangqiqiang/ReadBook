@@ -1,15 +1,13 @@
-package com.qq.readbook.weight.page;
+package com.qq.readbook.weight.page
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import com.qq.readbook.bean.Chapter
+import java.io.Serializable
+import java.util.*
 
 /**
  * 收藏的书籍
  */
-public class CollBookBean   implements Serializable {
-
-
+class CollBookBean : Serializable {
     /**
      * _id : 53663ae356bdc93e49004474
      * title : 逍遥派
@@ -20,177 +18,48 @@ public class CollBookBean   implements Serializable {
      * latelyFollower : 60213
      * retentionRatio : 22.87
      * updated : 2017-05-07T18:24:34.720Z
-     * <p>
+     *
+     *
      * chaptersCount : 1660
      * lastChapter : 第1659章 朱长老
      */
-    private String bookId; // 本地书籍中，path 的 md5 值作为本地书籍的 id
+    // 本地书籍中，path 的 md5 值作为本地书籍的 id
+    var bookId: String? = null
+    var title: String? = null
+    var author: String? = null
+    var shortIntro: String? = null
 
-    private String title;
-    private String author;
-    private String shortIntro;
-    private String cover; // 在本地书籍中，该字段作为本地文件的路径
-    private boolean hasCp;
-    private int latelyFollower;
-    private double retentionRatio;
+    // 在本地书籍中，该字段作为本地文件的路径
+    var cover: String? = null
+    var isHasCp = false
+    var latelyFollower = 0
+    var retentionRatio = 0.0
+
     //最新更新日期
-    private String updated;
+    var updated: String? = null
+
     //最新阅读日期
-    private String lastRead;
-    private int chaptersCount;
-    private String lastChapter;
+    var lastRead: String? = null
+    var chaptersCount = 0
+    var lastChapter: String? = null
+
     //是否更新或未阅读
-    private boolean isUpdate = true;
+    var isUpdate = true
+
     //是否是本地文件
-    private boolean isLocal = false;
-    private boolean isSelect = false;
-    private int include_image;
+    var isLocal = false
+    var isSelect = false
+    var include_image = 0
+    var bookChapterList: List<Chapter> = ArrayList()
+    val id: String
+        get() = if (bookId == null) "" else bookId!!
 
-    public String getBookId() {
-        return bookId;
+    fun setIsUpdate(update: Boolean) {
+        isUpdate = update
     }
 
-    public void setBookId(String bookId) {
-        this.bookId = bookId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public String getShortIntro() {
-        return shortIntro;
-    }
-
-    public void setShortIntro(String shortIntro) {
-        this.shortIntro = shortIntro;
-    }
-
-    public String getCover() {
-        return cover;
-    }
-
-    public void setCover(String cover) {
-        this.cover = cover;
-    }
-
-    public boolean isHasCp() {
-        return hasCp;
-    }
-
-    public void setHasCp(boolean hasCp) {
-        this.hasCp = hasCp;
-    }
-
-    public int getLatelyFollower() {
-        return latelyFollower;
-    }
-
-    public void setLatelyFollower(int latelyFollower) {
-        this.latelyFollower = latelyFollower;
-    }
-
-    public double getRetentionRatio() {
-        return retentionRatio;
-    }
-
-    public void setRetentionRatio(double retentionRatio) {
-        this.retentionRatio = retentionRatio;
-    }
-
-    public String getUpdated() {
-        return updated;
-    }
-
-    public void setUpdated(String updated) {
-        this.updated = updated;
-    }
-
-    public String getLastRead() {
-        return lastRead;
-    }
-
-    public void setLastRead(String lastRead) {
-        this.lastRead = lastRead;
-    }
-
-    public int getChaptersCount() {
-        return chaptersCount;
-    }
-
-    public void setChaptersCount(int chaptersCount) {
-        this.chaptersCount = chaptersCount;
-    }
-
-    public String getLastChapter() {
-        return lastChapter;
-    }
-
-    public void setLastChapter(String lastChapter) {
-        this.lastChapter = lastChapter;
-    }
-
-    public boolean isUpdate() {
-        return isUpdate;
-    }
-
-    public void setUpdate(boolean update) {
-        isUpdate = update;
-    }
-
-    public boolean isLocal() {
-        return isLocal;
-    }
-
-    public void setLocal(boolean local) {
-        isLocal = local;
-    }
-
-    public boolean isSelect() {
-        return isSelect;
-    }
-
-    public void setSelect(boolean select) {
-        isSelect = select;
-    }
-
-    public int getInclude_image() {
-        return include_image;
-    }
-
-    public void setInclude_image(int include_image) {
-        this.include_image = include_image;
-    }
-
-    public List<BookChapterBean> bookChapterList = new ArrayList<BookChapterBean>();
-    public String getId() {
-        return bookId == null ? "" : bookId;
-    }
-
-    public void setIsUpdate(boolean update) {
-        isUpdate = update;
-    }
-
-    public void setBookChapterList(List<BookChapterBean> bookChapterList) {
-        this.bookChapterList = bookChapterList;
-    }
-
-    public List<BookChapterBean> getBookChapters() {
-        if (bookChapterList == null) {
-            return new ArrayList<>();
-        }
-        return bookChapterList;
-    }
+    val bookChapters: List<Chapter>
+        get() = if (bookChapterList == null) {
+            ArrayList()
+        } else bookChapterList
 }

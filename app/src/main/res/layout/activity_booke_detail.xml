@@ -103,7 +103,6 @@
                 android:layout_marginTop="10dp">
 
                 <com.qq.readbook.weight.DrawableCenterButton
-                    android:id="@+id/btnJoinCollection"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
@@ -112,6 +111,7 @@
                     android:clickable="true"
                     android:drawableLeft="@mipmap/book_detail_info_add_img"
                     android:drawablePadding="5dp"
+                    android:onClick="@{vm.onAddBook}"
                     android:padding="10dp"
                     android:text="追更新"
                     android:textColor="@color/white" />

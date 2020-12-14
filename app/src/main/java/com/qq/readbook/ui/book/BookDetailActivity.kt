@@ -8,6 +8,7 @@ import com.qq.readbook.Keys
 import com.qq.readbook.R
 import com.qq.readbook.bean.Book
 import com.qq.readbook.databinding.ActivityBookeDetailBinding
+import com.qq.readbook.repository.BookChaptersRepository
 
 /**
  * @Author : huangqiqiang
@@ -29,8 +30,10 @@ class BookDetailActivity : BaseVmActivity<BookDetailViewModel, ActivityBookeDeta
     override val layoutId: Int = R.layout.activity_booke_detail
     override val bindingViewModelId: Int = BR.vm
 
-
     override fun initViews() {
+
+
+
     }
 
 }

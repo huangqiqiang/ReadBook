@@ -4,11 +4,16 @@ import android.app.Activity
 import android.content.Intent
 import com.hqq.core.ui.base.BaseVmActivity
 import com.hqq.core.utils.GsonUtil
+import com.hqq.core.utils.log.LogUtils
 import com.qq.readbook.BR
 import com.qq.readbook.R
+import com.qq.readbook.bean.Book
+import com.qq.readbook.bean.Chapter
 import com.qq.readbook.databinding.ActivityReadBookBinding
-import com.qq.readbook.weight.page.BookChapterBean
+import com.qq.readbook.repository.BookArticleRepository
+import com.qq.readbook.utils.room.RoomUtils
 import com.qq.readbook.weight.page.CollBookBean
+import com.qq.readbook.weight.page.loader.OnPageChangeListener
 import com.qq.readbook.weight.page.PageView
 
 /**
@@ -20,9 +25,13 @@ import com.qq.readbook.weight.page.PageView
  */
 class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBinding>() {
 
+
     companion object {
-        fun open(context: Activity) {
-            context.startActivityForResult(Intent(context, ReadBookActivity::class.java), -1)
+        fun open(context: Activity, item: Book) {
+            context.startActivityForResult(
+                Intent(context, ReadBookActivity::class.java)
+                    .putExtra("book", item), -1
+            )
         }
     }
 
@@ -33,22 +42,57 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
 
     override fun initViews() {
 
-        var str =
-            "{\"author\":\"Y.A\",\"bookChapterList\":[],\"bookId\":\"7786\",\"chaptersCount\":0,\"cover\":\"http://novel.duoduvip.com//uploads/20200519/7e267394f67a653da9855fa9d9cee33b.jpg\",\"hasCp\":false,\"include_image\":2,\"isLocal\":false,\"isSelect\":false,\"isUpdate\":true,\"lastChapter\":\"第五话 仙蒂小姐，真的超有女人味！\",\"latelyFollower\":0,\"retentionRatio\":0.0,\"shortIntro\":\"一宫信吾是个平凡的二十五岁上班族，某天早上一觉醒来，却发现自己换了一个截然不同的人生！他置身彷佛欧洲中世纪的魔法异世界，一个下级贵族的家庭里，并转生为五岁男孩。然而他并非从此过著养尊处优的日子，因身为贫穷贵族排行第八的儿子，不但无法继承家门和领地，连吃不吃得饱都成问题，还得学习魔法自力更生才行……\",\"title\":\"八男？别闹了！\",\"updated\":\"1593379378\",\"baseObjId\":0}";
 
-        var mCollBook = GsonUtil.fromJson(str, CollBookBean::class.java)
-
-
-        mCollBook?.bookChapterList?.add( BookChapterBean("1","aaaaaa"))
-        mCollBook?.bookChapterList?.add( BookChapterBean("2","bbbbbbbbbbbbb"))
-        mCollBook?.bookChapterList?.add( BookChapterBean("3","ccccccccc"))
-
+        var mCollBook = CollBookBean()
+        mCollBook.bookId = "sdfsdfsdfsdfsdfsd"
+        var book = intent.getParcelableExtra<Book>("book")
+        mCollBook?.author = book?.author
+        mCollBook?.title = book?.name
+        var charpters =
+            RoomUtils.getChapterDataBase(book!!.name + "_" + book.author).chapterDao().getAll()
+        mCollBook?.bookChapterList = (charpters)
 
         var loader = binding.pageView.getPageLoader(mCollBook)
 
-            binding.pageView.post {
-                loader.refreshChapterList()
+        binding.pageView.post {
+            loader.refreshChapterList()
+        }
+
+        loader.setOnPageChangeListener(object :
+            OnPageChangeListener {
+            override fun onChapterChange(pos: Int) {
+                LogUtils.e("onChapterChange" + pos)
             }
+
+            override fun requestChapters(requestChapters: MutableList<Chapter>?) {
+                LogUtils.e("requestChapters")
+                requestChapters?.get(0)?.let {
+                    BookArticleRepository.getChapterContent(
+                        it,
+                        book.name + "_" + book.author,
+                        object : BookArticleRepository.ArticleNetCallBack {
+                            override fun onSuccess() {
+                                loader.skipToChapter(loader.chapterPos)
+                            }
+
+                        })
+                }
+
+            }
+
+            override fun onCategoryFinish(chapters: MutableList<Chapter>?) {
+                LogUtils.e("onCategoryFinish")
+            }
+
+            override fun onPageCountChange(count: Int) {
+                LogUtils.e("onPageCountChange")
+            }
+
+            override fun onPageChange(pos: Int) {
+                LogUtils.e("onPageChange")
+            }
+
+        })
 
         binding.pageView.setTouchListener(object : PageView.TouchListener {
             override fun onTouch(): Boolean {
