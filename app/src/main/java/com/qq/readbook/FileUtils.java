@@ -7,7 +7,7 @@ import java.io.File;
  * @Package : com.qq.readbook
  * @Date : 下午 12:23
  * @Email : qiqiang213@gmail.com
- * @Descrive :
+ * @Describe :
  */
 public class FileUtils {
 

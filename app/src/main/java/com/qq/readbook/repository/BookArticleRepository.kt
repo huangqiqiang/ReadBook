@@ -12,7 +12,7 @@ import org.jsoup.Jsoup
  * @Package : com.qq.readbook.repository
  * @Date : 下午 4:34
  * @Email : qiqiang213@gmail.com
- * @Descrive :
+ * @Describe :
  */
 object BookArticleRepository {
     /**

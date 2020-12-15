@@ -5,7 +5,7 @@ package com.qq.readbook.weight.page.loader;
  * @Package : com.qq.readbook.weight.page
  * @Date : 下午 4:23
  * @Email : qiqiang213@gmail.com
- * @Descrive :
+ * @Describe :
  */
 
 import com.qq.readbook.bean.Chapter;

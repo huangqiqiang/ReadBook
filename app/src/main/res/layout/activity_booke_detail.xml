@@ -117,7 +117,6 @@
                     android:textColor="@color/white" />
 
                 <com.qq.readbook.weight.DrawableCenterButton
-                    android:id="@+id/btnRead"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -126,6 +125,7 @@
                     android:drawableLeft="@mipmap/book_detail_info_search_img"
                     android:drawablePadding="5dp"
                     android:padding="10dp"
+                    android:onClick="@{vm::onRead}"
                     android:text="开始阅读"
                     android:textColor="@color/white" />
             </LinearLayout>

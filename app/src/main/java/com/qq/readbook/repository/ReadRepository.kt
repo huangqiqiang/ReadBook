@@ -9,7 +9,7 @@ import com.qq.readbook.weight.page.BookRecordBean
  * @Package : com.qq.readbook.repository
  * @Date : 下午 5:01
  * @Email : qiqiang213@gmail.com
- * @Descrive :
+ * @Describe :
  */
 object ReadRepository {
     @JvmStatic

@@ -27,7 +27,6 @@ import com.qq.readbook.bean.Chapter;
 import com.qq.readbook.repository.ReadRepository;
 import com.qq.readbook.weight.page.BookRecordBean;
 import com.qq.readbook.weight.page.DateUtli;
-import com.qq.readbook.weight.page.IOUtils;
 import com.qq.readbook.weight.page.PageMode;
 import com.qq.readbook.weight.page.PageStyle;
 import com.qq.readbook.weight.page.PageView;
@@ -37,7 +36,6 @@ import com.qq.readbook.weight.page.TxtPage;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -583,7 +581,7 @@ public abstract class PageLoader {
         }
 
         //存储到数据库
-        ReadRepository.saveBookRecord(mCollBook,mBookRecord);
+        ReadRepository.saveBookRecord(mCollBook, mBookRecord);
     }
 
     /**
@@ -591,7 +589,7 @@ public abstract class PageLoader {
      */
     private void prepareBook() {
         //todo 获取阅读记录
-        mBookRecord = ReadRepository.getBookRecord(mCollBook,mCollBook.getBookId());
+        mBookRecord = ReadRepository.getBookRecord(mCollBook, mCollBook.getBookId());
 
         if (mBookRecord == null) {
             mBookRecord = new BookRecordBean();
@@ -1418,7 +1416,13 @@ public abstract class PageLoader {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            IOUtils.INSTANCE.close(br);
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return pages;
     }

@@ -18,7 +18,7 @@ import com.qq.readbook.ui.book.BookDetailActivity
  * @Package : com.qq.readbook.ui
  * @Date  : 下午 2:24
  * @Email : qiqiang213@gmail.com
- * @Descrive :
+ * @Describe :
  */
 class SearchActivity : BaseVmListActivity<SearchViewModel, ActivitySearchBinding>() {
 

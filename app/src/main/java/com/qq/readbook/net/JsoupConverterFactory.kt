@@ -13,7 +13,7 @@ import java.nio.charset.Charset
  * @Package : com.qq.readbook.net
  * @Date : 下午 1:18
  * @Email : qiqiang213@gmail.com
- * @Descrive :
+ * @Describe :
  */
  object JsoupConverterFactory : Converter.Factory() {
 

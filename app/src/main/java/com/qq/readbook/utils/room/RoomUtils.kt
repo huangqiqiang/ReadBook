@@ -15,12 +15,14 @@ import com.qq.readbook.weight.page.BookRecordBean
  * @Package : com.qq.readbook.utils.room
  * @Date : 上午 9:36
  * @Email : qiqiang213@gmail.com
- * @Descrive :
+ * @Describe :
  */
 @Dao
 interface BookDao {
     @Query("SELECT * FROM Book")
     fun getAll(): List<Book>
+
+
 
     @Insert
     fun insertAll(vararg book: Book)
@@ -56,10 +58,7 @@ interface BookRecordBeanDao {
 
     @Update
     fun update(bookRecordBeanDao: BookRecordBean): Int
-
-
 }
-
 
 @Database(entities = [Book::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {

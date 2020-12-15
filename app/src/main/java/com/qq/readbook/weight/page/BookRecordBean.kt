@@ -5,10 +5,15 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.io.Serializable
 
-/**
- * Created by zlj
- */
 
+/**
+ * @Author : huangqiqiang
+ * @Package : com.qq.readbook.weight.page
+ * @FileName :   BookRecordBean.kt
+ * @Date  : 2020/12/15 0015  上午 8:58
+ * @Email :  qiqiang213@gmail.com
+ * @Describe : 阅读记录
+ */
 @Entity
 class BookRecordBean : Serializable {
 

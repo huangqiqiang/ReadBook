@@ -21,7 +21,7 @@ import javax.net.ssl.X509TrustManager;
  * @Package : com.qq.readbook
  * @Date : 上午 11:04
  * @Email : qiqiang213@gmail.com
- * @Descrive :
+ * @Describe :
  */
 public class App extends Application {
     @Override

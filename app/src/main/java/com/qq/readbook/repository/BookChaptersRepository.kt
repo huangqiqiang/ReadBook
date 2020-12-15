@@ -18,7 +18,7 @@ import java.util.*
  * @Package : com.qq.readbook.repository
  * @Date : 下午 1:45
  * @Email : qiqiang213@gmail.com
- * @Descrive :
+ * @Describe :
  */
 object BookChaptersRepository {
     fun getBookChapters(book: Book) {

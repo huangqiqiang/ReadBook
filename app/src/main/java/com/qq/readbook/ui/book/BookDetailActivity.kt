@@ -15,7 +15,7 @@ import com.qq.readbook.repository.BookChaptersRepository
  * @Package : com.qq.readbook.ui.book
  * @Date  : 下午 4:46
  * @Email : qiqiang213@gmail.com
- * @Descrive :
+ * @Describe :
  */
 class BookDetailActivity : BaseVmActivity<BookDetailViewModel, ActivityBookeDetailBinding>() {
     companion object {

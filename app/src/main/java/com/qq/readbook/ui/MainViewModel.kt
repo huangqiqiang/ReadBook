@@ -10,7 +10,7 @@ import com.qq.readbook.utils.room.RoomUtils
  * @Package : com.qq.readbook.ui
  * @Date : 上午 11:23
  * @Email : qiqiang213@gmail.com
- * @Descrive :
+ * @Describe :
  */
 class MainViewModel : BaseListViewModel() {
 
@@ -19,6 +19,13 @@ class MainViewModel : BaseListViewModel() {
 
         var list = RoomUtils.getDataBase(CoreConfig.get().application!!).bookDao().getAll()
         setData(list)
+    }
+
+    override fun onLoadMore() {
+        super.onLoadMore()
+        var list = RoomUtils.getDataBase(CoreConfig.get().application!!).bookDao().getAll()
+        setData(list)
 
     }
+
 }

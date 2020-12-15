@@ -25,5 +25,12 @@
     <color name="read_font_night">#94969C</color>
 
     <color name="colorSelect">#498EFF</color>
-
+    <color name="read_menu_color">#FFFDF6</color>
+    <!--二级标题-->
+    <color name="smallColor">#262626</color>
+    <color name="light_yellow">#B87324</color>
+    <!--描述-->
+    <color name="colorDesTitle">#707177</color>
+    <!--一级标题-->
+    <color name="colorTitle">#212121</color>
 </resources>

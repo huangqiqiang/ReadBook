@@ -17,12 +17,17 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         tools:context=".ui.MainActivity">
+        <com.hqq.core.widget.CusPtrClassicFrameLayout
+            android:id="@id/ptr_pull_down"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@id/rc_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent" />
 
+        </com.hqq.core.widget.CusPtrClassicFrameLayout>
 
     </LinearLayout>
 

@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <import type="android.view.View" />
 
         <variable
             name="vm"
             type="com.qq.readbook.ui.book.ReadBookViewModel" />
     </data>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        tools:context=".ui.book.ReadBookActivity"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:context=".ui.book.ReadBookActivity">
 
 
         <com.qq.readbook.weight.page.PageView
@@ -19,5 +22,108 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-    </LinearLayout>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/ll_light"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@color/read_menu_color"
+            android:gravity="bottom"
+            android:padding="5dp"
+            android:visibility="@{vm.showLight?View.VISIBLE :View.GONE}"
+            app:layout_constraintBottom_toTopOf="@+id/ll_bottom_menu"
+            tools:visibility="visible">
+
+            <androidx.appcompat.widget.AppCompatSeekBar
+                android:id="@+id/sb_brightness"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:max="255"
+                android:maxHeight="3dp"
+                android:minHeight="3dp"
+                android:progressDrawable="@drawable/seekbar_bg"
+                android:thumb="@drawable/seekbar_thumb"
+                android:thumbOffset="10dp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvBookReadMode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:drawableTop="@mipmap/ic_menu_mode_night_normal"
+                android:gravity="center"
+                android:text="@string/book_read_mode_day"
+                android:textColor="@color/smallColor"
+                android:textSize="16sp" />
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+        <!--底部页面-->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/ll_bottom_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/read_menu_color"
+            android:orientation="horizontal"
+            android:padding="10dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:visibility="visible">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_category"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@mipmap/ic_contents"
+                android:gravity="center"
+                android:text="@string/contents"
+                android:textColor="@color/smallColor"
+                android:textSize="12sp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_light"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@mipmap/ic_light"
+                android:gravity="center"
+                android:onClick="@{vm::onClickLight}"
+                android:text="@string/light"
+                android:textColor="@color/smallColor"
+                android:textSize="12sp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_cache"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@mipmap/ic_cache"
+                android:gravity="center"
+                android:text="@string/cache"
+                android:textColor="@color/smallColor"
+                android:textSize="12sp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_setting"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@mipmap/ic_read_setting"
+                android:gravity="center"
+                android:text="@string/setting"
+                android:textColor="@color/smallColor"
+                android:textSize="12sp" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

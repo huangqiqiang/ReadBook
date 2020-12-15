@@ -15,7 +15,7 @@ import com.qq.readbook.utils.room.RoomUtils
  * @Package : com.qq.readbook.ui.book
  * @Date  : 上午 9:29
  * @Email : qiqiang213@gmail.com
- * @Descrive :
+ * @Describe :
  */
 class BookDetailViewModel : BaseViewModel() {
 
@@ -41,9 +41,23 @@ class BookDetailViewModel : BaseViewModel() {
      */
     fun onAddBook(view: View) {
         book.value?.let {
+            RoomUtils.getDataBase(CoreConfig.get().application!!).bookDao().getAll()
+
             RoomUtils.getDataBase(CoreConfig.get().application!!).bookDao().insertAll(it)
             setShowToast("添加成功")
         }
     }
+
+    /**
+     *  开始阅读
+     */
+    fun onRead(view: View) {
+        book.value?.let {
+            startActivity(ReadBookActivity::class.java, Bundle().apply {
+                putParcelable("book", book.value)
+            })
+        }
+    }
+
 
 }

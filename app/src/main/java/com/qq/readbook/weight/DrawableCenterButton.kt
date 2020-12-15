@@ -10,7 +10,7 @@ import androidx.appcompat.widget.AppCompatTextView
  * @Package : com.qq.readbook.weight
  * @Date : 上午 10:24
  * @Email : qiqiang213@gmail.com
- * @Descrive :
+ * @Describe :
  */
 class DrawableCenterButton : AppCompatTextView {
     constructor(

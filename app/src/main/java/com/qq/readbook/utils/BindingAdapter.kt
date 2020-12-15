@@ -9,7 +9,7 @@ import com.hqq.core.glide.ImageLoadUtils.with
  * @Package : com.qq.readbook.utils
  * @Date : 上午 9:49
  * @Email : qiqiang213@gmail.com
- * @Descrive :
+ * @Describe :
  */
 object BindingAdapter {
     @JvmStatic

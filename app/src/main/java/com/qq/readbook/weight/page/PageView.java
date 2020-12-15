@@ -28,23 +28,39 @@ import com.qq.readbook.weight.page.loader.PageLoader;
  */
 public class PageView extends View {
 
-    private int mViewWidth = 0; // 当前View的宽
-    private int mViewHeight = 0; // 当前View的高
+    /**
+     * 当前View的宽
+     */
+    private int mViewWidth = 0;
+    /**
+     * 当前View的高
+     */
+    private int mViewHeight = 0;
 
     private int mStartX = 0;
     private int mStartY = 0;
     private boolean isMove = false;
-    // 初始化参数
+    /**
+     * 初始化参数
+     */
     private int mBgColor = 0xFFCEC29C;
     private PageMode mPageMode = PageMode.SIMULATION;
-    // 是否允许点击
+    /**
+     * 是否允许点击
+     */
     private boolean canTouch = true;
-    // 唤醒菜单的区域
+    /**
+     * 唤醒菜单的区域
+     */
     private RectF mCenterRect = null;
     private boolean isPrepare;
-    // 动画类
+    /**
+     * 动画类
+     */
     private PageAnimation mPageAnim;
-    // 动画监听类
+    /**
+     * 动画监听类
+     */
     private PageAnimation.OnPageChangeListener mPageAnimListener = new PageAnimation.OnPageChangeListener() {
         @Override
         public boolean hasPrev() {
@@ -62,9 +78,13 @@ public class PageView extends View {
         }
     };
 
-    //点击监听
+    /**
+     * 点击监听
+     */
     private TouchListener mTouchListener;
-    //内容加载器
+    /**
+     * 内容加载器
+     */
     private PageLoader mPageLoader;
 
     public PageView(Context context) {
@@ -92,7 +112,10 @@ public class PageView extends View {
         }
     }
 
-    //设置翻页的模式
+    /**
+     * 设置翻页的模式
+     * @param pageMode
+     */
     public void setPageMode(PageMode pageMode) {
         mPageMode = pageMode;
         //视图未初始化的时候，禁止调用
@@ -100,9 +123,7 @@ public class PageView extends View {
             return;
         }
         switch (mPageMode) {
-            case SIMULATION:
-                mPageAnim = new SimulationPageAnim(mViewWidth, mViewHeight, this, mPageAnimListener);
-                break;
+
             case COVER:
                 mPageAnim = new CoverPageAnim(mViewWidth, mViewHeight, this, mPageAnimListener);
                 break;
@@ -116,6 +137,7 @@ public class PageView extends View {
                 mPageAnim = new ScrollPageAnim(mViewWidth, mViewHeight, 0,
                         mPageLoader.getMarginHeight(), this, mPageAnimListener);
                 break;
+            case SIMULATION:
             default:
                 mPageAnim = new SimulationPageAnim(mViewWidth, mViewHeight, this, mPageAnimListener);
         }
@@ -287,7 +309,9 @@ public class PageView extends View {
         super.computeScroll();
     }
 
-    //如果滑动状态没有停止就取消状态，重新设置Anim的触碰点
+    /**
+     * 如果滑动状态没有停止就取消状态，重新设置Anim的触碰点
+     */
     public void abortAnimation() {
         mPageAnim.abortAnim();
     }

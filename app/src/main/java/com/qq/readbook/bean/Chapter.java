@@ -12,7 +12,7 @@ import androidx.room.PrimaryKey;
  * @Package : com.qq.readbook.bean
  * @Date : 下午 1:42
  * @Email : qiqiang213@gmail.com
- * @Descrive :
+ * @Describe :
  */
 @Entity
 public class Chapter implements Parcelable {

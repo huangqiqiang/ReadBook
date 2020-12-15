@@ -16,7 +16,7 @@ import java.util.List;
  * @Package : com.qq.readbook
  * @Date : 下午 3:52
  * @Email : qiqiang213@gmail.com
- * @Descrive :
+ * @Describe :
  */
 @Entity
 public class Book implements Parcelable {

@@ -15,16 +15,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by zlj
- * 网络页面加载器
+ * @Author : huangqiqiang
+ * @Package : com.qq.readbook.weight.page.loader
+ * @FileName :   NetPageLoader
+ * @Date : 2020/12/15 0015  上午 9:04
+ * @Email :  qiqiang213@gmail.com
+ * @Describe : 网络页面加载器
  */
 public class NetPageLoader extends PageLoader {
-    private static final String TAG = "PageFactory";
-    private Context mContext;
 
     public NetPageLoader(PageView pageView, Book collBook) {
         super(pageView, collBook);
-        mContext = pageView.getContext();
     }
 
 //    private List<TxtChapter> convertTxtChapter(List<Chapter> bookChapters) {
@@ -87,7 +88,10 @@ public class NetPageLoader extends PageLoader {
         return false;
     }
 
-    // 装载上一章节的内容
+    /**
+     * 装载上一章节的内容
+     * @return
+     */
     @Override
     boolean parsePrevChapter() {
         boolean isRight = super.parsePrevChapter();
@@ -100,7 +104,10 @@ public class NetPageLoader extends PageLoader {
         return isRight;
     }
 
-    // 装载当前章内容。
+    /**
+     * 装载当前章内容。
+     * @return
+     */
     @Override
     boolean parseCurChapter() {
         boolean isRight = super.parseCurChapter();
@@ -111,7 +118,10 @@ public class NetPageLoader extends PageLoader {
         return isRight;
     }
 
-    // 装载下一章节的内容
+    /**
+     * 装载下一章节的内容
+     * @return
+     */
     @Override
     boolean parseNextChapter() {
         boolean isRight = super.parseNextChapter();
