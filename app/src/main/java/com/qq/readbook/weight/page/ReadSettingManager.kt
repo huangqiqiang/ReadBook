@@ -75,20 +75,7 @@ class ReadSettingManager private constructor() {
         val SHARED_READ_FULL_SCREEN = "shared_read_full_screen"
         val SHARED_READ_CONVERT_TYPE = "shared_read_convert_type"
 
-//        @Volatile
-//        private var sInstance: ReadSettingManager? = null
-//
-//        val instance: ReadSettingManager?
-//            get() {
-//                if (sInstance == null) {
-//                    synchronized(ReadSettingManager::class.java) {
-//                        if (sInstance == null) {
-//                            sInstance = ReadSettingManager()
-//                        }
-//                    }
-//                }
-//                return sInstance
-//            }
+
         @Volatile
         private var instance: ReadSettingManager? = null
 

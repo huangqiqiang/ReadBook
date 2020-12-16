@@ -2,6 +2,7 @@ package com.qq.readbook.ui.book
 
 import android.view.Gravity
 import android.view.WindowManager
+import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
 import com.hqq.core.ui.dialog.BaseDialog
@@ -25,10 +26,9 @@ class SettingDialog(private var mPageLoader: PageLoader) : BaseDialog() {
     override val weight: Int = WindowManager.LayoutParams.WRAP_CONTENT
 
     override val height: Int = WindowManager.LayoutParams.MATCH_PARENT
-
+    var settingManager = ReadSettingManager.getInstance();
     override fun initView() {
         var tvSize = rootView?.findViewById<TextView>(R.id.tv_size)
-
 
         //字体大小调节
         rootView?.findViewById<TextView>(R.id.tv_font_minus)?.setOnClickListener {
@@ -51,6 +51,17 @@ class SettingDialog(private var mPageLoader: PageLoader) : BaseDialog() {
             mPageLoader.setTextSize(fontSize)
             tvSize?.text = "$fontSize"
         }
+        when (settingManager.pageMode) {
+            PageMode.SIMULATION -> rootView?.findViewById<RadioButton>(R.id.rb_simulation)?.isChecked =
+                true
+            PageMode.COVER -> rootView?.findViewById<RadioButton>(R.id.rb_cover)?.isChecked =
+                true
+            PageMode.NONE -> rootView?.findViewById<RadioButton>(R.id.rb_scroll)?.isChecked =
+                true
+            PageMode.SCROLL -> rootView?.findViewById<RadioButton>(R.id.rb_none)?.isChecked =
+                true
+        }
+        tvSize?.text = settingManager.textSize.toString()
 
         // 设置模式
         rootView?.findViewById<RadioGroup>(R.id.rg_page_mode)

@@ -26,6 +26,7 @@ object BookArticleRepository {
                     var content = getContentFormHtml(response)
                     chapter.content = content;
                     RoomUtils.getChapterDataBase(s).chapterDao().update(chapter)
+                    param.onSuccess()
                 }
 
                 override fun onFailure(statusCode: String?, errMsg: String?, response: String?) {
@@ -58,7 +59,7 @@ object BookArticleRepository {
         }
     }
 
-    open interface ArticleNetCallBack {
+    interface ArticleNetCallBack {
 
         fun onSuccess();
     }

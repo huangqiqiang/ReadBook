@@ -1,10 +1,13 @@
 package com.qq.readbook.ui.book
 
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.hqq.core.ui.dialog.BaseDialog
+import com.hqq.core.utils.ScreenUtils
+import com.hqq.core.utils.statusbar.StatusBarManager
 import com.qq.readbook.R
 import com.qq.readbook.bean.Chapter
 import com.qq.readbook.weight.page.loader.PageLoader
@@ -20,6 +23,13 @@ class ChaptersDialog(var mPageLoader: PageLoader, var bookChapterList: List<Chap
     BaseDialog() {
     override val layoutId: Int = R.layout.dialog_chapters
     override fun initView() {
+        context?.let {
+            rootView?.findViewById<ConstraintLayout>(R.id.cl_content)?.setPadding(
+                0, ScreenUtils.getStatusBarHeight(it), 0, 0
+            )
+        }
+
+
         var listView = rootView?.findViewById<RecyclerView>(R.id.rc_list)
         listView?.layoutManager = LinearLayoutManager(context).apply {
             // scrollToPosition   才会生效
@@ -27,7 +37,12 @@ class ChaptersDialog(var mPageLoader: PageLoader, var bookChapterList: List<Chap
         }
         var adapter = ChaptersAdapter()
         adapter.addData(bookChapterList)
-        listView?.adapter = adapter
+        listView?.adapter = adapter.apply {
+            setOnItemClickListener { adapter, view, position ->
+                mPageLoader.skipToChapter(position)
+                dismiss()
+            }
+        }
 
         listView?.postDelayed({
             listView?.scrollToPosition(adapter.itemCount - mPageLoader.chapterPos - 1)

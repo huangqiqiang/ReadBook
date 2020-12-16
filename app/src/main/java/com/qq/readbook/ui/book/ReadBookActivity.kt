@@ -68,11 +68,11 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
                 // 理论上需要用队列去维护 避免重复请求
                 requestChapters?.get(0)?.let {
                     BookArticleRepository.getChapterContent(
-                        it,
-                        book.name + "_" + book.author,
+                        it, book.name + "_" + book.author,
                         object : BookArticleRepository.ArticleNetCallBack {
                             override fun onSuccess() {
-                                pageLoader.skipToChapter(pageLoader.chapterPos)
+//                                pageLoader.skipToChapter(pageLoader.chapterPos)
+                                pageLoader.openChapter()
                             }
 
                         })
@@ -139,18 +139,21 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
         binding.tvSetting.setOnClickListener {
             // 设置
             SettingDialog(pageLoader).show(supportFragmentManager)
+            binding.llBottomMenu.visibility = View.GONE
+
         }
         binding.llBottomMenu.setOnClickListener {
             // 避免点击透传
         }
         binding.tvCategory.setOnClickListener {
             // 目录
-            ChaptersDialog(pageLoader,book.bookChapterList).show(supportFragmentManager)
+            ChaptersDialog(pageLoader, book.bookChapterList).show(supportFragmentManager)
         }
     }
 
     private fun hintMenu() {
         binding.llLight.visibility = View.GONE
+        binding.llBottomMenu.visibility = View.GONE
     }
 
 }
