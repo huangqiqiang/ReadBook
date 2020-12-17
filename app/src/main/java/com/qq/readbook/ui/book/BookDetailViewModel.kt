@@ -3,7 +3,6 @@ package com.qq.readbook.ui.book
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.MutableLiveData
-import com.hqq.core.CoreConfig
 import com.hqq.core.ui.base.BaseViewModel
 import com.qq.readbook.Keys
 import com.qq.readbook.bean.Book
@@ -20,7 +19,7 @@ import com.qq.readbook.utils.room.RoomUtils
 class BookDetailViewModel : BaseViewModel() {
 
     val book = MutableLiveData<Book>()
-
+    var addBookMenu = MutableLiveData<String>("加入书架")
     override fun initData(extras: Bundle?) {
         super.initData(extras)
         extras?.getParcelable<Book>(Keys.BOOK).let {
@@ -29,11 +28,16 @@ class BookDetailViewModel : BaseViewModel() {
     }
 
     override fun onCrete() {
+        book.value?.let {
+            BookChaptersRepository.getBookChapters(it)
 
-
-        book.value?.let { BookChaptersRepository.getBookChapters(it) }
-
-
+            var b = RoomUtils.getDataBase().bookDao().getBookById(it.bookId)
+            b?.let {
+                if (it.name.equals(it.name)) {
+                    addBookMenu.value = "移出书架"
+                }
+            }
+        }
     }
 
     /**
@@ -41,9 +45,8 @@ class BookDetailViewModel : BaseViewModel() {
      */
     fun onAddBook(view: View) {
         book.value?.let {
-            RoomUtils.getDataBase(CoreConfig.get().application!!).bookDao().getAll()
 
-            RoomUtils.getDataBase(CoreConfig.get().application!!).bookDao().insertAll(it)
+            RoomUtils.getDataBase().bookDao().insertAll(it)
             setShowToast("添加成功")
         }
     }

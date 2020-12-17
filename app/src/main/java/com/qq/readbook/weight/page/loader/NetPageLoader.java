@@ -5,7 +5,9 @@ import android.content.Context;
 
 
 import com.qq.readbook.bean.Book;
+import com.qq.readbook.bean.BookContent;
 import com.qq.readbook.bean.Chapter;
+import com.qq.readbook.utils.room.RoomUtils;
 import com.qq.readbook.weight.page.PageView;
 
 import java.io.BufferedReader;
@@ -67,10 +69,11 @@ public class NetPageLoader extends PageLoader {
     @Override
     protected BufferedReader getChapterReader(Chapter chapter) throws Exception {
         // todo  需要改成用数据库存储
-        if (chapter.getContent().isEmpty()) {
+        BookContent bookContent = RoomUtils.INSTANCE.getChapterDataBase(mCollBook.getName() + "_" + mCollBook.getAuthor()).bookContentDao().getContent(chapter.getNumber());
+        if (bookContent == null || bookContent.getContent().isEmpty()) {
             return null;
         }
-        Reader reader = new StringReader(chapter.getContent());
+        Reader reader = new StringReader(bookContent.getContent());
         return new BufferedReader(reader);
     }
 
@@ -82,14 +85,18 @@ public class NetPageLoader extends PageLoader {
      */
     @Override
     protected boolean hasChapterData(Chapter chapter) {
-        if (chapter != null && chapter.getContent() != null && !chapter.getContent().isEmpty()) {
+        //单独从数据库中查询
+        BookContent bookContent = RoomUtils.INSTANCE.getChapterDataBase(mCollBook.getName() + "_" + mCollBook.getAuthor()).bookContentDao().getContent(chapter.getNumber());
+        if (bookContent != null && bookContent.getContent() != null && !bookContent.getContent().isEmpty()) {
             return true;
         }
+
         return false;
     }
 
     /**
      * 装载上一章节的内容
+     *
      * @return
      */
     @Override
@@ -106,6 +113,7 @@ public class NetPageLoader extends PageLoader {
 
     /**
      * 装载当前章内容。
+     *
      * @return
      */
     @Override
@@ -120,6 +128,7 @@ public class NetPageLoader extends PageLoader {
 
     /**
      * 装载下一章节的内容
+     *
      * @return
      */
     @Override

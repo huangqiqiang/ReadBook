@@ -47,7 +47,9 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
     lateinit var pageLoader: PageLoader
     override fun initViews() {
 
+
         var book = intent.getParcelableExtra<Book>("book")
+        binding.tvBarTitle.text = book?.name
         // 需要异步加载
         var charpters =
             RoomUtils.getChapterDataBase(book!!.name + "_" + book.author).chapterDao().getAll()
@@ -74,10 +76,8 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
 //                                pageLoader.skipToChapter(pageLoader.chapterPos)
                                 pageLoader.openChapter()
                             }
-
                         })
                 }
-
             }
 
             override fun onCategoryFinish(chapters: MutableList<Chapter>?) {
@@ -104,10 +104,12 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
             }
 
             override fun center() {
-                if (binding.llBottomMenu.visibility == View.VISIBLE) {
+                if (binding.flLayout.visibility == View.VISIBLE) {
                     binding.llBottomMenu.visibility = View.GONE
+                    binding.flLayout.visibility = View.GONE
                 } else {
                     binding.llBottomMenu.visibility = View.VISIBLE
+                    binding.flLayout.visibility = View.VISIBLE
                 }
             }
 
@@ -154,6 +156,7 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
     private fun hintMenu() {
         binding.llLight.visibility = View.GONE
         binding.llBottomMenu.visibility = View.GONE
+        binding.flLayout.visibility = View.GONE
     }
 
 }

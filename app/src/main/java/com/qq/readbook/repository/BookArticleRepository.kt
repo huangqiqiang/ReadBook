@@ -3,6 +3,7 @@ package com.qq.readbook.repository
 import android.text.Html
 import com.hqq.core.net.ok.OkHttp
 import com.hqq.core.net.ok.OkNetCallback
+import com.qq.readbook.bean.BookContent
 import com.qq.readbook.bean.Chapter
 import com.qq.readbook.utils.room.RoomUtils
 import org.jsoup.Jsoup
@@ -24,8 +25,11 @@ object BookArticleRepository {
             chapter.url, OkHttp.newParamsCompat(), object : OkNetCallback {
                 override fun onSuccess(statusCode: String?, response: String?) {
                     var content = getContentFormHtml(response)
-                    chapter.content = content;
-                    RoomUtils.getChapterDataBase(s).chapterDao().update(chapter)
+                    var bookContent = BookContent().apply {
+                        number = chapter.number
+                        this.content = content
+                    }
+                    RoomUtils.getChapterDataBase(s).bookContentDao().insert(bookContent)
                     param.onSuccess()
                 }
 

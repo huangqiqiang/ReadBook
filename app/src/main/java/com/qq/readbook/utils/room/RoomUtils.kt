@@ -6,6 +6,7 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.hqq.core.CoreConfig
 import com.qq.readbook.bean.Book
+import com.qq.readbook.bean.BookContent
 import com.qq.readbook.bean.Chapter
 import com.qq.readbook.weight.page.BookRecordBean
 
@@ -22,12 +23,11 @@ interface BookDao {
     @Query("SELECT * FROM Book")
     fun getAll(): List<Book>
 
-
+    @Query("SELECT * FROM Book where bookId =:bookId")
+    fun getBookById(bookId: String): Book?
 
     @Insert
     fun insertAll(vararg book: Book)
-
-
 }
 
 @Dao
@@ -39,7 +39,10 @@ interface ChapterDao {
     fun insertAll(vararg chapter: Chapter)
 
     @Query("delete  FROM Chapter")
-    fun deleteAll();
+    fun deleteAll()
+
+    @Query("delete  FROM sqlite_sequence WHERE name = 'Chapter'")
+    fun resetId()
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(chapter: ArrayList<Chapter>)
@@ -50,6 +53,7 @@ interface ChapterDao {
 
 @Dao
 interface BookRecordBeanDao {
+
     @Query("SELECT * FROM BookRecordBean")
     fun getAll(): List<BookRecordBean>
 
@@ -60,16 +64,32 @@ interface BookRecordBeanDao {
     fun update(bookRecordBeanDao: BookRecordBean): Int
 }
 
+@Dao
+interface BookContentDao {
+    @Query("SELECT * FROM BookContent where number =:number")
+    fun getContent(number: Int): BookContent
+
+    @Update
+    fun update(bookContent: BookContent): Int
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(bookContent: BookContent)
+}
+
 @Database(entities = [Book::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun bookDao(): BookDao
 }
 
-@Database(entities = [Chapter::class, BookRecordBean::class], version = 1, exportSchema = false)
+@Database(
+    entities = [Chapter::class, BookRecordBean::class, BookContent::class],
+    version = 1,
+    exportSchema = false
+)
 abstract class ChapterDatabase : RoomDatabase() {
     abstract fun chapterDao(): ChapterDao
-
     abstract fun bookRecordBeanDao(): BookRecordBeanDao
+    abstract fun bookContentDao(): BookContentDao
 }
 
 
@@ -79,10 +99,10 @@ abstract class ChapterDatabase : RoomDatabase() {
  *  3.  缓存成本地文件 使用文件读取
  */
 object RoomUtils {
-    fun getDataBase(context: Application, name: String = "books.db"): AppDatabase {
+    fun <T : RoomDatabase> getBase(java: Class<T>, name: String): T {
         return Room.databaseBuilder(
-            context,
-            AppDatabase::class.java, name
+            CoreConfig.get().application!!,
+            java, name
         )
             //设置是否允许在主线程做查询操作
             .allowMainThreadQueries()
@@ -95,33 +115,18 @@ object RoomUtils {
             //监听数据库，创建和打开的操作
 //                .addCallback()
             .build()
+    }
+
+    fun getDataBase(name: String = "books.db"): AppDatabase {
+        return getBase(AppDatabase::class.java, name)
 
     }
 
     fun getChapterDataBase(
         name: String,
-        context: Application = CoreConfig.get().application!!
-
     ): ChapterDatabase {
-        return Room.databaseBuilder(
-            context,
-            ChapterDatabase::class.java, name
-        )
-            //设置是否允许在主线程做查询操作
-            .allowMainThreadQueries()
-            //设置数据库升级(迁移)的逻辑
-            .addMigrations(MIGRATION_1_2)
-            //默认值是FrameworkSQLiteOpenHelperFactory，设置数据库的factory。比如我们想改变数据库的存储路径可以通过这个函数来实现
-//                .openHelperFactory {  }
-            //设置迁移数据库如果发生错误，将会重新创建数据库，而不是发生崩溃
-            .fallbackToDestructiveMigration()
-            //监听数据库，创建和打开的操作
-//                .addCallback()
-            .build()
-    }
+        return getBase(ChapterDatabase::class.java, name)
 
-    fun getUserDao(appDatabase: AppDatabase): BookDao {
-        return appDatabase.bookDao()
     }
 
     /**

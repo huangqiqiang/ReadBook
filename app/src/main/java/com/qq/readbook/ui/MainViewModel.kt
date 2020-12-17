@@ -17,13 +17,13 @@ class MainViewModel : BaseListViewModel() {
     override fun initData(extras: Bundle?) {
         super.initData(extras)
 
-        var list = RoomUtils.getDataBase(CoreConfig.get().application!!).bookDao().getAll()
+        var list = RoomUtils.getDataBase().bookDao().getAll()
         setData(list)
     }
 
     override fun onLoadMore() {
         super.onLoadMore()
-        var list = RoomUtils.getDataBase(CoreConfig.get().application!!).bookDao().getAll()
+        var list = RoomUtils.getDataBase().bookDao().getAll()
         setData(list)
 
     }

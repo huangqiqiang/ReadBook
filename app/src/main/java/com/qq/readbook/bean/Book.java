@@ -23,7 +23,7 @@ public class Book implements Parcelable {
     @PrimaryKey(autoGenerate = true)
     public int id = 0;
     /**
-     *  书籍id
+     * 书籍id
      */
     private String bookId;
 
@@ -71,7 +71,7 @@ public class Book implements Parcelable {
      */
     private String newestChapterUrl;
     /**
-     *
+     * 资源
      */
     @Nullable
     private String source;
@@ -84,8 +84,13 @@ public class Book implements Parcelable {
      * 是否更新或未阅读
      */
     boolean isUpdate = true;
+
+    /**
+     * 章节列表
+     */
     @Ignore
-    List<Chapter> bookChapterList =new ArrayList();
+    List<Chapter> bookChapterList = new ArrayList();
+
 
     public List<Chapter> getBookChapterList() {
         if (bookChapterList == null) {

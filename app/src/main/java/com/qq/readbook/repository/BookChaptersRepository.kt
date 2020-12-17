@@ -1,8 +1,5 @@
 package com.qq.readbook.repository
 
-import android.content.ContentValues
-import androidx.room.OnConflictStrategy
-import com.hqq.core.CoreConfig
 import com.hqq.core.net.ok.OkHttp
 import com.hqq.core.net.ok.OkNetCallback
 import com.qq.readbook.bean.Book
@@ -26,29 +23,10 @@ object BookChaptersRepository {
             override fun onSuccess(statusCode: String, response: String) {
                 val arrayList = getChaptersFromHtml(response, book)
 
-                RoomUtils.getDataBase(
-                    CoreConfig.get().application!!
-                ).run {
-
-                    // 创建表 并插入数据
-//                    var db = getOpenHelper().getWritableDatabase()
-//                    getOpenHelper().writableDatabase.execSQL("delete  FROM Chapter")
-//                    db.execSQL(Chapter.getCreateTableName("Chapter_" + book.name + "_" + book.author))
-//                    for (chapter in arrayList) {
-//                        var value = ContentValues()
-//                        value.put("bookId", chapter.bookId)
-//                        value.put("number", chapter.number)
-//                        value.put("title", chapter.title)
-//                        value.put("url", chapter.url)
-//                        value.put("content", chapter.content)
-//                        getOpenHelper().writableDatabase.insert(
-//                            "Chapter_" + book.name + "_" + book.author,
-//                            OnConflictStrategy.IGNORE, value
-//                        )
-//                    }
-
+                RoomUtils.getDataBase().run {
                     RoomUtils.getChapterDataBase(book.name + "_" + book.author).chapterDao().apply {
                         deleteAll()
+                        resetId()
                         insert(arrayList)
                     }
 
@@ -56,6 +34,7 @@ object BookChaptersRepository {
                 }
 
             }
+
             override fun onFailure(statusCode: String, errMsg: String, response: String) {}
         }]
     }
@@ -90,6 +69,7 @@ object BookChaptersRepository {
                 } else if ("笔趣阁" == book.source) {
                     url = book.chapterUrl + url
                 }
+                chapter.bookId = book.bookId
                 chapter.url = url
                 chapters.add(chapter)
                 lastTile = title

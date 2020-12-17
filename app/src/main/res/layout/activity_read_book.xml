@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -11,7 +12,7 @@
             type="com.qq.readbook.ui.book.ReadBookViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.book.ReadBookActivity">
@@ -23,6 +24,66 @@
             android:layout_height="match_parent" />
 
 
+        <!--        顶部 Bar-->
+        <FrameLayout
+            android:id="@+id/fl_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x88"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <ImageView
+                android:id="@+id/iv_toolBar_Bg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/transparent" />
+
+            <TextView
+                android:id="@+id/tv_bar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxEms="10"
+                android:maxLines="1"
+                android:text="@string/app_name"
+                android:textColor="@color/toolbar_text_color"
+                android:textSize="@dimen/x36" />
+
+            <ImageView
+                android:id="@+id/iv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+
+
+            <com.hqq.core.widget.FilterImageView
+                android:id="@+id/iv_bar_back"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingLeft="@dimen/x15"
+                android:paddingRight="@dimen/x26"
+                android:src="@mipmap/ic_back_gray" />
+
+
+            <TextView
+                android:id="@+id/ll_right"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="right"
+                android:text="换源"
+                android:gravity="center"
+                style="@style/def_text.30.666"
+                android:orientation="horizontal">
+
+            </TextView>
+
+
+        </FrameLayout>
+
+
+        <!--亮度 调节-->
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/ll_light"
             android:layout_width="match_parent"
@@ -33,7 +94,7 @@
             android:padding="5dp"
             android:visibility="@{vm.showLight?View.VISIBLE :View.GONE}"
             app:layout_constraintBottom_toTopOf="@+id/ll_bottom_menu"
-            tools:visibility="visible">
+            tools:visibility="gone">
 
             <androidx.appcompat.widget.AppCompatSeekBar
                 android:id="@+id/sb_brightness"
