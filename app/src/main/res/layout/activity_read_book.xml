@@ -26,6 +26,7 @@
 
         <!--        顶部 Bar-->
         <FrameLayout
+            android:background="@color/white"
             android:id="@+id/fl_layout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/x88"
@@ -68,6 +69,7 @@
 
 
             <TextView
+                android:padding="@dimen/x20"
                 android:id="@+id/ll_right"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"

@@ -123,7 +123,6 @@ public class PageView extends View {
             return;
         }
         switch (mPageMode) {
-
             case COVER:
                 mPageAnim = new CoverPageAnim(mViewWidth, mViewHeight, this, mPageAnimListener);
                 break;

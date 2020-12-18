@@ -15,8 +15,7 @@ object ReadRepository {
     @JvmStatic
     fun getBookRecord(book: Book, bookId: String): BookRecordBean? {
 
-        var list = RoomUtils.getChapterDataBase(book.name + "_" + book.author).bookRecordBeanDao()
-            .getAll()
+        var list = RoomUtils.getChapterDataBase(book.name + "_" + book.author).bookRecordBeanDao().getAll()
 
         if (list.isNotEmpty()) {
             return list[0]

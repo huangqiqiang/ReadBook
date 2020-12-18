@@ -33,7 +33,6 @@ class BookDetailActivity : BaseVmActivity<BookDetailViewModel, ActivityBookeDeta
     override fun initViews() {
 
 
-
     }
 
 }

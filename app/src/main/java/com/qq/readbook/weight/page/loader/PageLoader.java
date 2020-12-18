@@ -1145,7 +1145,6 @@ public abstract class PageLoader {
             if (mCurPageList != null) {
                 if (mCurPageList.isEmpty()) {
                     mStatus = STATUS_EMPTY;
-
                     // 添加一个空数据
                     TxtPage page = new TxtPage();
                     page.lines = new ArrayList<>(1);

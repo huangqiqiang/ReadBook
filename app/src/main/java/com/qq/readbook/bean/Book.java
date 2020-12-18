@@ -219,6 +219,9 @@ public class Book implements Parcelable {
         this.author = author;
     }
 
+    public Book() {
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -226,6 +229,8 @@ public class Book implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
+        dest.writeString(this.bookId);
         dest.writeString(this.name);
         dest.writeString(this.chapterUrl);
         dest.writeString(this.imgUrl);
@@ -237,12 +242,14 @@ public class Book implements Parcelable {
         dest.writeString(this.newestChapterTitle);
         dest.writeString(this.newestChapterUrl);
         dest.writeString(this.source);
-    }
-
-    public Book() {
+        dest.writeString(this.lastRead);
+        dest.writeByte(this.isUpdate ? (byte) 1 : (byte) 0);
+        dest.writeTypedList(this.bookChapterList);
     }
 
     protected Book(Parcel in) {
+        this.id = in.readInt();
+        this.bookId = in.readString();
         this.name = in.readString();
         this.chapterUrl = in.readString();
         this.imgUrl = in.readString();
@@ -254,9 +261,12 @@ public class Book implements Parcelable {
         this.newestChapterTitle = in.readString();
         this.newestChapterUrl = in.readString();
         this.source = in.readString();
+        this.lastRead = in.readString();
+        this.isUpdate = in.readByte() != 0;
+        this.bookChapterList = in.createTypedArrayList(Chapter.CREATOR);
     }
 
-    public static final Parcelable.Creator<Book> CREATOR = new Parcelable.Creator<Book>() {
+    public static final Creator<Book> CREATOR = new Creator<Book>() {
         @Override
         public Book createFromParcel(Parcel source) {
             return new Book(source);

@@ -6,6 +6,7 @@ import android.graphics.Rect
 import android.view.MotionEvent
 import android.view.VelocityTracker
 import android.view.View
+import com.hqq.core.utils.log.LogUtils
 
 import com.qq.readbook.weight.page.animation.PageAnimation
 
@@ -141,7 +142,7 @@ class ScrollPageAnim(
 
             if (!isRefresh) {
                 val hasNext = mListener.hasNext() //如果不成功则无法滑动
-
+LogUtils.e("------------------------"+ hasNext)
                 // 如果不存在next,则进行还原
                 if (!hasNext) {
                     mNextBitmap = cancelBitmap

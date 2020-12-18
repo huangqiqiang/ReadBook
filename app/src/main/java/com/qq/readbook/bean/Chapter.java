@@ -35,11 +35,6 @@ public class Chapter implements Parcelable {
      * 章节链接
      */
     private String url;
-    /**
-     * 章节正文
-     */
-    @Nullable
-    private String content;
 
     /**
      *   创建表
@@ -92,14 +87,7 @@ public class Chapter implements Parcelable {
         this.url = url;
     }
 
-    @Nullable
-    public String getContent() {
-        return content;
-    }
 
-    public void setContent(@Nullable String content) {
-        this.content = content;
-    }
 
     @Override
     public int describeContents() {
@@ -113,7 +101,6 @@ public class Chapter implements Parcelable {
         dest.writeInt(this.number);
         dest.writeString(this.title);
         dest.writeString(this.url);
-        dest.writeString(this.content);
     }
 
     public Chapter() {
@@ -125,7 +112,6 @@ public class Chapter implements Parcelable {
         this.number = in.readInt();
         this.title = in.readString();
         this.url = in.readString();
-        this.content = in.readString();
     }
 
     public static final Parcelable.Creator<Chapter> CREATOR = new Parcelable.Creator<Chapter>() {

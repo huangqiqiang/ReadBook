@@ -1,14 +1,19 @@
 package com.qq.readbook.ui
 
 import android.content.Intent
+import android.util.Log
 import android.view.View
 import com.hqq.core.toolbar.DefToolBar
 import com.hqq.core.ui.list.BaseVmListActivity
+import com.hqq.core.utils.log.LogUtils
 import com.qq.readbook.BR
 import com.qq.readbook.R
 import com.qq.readbook.adapter.BookAdapter
 import com.qq.readbook.databinding.ActivityMainBinding
+import com.qq.readbook.ui.book.BookDetailActivity
 import com.qq.readbook.ui.book.ReadBookActivity
+import kotlinx.coroutines.*
+import okhttp3.internal.wait
 
 class MainActivity : BaseVmListActivity<MainViewModel, ActivityMainBinding>() {
 
@@ -20,6 +25,10 @@ class MainActivity : BaseVmListActivity<MainViewModel, ActivityMainBinding>() {
         setOnItemClickListener { _, _, position ->
             ReadBookActivity.open(activity, getItem(position))
         }
+        setOnItemChildLongClickListener { _, _, position ->
+            BookDetailActivity.open(activity, getItem(position))
+            true
+        }
     }
 
     override fun initData() {
@@ -27,9 +36,36 @@ class MainActivity : BaseVmListActivity<MainViewModel, ActivityMainBinding>() {
         (iToolBar as DefToolBar).addRightImageView(R.mipmap.ic_search) {
             startActivity(Intent(this@MainActivity, SearchActivity::class.java))
         }
+
+
+//        var coroutineScope = CoroutineScope(Dispatchers.Main)
+//        var map = HashMap<Int, Job>()
+//        for (i in 0..100) {
+//            var job: Job = coroutineScope.launch(
+//                newFixedThreadPoolContext(3, "down"), start = CoroutineStart.LAZY
+//            ) {
+//                LogUtils.e(i.toString() + "协程开始运行，时间: " + System.currentTimeMillis())
+//                Thread.sleep(1000L)
+//                LogUtils.e(i.toString() + "协程借宿运行，时间: " + System.currentTimeMillis())
+//            }
+////            job.wait()
+//            map.put(i, job)
+//        }
+//        LogUtils.e("----------------1---------------" + System.currentTimeMillis())
+//        coroutineScope.launch(   newFixedThreadPoolContext(3, "down")) {
+//            LogUtils.e("----------------2---------------" + System.currentTimeMillis())
+//            for (i in 0..100) {
+//                LogUtils.e("----------------3---------------" + System.currentTimeMillis())
+//                (map.get(100 - i) as Job).join()
+//                LogUtils.e("----------------4---------------" + System.currentTimeMillis())
+//            }
+//            LogUtils.e("----------------5---------------" + System.currentTimeMillis())
+//
+//        }
+//        LogUtils.e("-----------6--------------------" + System.currentTimeMillis())
+
+
     }
-
-
 
 
 }

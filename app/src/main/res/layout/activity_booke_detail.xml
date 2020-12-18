@@ -130,7 +130,7 @@
                 android:drawablePadding="5dp"
                 android:onClick="@{vm::onAddBook}"
                 android:padding="10dp"
-                android:text="@{vm.addBookMenu}"
+                android:text='@{vm.addBookMenu?"加入书架":"移出书架"}'
                 android:textColor="@color/white" />
 
             <com.qq.readbook.weight.DrawableCenterButton

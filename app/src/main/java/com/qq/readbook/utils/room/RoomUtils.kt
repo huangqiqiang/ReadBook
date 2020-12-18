@@ -28,6 +28,10 @@ interface BookDao {
 
     @Insert
     fun insertAll(vararg book: Book)
+
+    @Delete
+    fun delete(book: Book)
+
 }
 
 @Dao

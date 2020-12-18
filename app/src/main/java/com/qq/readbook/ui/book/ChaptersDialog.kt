@@ -19,7 +19,7 @@ import com.qq.readbook.weight.page.loader.PageLoader
  * @Email : qiqiang213@gmail.com
  * @Describe :
  */
-class ChaptersDialog(var mPageLoader: PageLoader, var bookChapterList: List<Chapter>) :
+class ChaptersDialog(var mPageLoader: PageLoader, var bookChapterList: List<Chapter>?) :
     BaseDialog() {
     override val layoutId: Int = R.layout.dialog_chapters
     override fun initView() {
@@ -36,7 +36,7 @@ class ChaptersDialog(var mPageLoader: PageLoader, var bookChapterList: List<Chap
             reverseLayout = true
         }
         var adapter = ChaptersAdapter()
-        adapter.addData(bookChapterList)
+        bookChapterList?.let { adapter.addData(it) }
         listView?.adapter = adapter.apply {
             setOnItemClickListener { adapter, view, position ->
                 mPageLoader.skipToChapter(position)

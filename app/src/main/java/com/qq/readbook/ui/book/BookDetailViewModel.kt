@@ -19,7 +19,7 @@ import com.qq.readbook.utils.room.RoomUtils
 class BookDetailViewModel : BaseViewModel() {
 
     val book = MutableLiveData<Book>()
-    var addBookMenu = MutableLiveData<String>("加入书架")
+    var addBookMenu = MutableLiveData<Boolean>(true)
     override fun initData(extras: Bundle?) {
         super.initData(extras)
         extras?.getParcelable<Book>(Keys.BOOK).let {
@@ -34,7 +34,9 @@ class BookDetailViewModel : BaseViewModel() {
             var b = RoomUtils.getDataBase().bookDao().getBookById(it.bookId)
             b?.let {
                 if (it.name.equals(it.name)) {
-                    addBookMenu.value = "移出书架"
+                    //
+                    //移出书架
+                    addBookMenu.value = !(addBookMenu.value as Boolean)
                 }
             }
         }
@@ -45,9 +47,13 @@ class BookDetailViewModel : BaseViewModel() {
      */
     fun onAddBook(view: View) {
         book.value?.let {
-
-            RoomUtils.getDataBase().bookDao().insertAll(it)
-            setShowToast("添加成功")
+            if (addBookMenu.value == true) {
+                RoomUtils.getDataBase().bookDao().insertAll(it)
+                setShowToast("添加成功")
+            } else {
+                RoomUtils.getDataBase().bookDao().delete(it)
+                setShowToast("删除成功")
+            }
         }
     }
 
