@@ -26,7 +26,7 @@ import com.qq.readbook.bean.Book;
 import com.qq.readbook.bean.Chapter;
 import com.qq.readbook.repository.ReadRepository;
 import com.qq.readbook.weight.page.BookRecordBean;
-import com.qq.readbook.weight.page.DateUtli;
+import com.qq.readbook.weight.page.DateUtils;
 import com.qq.readbook.weight.page.PageMode;
 import com.qq.readbook.weight.page.PageStyle;
 import com.qq.readbook.weight.page.PageView;
@@ -646,8 +646,10 @@ public abstract class PageLoader {
         mPageView.drawCurPage(false);
     }
 
+    /**
+     * 加载错误
+     */
     public void chapterError() {
-        //加载错误
         mStatus = STATUS_ERROR;
         mPageView.drawCurPage(false);
     }
@@ -810,7 +812,7 @@ public abstract class PageLoader {
         //绘制当前时间
         //底部的字显示的位置Y
         float y = mDisplayHeight - mTipPaint.getFontMetrics().bottom - tipMarginHeight;
-        String time = DateUtli.INSTANCE.dateConvert(System.currentTimeMillis(), "HH:mm");
+        String time = DateUtils.INSTANCE.dateConvert(System.currentTimeMillis(), "HH:mm");
         float x = outFrameLeft - mTipPaint.measureText(time) - ScreenUtils.dip2px(4);
         canvas.drawText(time, x, y, mTipPaint);
     }

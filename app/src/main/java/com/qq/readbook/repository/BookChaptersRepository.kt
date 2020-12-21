@@ -18,11 +18,13 @@ import java.util.*
  * @Describe :
  */
 object BookChaptersRepository {
+    /**
+     *  读取数据量 目录列表
+     */
     fun getBookChapters(book: Book) {
         OkHttp.newHttpCompat()[book.chapterUrl, OkHttp.newParamsCompat(), object : OkNetCallback {
             override fun onSuccess(statusCode: String, response: String) {
                 val arrayList = getChaptersFromHtml(response, book)
-
                 RoomUtils.getDataBase().run {
                     RoomUtils.getChapterDataBase(book.name + "_" + book.author).chapterDao().apply {
                         deleteAll()

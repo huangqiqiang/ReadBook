@@ -37,15 +37,11 @@ public class Chapter implements Parcelable {
     private String url;
 
     /**
-     *   创建表
-     * @param name
-     * @return
+     * 是否缓存成功
+     * 用于 章节列表标识
      */
-    public static String getCreateTableName(String name) {
-        return "CREATE TABLE IF NOT EXISTS "
-                + name +
-                "( id INTEGER PRIMARY KEY AUTOINCREMENT, bookId TEXT, number INTEGER, title TEXT,url TEXT,content TEXT)";
-    }
+    private boolean isCache;
+
 
     public int getId() {
         return id;
@@ -83,11 +79,21 @@ public class Chapter implements Parcelable {
         return url;
     }
 
+
+    public boolean isCache() {
+        return isCache;
+    }
+
+    public void setCache(boolean cache) {
+        isCache = cache;
+    }
+
     public void setUrl(String url) {
         this.url = url;
     }
 
-
+    public Chapter() {
+    }
 
     @Override
     public int describeContents() {
@@ -101,9 +107,7 @@ public class Chapter implements Parcelable {
         dest.writeInt(this.number);
         dest.writeString(this.title);
         dest.writeString(this.url);
-    }
-
-    public Chapter() {
+        dest.writeByte(this.isCache ? (byte) 1 : (byte) 0);
     }
 
     protected Chapter(Parcel in) {
@@ -112,9 +116,10 @@ public class Chapter implements Parcelable {
         this.number = in.readInt();
         this.title = in.readString();
         this.url = in.readString();
+        this.isCache = in.readByte() != 0;
     }
 
-    public static final Parcelable.Creator<Chapter> CREATOR = new Parcelable.Creator<Chapter>() {
+    public static final Creator<Chapter> CREATOR = new Creator<Chapter>() {
         @Override
         public Chapter createFromParcel(Parcel source) {
             return new Chapter(source);

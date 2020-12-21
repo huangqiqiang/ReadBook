@@ -8,26 +8,24 @@
             name="vm"
             type="com.qq.readbook.ui.book.BookDetailViewModel" />
 
-
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
         android:orientation="vertical"
         tools:context=".ui.book.BookDetailActivity">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="15dp">
+            android:padding="@dimen/x20">
 
             <ImageView
                 android:id="@+id/ivBookCover"
-                android:layout_width="55dp"
-                android:layout_height="75dp"
+                android:layout_width="@dimen/x150"
+                android:layout_height="@dimen/x200"
                 android:layout_alignParentLeft="true"
                 android:layout_marginRight="10dp"
                 android:contentDescription="@null"
@@ -100,24 +98,31 @@
 
 
         <TextView
+            style="@style/def_text.30.666"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/x20"
+            android:text="简介:" />
+
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="-10dp"
             android:ellipsize="end"
             android:maxLines="4"
-            android:padding="15dp"
+            android:padding="@dimen/x20"
+            tools:text="123"
             android:text="@{vm.book.desc}"
-            android:textSize="15sp" />
-
-
+            style="@style/def_text.28.999" />
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/ivBookCover"
-            android:paddingHorizontal="@dimen/x20"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="10dp"
+            android:paddingHorizontal="@dimen/x20">
 
             <com.qq.readbook.weight.DrawableCenterButton
                 android:layout_width="0dp"

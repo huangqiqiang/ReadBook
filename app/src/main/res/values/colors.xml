@@ -33,4 +33,5 @@
     <color name="colorDesTitle">#707177</color>
     <!--一级标题-->
     <color name="colorTitle">#212121</color>
+    <color name="color_blue">#0092FF</color>
 </resources>

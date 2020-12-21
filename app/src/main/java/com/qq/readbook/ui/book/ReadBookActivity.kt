@@ -77,19 +77,22 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
         pageLoader.setOnPageChangeListener(object :
             OnPageChangeListener {
             override fun onChapterChange(pos: Int) {
-                LogUtils.e("onChapterChange" + pos)
+                LogUtils.d("onChapterChange  :    " + pos)
             }
 
             override fun requestChapters(requestChapters: MutableList<Chapter>?) {
-                LogUtils.e("requestChapters")
                 // 理论上需要用队列去维护 避免重复请求
                 requestChapters?.get(0)?.let {
+                    LogUtils.d("requestChapters  " + it.title)
                     BookArticleRepository.getChapterContent(
                         it, book?.name + "_" + book?.author,
                         object : BookArticleRepository.ArticleNetCallBack {
-                            override fun onSuccess() {
-//                                pageLoader.skipToChapter(pageLoader.chapterPos)
-                                pageLoader.openChapter()
+                            override fun onSuccess(boolean: Boolean) {
+                                if (boolean) {
+                                    pageLoader.openChapter()
+                                } else {
+                                    pageLoader.chapterError()
+                                }
                             }
                         })
 
@@ -109,17 +112,20 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
             }
 
         })
+        loadingView.show()
         GlobalScope.launch {
             // 需要异步加载
             var charpters =
                 RoomUtils.getChapterDataBase(book!!.name + "_" + book.author).chapterDao().getAll()
-            if (charpters.isNullOrEmpty()) {
-                // 数据库中没有查询到章节数据
-
-            } else {
-                launch(Dispatchers.Main) {
+            launch(Dispatchers.Main) {
+                if (charpters.isNullOrEmpty()) {
+                    // 数据库中没有查询到章节数据
+                    loadingView.dismiss()
+                    BookDetailActivity.open(activity, book)
+                } else {
                     book.bookChapterList = (charpters)
                     pageLoader.refreshChapterList()
+                    loadingView.dismiss()
                 }
             }
 
@@ -154,12 +160,7 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
 
             override fun prePage() {}
 
-            override fun nextPage() {
-
-                LogUtils.e(" ReadBookActivity -------------- nextPage ")
-
-            }
-
+            override fun nextPage() {}
             override fun cancel() {}
         })
         binding.sbBrightness.progress = ReadSettingManager.getInstance().brightness
@@ -225,5 +226,6 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
     override fun onDestroy() {
         super.onDestroy()
         pageLoader.closeBook()
+        unregisterReceiver(mReceiver)
     }
 }

@@ -3,6 +3,7 @@ package com.qq.readbook.repository
 import android.text.Html
 import com.hqq.core.net.ok.OkHttp
 import com.hqq.core.net.ok.OkNetCallback
+import com.hqq.core.utils.log.LogUtils
 import com.qq.readbook.bean.BookContent
 import com.qq.readbook.bean.Chapter
 import com.qq.readbook.utils.room.RoomUtils
@@ -25,16 +26,23 @@ object BookArticleRepository {
             chapter.url, OkHttp.newParamsCompat(), object : OkNetCallback {
                 override fun onSuccess(statusCode: String?, response: String?) {
                     var content = getContentFormHtml(response)
-                    var bookContent = BookContent().apply {
-                        number = chapter.number
-                        this.content = content
+                    if (!content.isNullOrBlank()) {
+                        var bookContent = BookContent().apply {
+                            number = chapter.number
+                            this.content = content
+                        }
+                        chapter.isCache=true
+                        RoomUtils.getChapterDataBase(s).bookContentDao().insert(bookContent)
+                        RoomUtils.getChapterDataBase(s).chapterDao().update(chapter)
+                        param.onSuccess(true)
+                    } else {
+                        LogUtils.d(chapter.title + "   :  " + chapter.url)
+                        param.onSuccess(false)
                     }
-                    RoomUtils.getChapterDataBase(s).bookContentDao().insert(bookContent)
-                    param.onSuccess()
                 }
 
                 override fun onFailure(statusCode: String?, errMsg: String?, response: String?) {
-
+                    param.onSuccess(false)
                 }
 
             }
@@ -65,7 +73,7 @@ object BookArticleRepository {
 
     interface ArticleNetCallBack {
 
-        fun onSuccess();
+        fun onSuccess(boolean: Boolean);
     }
 
 }

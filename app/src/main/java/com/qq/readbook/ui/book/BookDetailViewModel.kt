@@ -54,6 +54,7 @@ class BookDetailViewModel : BaseViewModel() {
                 RoomUtils.getDataBase().bookDao().delete(it)
                 setShowToast("删除成功")
             }
+            addBookMenu.value = !(addBookMenu.value as Boolean)
         }
     }
 

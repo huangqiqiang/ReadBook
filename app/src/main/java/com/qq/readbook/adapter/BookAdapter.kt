@@ -1,9 +1,12 @@
 package com.qq.readbook.adapter
 
+import android.view.View
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.module.LoadMoreModule
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.hqq.core.glide.ImageLoadUtils
+import com.hqq.core.utils.ToastUtils
+import com.hqq.core.utils.log.LogUtils
 import com.qq.readbook.R
 import com.qq.readbook.bean.Book
 
@@ -15,11 +18,16 @@ import com.qq.readbook.bean.Book
  * @Describe :
  */
 class BookAdapter : BaseQuickAdapter<Book, BaseViewHolder>(R.layout.item_book), LoadMoreModule {
+    init {
+        addChildClickViewIds(R.id.tv_delete, R.id.tv_detail, R.id.ll_content)
+    }
+
     override fun convert(holder: BaseViewHolder, item: Book) {
         holder.setText(R.id.tv_book_name, item.name)
         holder.setText(R.id.tv_book_desc, item.desc)
         holder.setText(R.id.tv_book_author, item.author)
         holder.setText(R.id.tv_book_type, item.type)
         ImageLoadUtils.with(item.imgUrl, holder.getView(R.id.iv_book_img))
+
     }
 }

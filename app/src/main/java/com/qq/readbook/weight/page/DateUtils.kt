@@ -9,7 +9,7 @@ import java.util.Calendar
 import java.util.Date
 
 @SuppressLint("SimpleDateFormat")
-object DateUtli {
+object DateUtils {
 
     private val HOUR_OF_DAY = 24
     private val DAY_OF_YESTERDAY = 2

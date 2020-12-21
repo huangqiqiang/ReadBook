@@ -1,72 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/x20"
-    android:background="@color/white"
-    android:padding="@dimen/x20">
+    android:clickable="true"
+    android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/iv_book_img"
-        android:layout_width="@dimen/x180"
-        android:layout_height="@dimen/x250"
-        android:scaleType="fitXY"
-        android:src="@mipmap/no_image" />
+    <com.qq.readbook.weight.EasySwipeMenuLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:contentView="@id/ll_content"
+        app:leftMenuView="@id/ll_left"
+        app:rightMenuView="@id/ll_right">
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:padding="@dimen/x20">
 
         <TextView
-            android:id="@+id/tv_book_name"
-            style="@style/def_text.28.333"
-            android:layout_width="wrap_content"
+            android:id="@+id/ll_left"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:maxLines="1"
-            tools:text="abs123qpzndfhfgdd" />
-
-        <TextView
-            android:id="@+id/tv_book_desc"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:text="book desc"
-            android:textSize="14sp" />
+            android:orientation="vertical" />
 
         <LinearLayout
+            android:id="@+id/ll_content"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:orientation="horizontal"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp">
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/x20"
+            android:background="@color/white"
+            android:padding="@dimen/x20">
 
-            <TextView
-                android:id="@+id/tv_book_author"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:maxLines="3"
-                android:text="author"
-                android:textSize="14sp" />
 
-            <TextView
-                android:id="@+id/tv_book_type"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="3"
-                android:text="type"
-                android:textSize="14sp" />
+            <ImageView
+                android:id="@+id/iv_book_img"
+                android:layout_width="@dimen/x180"
+                android:layout_height="@dimen/x250"
+                android:scaleType="fitXY"
+                android:src="@mipmap/no_image" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="@dimen/x20">
+
+                <TextView
+                    android:id="@+id/tv_book_name"
+                    style="@style/def_text.28.333"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    tools:text="abs123qpzndfhfgdd" />
+
+                <TextView
+                    android:id="@+id/tv_book_desc"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:text="book desc"
+                    android:textSize="14sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:orientation="horizontal"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp">
+
+                    <TextView
+                        android:id="@+id/tv_book_author"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:maxLines="3"
+                        android:text="author"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_book_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="3"
+                        android:text="type"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+            </LinearLayout>
+
 
         </LinearLayout>
-    </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/ll_right"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/x20">
+
+            <TextView
+                android:id="@+id/tv_delete"
+                style="@style/def_text.36.white"
+                android:layout_width="@dimen/x200"
+                android:layout_height="match_parent"
+                android:background="@color/color_red"
+                android:gravity="center"
+                android:text="删除" />
+
+            <TextView
+                android:id="@+id/tv_detail"
+                style="@style/def_text.36.white"
+                android:layout_width="@dimen/x200"
+                android:layout_height="match_parent"
+                android:background="@color/color_blue"
+                android:gravity="center"
+                android:text="详情" />
+
+
+        </LinearLayout>
+    </com.qq.readbook.weight.EasySwipeMenuLayout>
 </LinearLayout>
