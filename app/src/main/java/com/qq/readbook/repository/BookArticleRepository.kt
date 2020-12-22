@@ -22,7 +22,7 @@ object BookArticleRepository {
      * @param url
      */
     fun getChapterContent(chapter: Chapter, s: String, param: ArticleNetCallBack) {
-        OkHttp.newHttpCompat().get(
+        OkHttp.newHttpCompat().getExecute(
             chapter.url, OkHttp.newParamsCompat(), object : OkNetCallback {
                 override fun onSuccess(statusCode: String?, response: String?) {
                     var content = getContentFormHtml(response)

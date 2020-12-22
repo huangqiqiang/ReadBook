@@ -13,14 +13,34 @@ import com.hqq.core.ui.base.BaseViewModel
  */
 class ReadBookViewModel : BaseViewModel() {
     /**
-     *
+     *   是否点击亮度
      */
     var showLight = MutableLiveData<Boolean>(false)
+    var showCache = MutableLiveData<Boolean>(false)
 
 
+    /**
+     *  点击亮度
+     */
     fun onClickLight(view: View) {
         showLight.value = !(showLight.value as Boolean)
-
     }
 
+    fun onCache(view: View) {
+        showCache.value = !(showCache.value as Boolean)
+    }
+
+    /**
+     *  返回
+     */
+    fun onBack(view: View) {
+        finish()
+    }
+
+    /**
+     *  按钮空白位置
+     */
+    fun onLayoutMenu(view: View) {
+
+    }
 }

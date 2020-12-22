@@ -26,10 +26,10 @@
 
         <!--        顶部 Bar-->
         <FrameLayout
-            android:background="@color/white"
             android:id="@+id/fl_layout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/x88"
+            android:background="@color/white"
             android:visibility="gone"
             tools:visibility="visible">
 
@@ -60,24 +60,24 @@
 
 
             <com.hqq.core.widget.FilterImageView
-                android:id="@+id/iv_bar_back"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:onClick="@{vm::onBack}"
                 android:paddingLeft="@dimen/x15"
                 android:paddingRight="@dimen/x26"
                 android:src="@mipmap/ic_back_gray" />
 
 
             <TextView
-                android:padding="@dimen/x20"
                 android:id="@+id/ll_right"
+                style="@style/def_text.30.666"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="right"
-                android:text="换源"
                 android:gravity="center"
-                style="@style/def_text.30.666"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:padding="@dimen/x20"
+                android:text="换源">
 
             </TextView>
 
@@ -85,8 +85,68 @@
         </FrameLayout>
 
 
+        <RadioGroup
+            android:id="@+id/ll_cache"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@color/read_menu_color"
+            android:gravity="bottom"
+            android:padding="5dp"
+            android:orientation="horizontal"
+            android:visibility="@{vm.showCache?View.VISIBLE :View.GONE}"
+            app:layout_constraintBottom_toTopOf="@+id/ll_bottom_menu"
+            tools:visibility="visible">
+
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/tv_cache50"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:background="@drawable/bg_listen"
+                android:button="@null"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="后面50"
+                android:textColor="@drawable/text_color"
+                android:textSize="14sp" />
+
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:background="@drawable/bg_listen"
+                android:button="@null"
+                android:gravity="center"
+                android:padding="5dp"
+                android:id="@+id/tv_cache100"
+
+                android:text="后面100"
+                android:textColor="@drawable/text_color"
+                android:textSize="14sp" />
+
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:background="@drawable/bg_listen"
+                android:button="@null"
+                android:gravity="center"
+                android:padding="5dp"
+                android:id="@+id/tv_cacheAll"
+                android:text="后面全部"
+                android:textColor="@drawable/text_color"
+                android:textSize="14sp" />
+
+        </RadioGroup>
+
+
         <!--亮度 调节-->
         <androidx.appcompat.widget.LinearLayoutCompat
+
             android:id="@+id/ll_light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -134,6 +194,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/read_menu_color"
+            android:onClick="@{vm::onLayoutMenu}"
             android:orientation="horizontal"
             android:padding="10dp"
             android:visibility="gone"
@@ -171,6 +232,7 @@
                 android:drawableTop="@mipmap/ic_cache"
                 android:gravity="center"
                 android:text="@string/cache"
+                android:onClick="@{vm::onCache}"
                 android:textColor="@color/smallColor"
                 android:textSize="12sp" />
 

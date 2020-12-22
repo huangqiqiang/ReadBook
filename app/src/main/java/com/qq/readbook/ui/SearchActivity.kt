@@ -21,22 +21,17 @@ import com.qq.readbook.ui.book.BookDetailActivity
  * @Describe :
  */
 class SearchActivity : BaseVmListActivity<SearchViewModel, ActivitySearchBinding>() {
-
     override val layoutId: Int = R.layout.activity_search
-
+    override val bindingViewModelId: Int = BR.vm
     override val adapter: BookAdapter = BookAdapter().apply {
-        setOnItemChildClickListener { adapter, view, position ->
-
-            when(view.id){
-                R.id.ll_content ->{
+        setOnItemChildClickListener { _, view, position ->
+            when (view.id) {
+                R.id.ll_content -> {
                     BookDetailActivity.open(activity, getItem(position))
                 }
             }
-
         }
     }
-
-    override val bindingViewModelId: Int = BR.vm
 
     override fun initConfig() {
         super.initConfig()
@@ -61,8 +56,6 @@ class SearchActivity : BaseVmListActivity<SearchViewModel, ActivitySearchBinding
         var key = (rootViewImpl.iCreateToolbar as BaseToolBarSearch).searchView.text.toString()
         viewMode.onSearch(key)
     }
-
-
 
 
 }

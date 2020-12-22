@@ -4,7 +4,6 @@ import android.content.Intent
 import android.view.View
 import com.hqq.core.toolbar.DefToolBar
 import com.hqq.core.ui.list.BaseVmListActivity
-import com.hqq.core.utils.ToastUtils
 import com.qq.readbook.BR
 import com.qq.readbook.R
 import com.qq.readbook.adapter.BookAdapter
@@ -51,6 +50,10 @@ class MainActivity : BaseVmListActivity<MainViewModel, ActivityMainBinding>() {
         (iToolBar as DefToolBar).addRightImageView(R.mipmap.ic_search) {
             startActivity(Intent(this@MainActivity, SearchActivity::class.java))
         }
+
+
+
+
 //        var coroutineScope = CoroutineScope(Dispatchers.Main)
 //        var map = HashMap<Int, Job>()
 //        for (i in 0..100) {

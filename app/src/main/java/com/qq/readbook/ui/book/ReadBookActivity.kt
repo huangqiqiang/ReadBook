@@ -1,21 +1,19 @@
 package com.qq.readbook.ui.book
 
 import android.app.Activity
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
-import android.opengl.Visibility
+import android.content.*
+import android.os.IBinder
 import android.view.View
 import android.widget.SeekBar
 import com.hqq.core.ui.base.BaseVmActivity
+import com.hqq.core.utils.ToastUtils
 import com.hqq.core.utils.log.LogUtils
 import com.qq.readbook.BR
+import com.qq.readbook.DownService
 import com.qq.readbook.R
 import com.qq.readbook.bean.Book
 import com.qq.readbook.bean.Chapter
 import com.qq.readbook.databinding.ActivityReadBookBinding
-import com.qq.readbook.repository.BookArticleRepository
 import com.qq.readbook.utils.room.RoomUtils
 import com.qq.readbook.weight.page.BrightnessUtils
 import com.qq.readbook.weight.page.PageView
@@ -23,8 +21,8 @@ import com.qq.readbook.weight.page.ReadSettingManager
 import com.qq.readbook.weight.page.loader.OnPageChangeListener
 import com.qq.readbook.weight.page.loader.PageLoader
 import kotlinx.coroutines.*
-import okhttp3.internal.wait
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * @Author : huangqiqiang
@@ -67,12 +65,16 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
         }
     }
 
+    var taskBuilder: DownService.TaskBuilder? = null;
 
     override fun initViews() {
-
         var book = intent.getParcelableExtra<Book>("book")
+        initService(book)
         binding.tvBarTitle.text = book?.name
         pageLoader = binding.pageView.getPageLoader(book)
+
+
+
         pageLoader.refreshChapterList()
         pageLoader.setOnPageChangeListener(object :
             OnPageChangeListener {
@@ -82,21 +84,7 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
 
             override fun requestChapters(requestChapters: MutableList<Chapter>?) {
                 // 理论上需要用队列去维护 避免重复请求
-                requestChapters?.get(0)?.let {
-                    LogUtils.d("requestChapters  " + it.title)
-                    BookArticleRepository.getChapterContent(
-                        it, book?.name + "_" + book?.author,
-                        object : BookArticleRepository.ArticleNetCallBack {
-                            override fun onSuccess(boolean: Boolean) {
-                                if (boolean) {
-                                    pageLoader.openChapter()
-                                } else {
-                                    pageLoader.chapterError()
-                                }
-                            }
-                        })
-
-                }
+                taskBuilder?.dataList?.postValue(requestChapters)
             }
 
             override fun onCategoryFinish(chapters: MutableList<Chapter>?) {
@@ -110,7 +98,6 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
             override fun onPageChange(pos: Int) {
                 LogUtils.e("onPageChange")
             }
-
         })
         loadingView.show()
         GlobalScope.launch {
@@ -132,13 +119,45 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
         }
 
         initClick(book)
-
         //注册广播
         val intentFilter = IntentFilter()
         intentFilter.addAction(Intent.ACTION_BATTERY_CHANGED)
         intentFilter.addAction(Intent.ACTION_TIME_TICK)
         registerReceiver(mReceiver, intentFilter)
+    }
 
+    private fun initService(book: Book?) {
+        bindService(Intent(this, DownService::class.java).apply {
+            putExtra("book", book)
+        }, object : ServiceConnection {
+            override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+                taskBuilder = service as DownService.TaskBuilder
+                if (taskBuilder?.onDownloadListener == null) {
+                    taskBuilder?.onDownloadListener = object : DownService.OnDownloadListener {
+                        override fun onSuccess(
+                            boolean: Boolean,
+                            int: Int,
+                            totalSize: Int,
+                            successSize: Int
+                        ) {
+                            LogUtils.e(" ----- 收到 service 回调  当前position: " + int + "      ---   " + totalSize + "         " + successSize)
+                            if (int == pageLoader.chapterPos) {
+                                hintMenu()
+                                if (boolean) {
+                                    pageLoader.openChapter()
+                                } else {
+                                    pageLoader.chapterError()
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            override fun onServiceDisconnected(name: ComponentName?) {
+            }
+
+        }, BIND_AUTO_CREATE)
     }
 
     private fun initClick(book: Book?) {
@@ -159,7 +178,6 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
             }
 
             override fun prePage() {}
-
             override fun nextPage() {}
             override fun cancel() {}
         })
@@ -185,25 +203,58 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
             // 设置
             SettingDialog(pageLoader).show(supportFragmentManager)
             binding.llBottomMenu.visibility = View.GONE
-
-        }
-        binding.llBottomMenu.setOnClickListener {
-            // 避免点击透传
         }
         binding.tvCategory.setOnClickListener {
             // 目录
             ChaptersDialog(pageLoader, book?.bookChapterList).show(supportFragmentManager)
         }
-        binding.ivBarBack.setOnClickListener {
-            onBackPressed()
+
+        binding.tvCache50.setOnClickListener {
+            taskBuilder?.dataList?.postValue(
+                getCacheList(book, 50)
+            )
         }
+        binding.tvCache100.setOnClickListener {
+            taskBuilder?.dataList?.postValue(
+                getCacheList(book, 100)
+            )
+        }
+        binding.tvCacheAll.setOnClickListener {
+            taskBuilder?.dataList?.postValue(
+                getCacheList(book, 9999999)
+            )
+
+        }
+    }
+
+    private fun getCacheList(book: Book?, size: Int): MutableList<Chapter>? {
+        var newChacheList = ArrayList<Chapter>()
+        book?.bookChapterList?.let {
+            var position = pageLoader.chapterPos
+            var start = if (position < it.size) position else {
+                ToastUtils.showToast("全部已缓存完毕")
+                return@let
+            }
+            var end = if ((position + size) < it.size) {
+                (position + size)
+            } else it.size
+            // 截取部分集合
+            var list = it.subList(start, end)
+            LogUtils.e("---" + list.size)
+            for (chapter in list) {
+                if (!chapter.isCache) {
+                    newChacheList.add(chapter)
+                }
+            }
+            return newChacheList
+        }
+        return newChacheList;
     }
 
     /**
      *  隐藏按钮
      */
     private fun hintMenu(): Boolean {
-
         if (binding.flLayout.visibility == View.VISIBLE) {
             binding.llLight.visibility = View.GONE
             binding.llBottomMenu.visibility = View.GONE
@@ -213,13 +264,11 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
             binding.llLight.visibility = View.GONE
             binding.llBottomMenu.visibility = View.GONE
             return true
-
         }
     }
 
     override fun onPause() {
         super.onPause()
-
         pageLoader.saveRecord()
     }
 
