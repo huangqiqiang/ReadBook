@@ -929,11 +929,9 @@ public abstract class PageLoader {
                             canvas.drawBitmap(resource, pivotX, pivotY, mTextPaint);
                             mPageView.invalidate();
                         }
-
                     }
                 });
             }
-
         }
     }
 

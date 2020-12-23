@@ -143,6 +143,7 @@ class ScrollPageAnim(
 
             if (!isRefresh) {
                 val hasNext = mListener.hasNext() //如果不成功则无法滑动
+                LogUtils.e("--------------------------------------" + hasNext.toString())
                 // 如果不存在next,则进行还原
                 if (!hasNext) {
                     mNextBitmap = cancelBitmap

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/tv_chapter"
-        style="@style/def_text.26.999"
+        style="@style/def_text.30.999"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:drawableStart="@drawable/selector_category_unload"
@@ -14,4 +14,4 @@
         android:padding="15dp"
         tools:text="1.第一章 八十大寿" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

@@ -1,6 +1,7 @@
 package com.qq.readbook.ui.book
 
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,6 +26,11 @@ class ChaptersDialog(var mPageLoader: PageLoader, var bookChapterList: List<Chap
     BaseDialog() {
     override val layoutId: Int = R.layout.dialog_chapters
 
+    /**
+     *  true  升序
+     *  false 降序
+     */
+    var soft = false
     override fun initView() {
         context?.let {
             rootView?.findViewById<ConstraintLayout>(R.id.cl_content)?.setPadding(
@@ -45,8 +51,42 @@ class ChaptersDialog(var mPageLoader: PageLoader, var bookChapterList: List<Chap
                 bookChapterList?.let { this.addData(it) }
             }
             postDelayed({
-                scrollToPosition(mPageLoader.chapterPos)
+                goCurrPosition()
             }, 500)
+        }
+
+        rootView?.findViewById<ImageView>(R.id.iv_close)?.setOnClickListener {
+            dismiss()
+        }
+        rootView?.findViewById<ImageView>(R.id.iv_locate)?.setOnClickListener {
+            goCurrPosition()
+        }
+
+        rootView?.findViewById<TextView>(R.id.ll_right)?.setOnClickListener {
+            var listView = rootView?.findViewById<RecyclerView>(R.id.rc_list)
+            var manager = listView?.layoutManager as? LinearLayoutManager
+            if (soft) {
+                (it as TextView).text = "升序"
+            } else {
+                (it as TextView).text = "降序"
+            }
+            soft = !soft
+            manager?.stackFromEnd = !soft
+            manager?.reverseLayout = !soft
+            goCurrPosition()
+        }
+    }
+
+    private fun goCurrPosition() {
+        var listView = rootView?.findViewById<RecyclerView>(R.id.rc_list)
+        var manager = listView?.layoutManager as? LinearLayoutManager
+        var position = mPageLoader.chapterPos;
+        context?.let {
+            // 设置偏移量  为什么是4  我也不懂
+            manager?.scrollToPositionWithOffset(
+                position,
+                ScreenUtils.getScreenHeight(it) / 4
+            )
         }
     }
 

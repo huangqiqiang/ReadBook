@@ -2,6 +2,7 @@ package com.qq.readbook
 
 import android.content.Intent
 import android.os.Binder
+import android.os.Environment
 import android.os.IBinder
 import android.util.ArrayMap
 import androidx.lifecycle.Lifecycle
@@ -27,6 +28,7 @@ class DownService : BaseService() {
     override fun onBind(intent: Intent): IBinder {
         var book = intent.getParcelableExtra<Book>("book")
         LogUtils.e("----------onBind")
+        //  liveData 观察数据  监听需要缓存的 数据
         taskBuilder.dataList.observe(this@DownService, object : Observer<List<Chapter>> {
             override fun onChanged(t: List<Chapter>) {
                 GlobalScope.launch(Dispatchers.IO) {
@@ -42,6 +44,10 @@ class DownService : BaseService() {
         return taskBuilder
     }
 
+    /**
+     *  挂起函数
+     *  执行 get同步 请求
+     */
     suspend fun doGet(chapter: Chapter, book: Book?) {
         withContext(Dispatchers.IO) {
             LogUtils.e("----- 开始请求 : " + chapter.number + "----" + chapter.title)

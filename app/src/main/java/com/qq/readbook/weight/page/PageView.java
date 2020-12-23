@@ -302,7 +302,7 @@ public class PageView extends View {
     private boolean hasPrevPage() {
         mTouchListener.prePage();
         //  1 秒内只能滑动章
-        if (System.currentTimeMillis() - hasTime < 200 ) {
+        if (System.currentTimeMillis() - hasTime < 200 && mPageLoader.getPageStatus() == PageLoader.STATUS_ERROR) {
             return false;
         }
         hasTime = System.currentTimeMillis();
@@ -319,7 +319,7 @@ public class PageView extends View {
     private boolean hasNextPage() {
         mTouchListener.nextPage();
         //  1 秒内只能滑动章
-        if (System.currentTimeMillis() - hasTime < 200 ) {
+        if (System.currentTimeMillis() - hasTime < 200 && mPageLoader.getPageStatus() == PageLoader.STATUS_ERROR) {
             return false;
         }
         hasTime = System.currentTimeMillis();
