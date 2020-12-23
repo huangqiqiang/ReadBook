@@ -30,19 +30,6 @@ public class NetPageLoader extends PageLoader {
         super(pageView, collBook);
     }
 
-//    private List<TxtChapter> convertTxtChapter(List<Chapter> bookChapters) {
-//        List<TxtChapter> txtChapters = new ArrayList<>(bookChapters.size());
-//        for (Chapter bean : bookChapters) {
-//            TxtChapter chapter = new TxtChapter();
-//            chapter.bookId = mCollBook.getBookId();
-//            chapter.title = bean.getTitle();
-//           chapter.link = bean.getLink();
-//         chapter.chapterId = bean.getId();
-//            txtChapters.add(chapter);
-//        }
-//        return txtChapters;
-//    }
-
     @Override
     public void refreshChapterList() {
         if (mCollBook.getBookChapterList() == null) {
@@ -68,7 +55,6 @@ public class NetPageLoader extends PageLoader {
 
     @Override
     protected BufferedReader getChapterReader(Chapter chapter) throws Exception {
-        // todo  需要改成用数据库存储
         BookContent bookContent = RoomUtils.INSTANCE.getChapterDataBase(mCollBook.getName() + "_" + mCollBook.getAuthor()).bookContentDao().getContent(chapter.getNumber());
         if (bookContent == null || bookContent.getContent().isEmpty()) {
             return null;
@@ -90,7 +76,6 @@ public class NetPageLoader extends PageLoader {
         if (bookContent != null && bookContent.getContent() != null && !bookContent.getContent().isEmpty()) {
             return true;
         }
-
         return false;
     }
 
@@ -102,7 +87,6 @@ public class NetPageLoader extends PageLoader {
     @Override
     boolean parsePrevChapter() {
         boolean isRight = super.parsePrevChapter();
-
         if (mStatus == STATUS_FINISH) {
             loadPrevChapter();
         } else if (mStatus == STATUS_LOADING) {
@@ -216,14 +200,10 @@ public class NetPageLoader extends PageLoader {
         if (start < 0) {
             start = 0;
         }
-
         if (end >= mChapterList.size()) {
             end = mChapterList.size() - 1;
         }
-
-
         List<Chapter> chapters = new ArrayList<>();
-
         // 过滤，哪些数据已经加载了
         for (int i = start; i <= end; ++i) {
             Chapter txtChapter = mChapterList.get(i);
@@ -231,7 +211,6 @@ public class NetPageLoader extends PageLoader {
                 chapters.add(txtChapter);
             }
         }
-
         if (!chapters.isEmpty()) {
             mPageChangeListener.requestChapters(chapters);
         }

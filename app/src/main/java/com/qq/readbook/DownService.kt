@@ -23,17 +23,13 @@ import kotlinx.coroutines.*
 class DownService : BaseService() {
 
     private val taskBuilder = TaskBuilder()
-
-    // 协程队列
-    val map = ArrayMap<Int, Job>()
-
     val successMap = ArrayMap<Int, Chapter>()
     override fun onBind(intent: Intent): IBinder {
         var book = intent.getParcelableExtra<Book>("book")
         LogUtils.e("----------onBind")
         taskBuilder.dataList.observe(this@DownService, object : Observer<List<Chapter>> {
             override fun onChanged(t: List<Chapter>) {
-                GlobalScope.launch(Dispatchers.Main) {
+                GlobalScope.launch(Dispatchers.IO) {
                     LogUtils.e("onBind: observe   ")
                     for (chapter in t) {
                         LogUtils.e("onBind:   " + chapter.title)
@@ -42,7 +38,6 @@ class DownService : BaseService() {
                 }
             }
         })
-
         mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
         return taskBuilder
     }
@@ -60,7 +55,7 @@ class DownService : BaseService() {
                             taskBuilder.onDownloadListener?.onSuccess(
                                 boolean,
                                 chapter.number,
-                                map.size,
+                                taskBuilder.dataList.value!!.size,
                                 successMap.size
                             )
                         }

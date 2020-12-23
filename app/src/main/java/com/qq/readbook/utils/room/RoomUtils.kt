@@ -106,6 +106,8 @@ abstract class ChapterDatabase : RoomDatabase() {
  *  3.  缓存成本地文件 使用文件读取
  */
 object RoomUtils {
+    var chapterDatabase: ChapterDatabase? = null
+    var appDatabase: AppDatabase? = null
     fun <T : RoomDatabase> getBase(java: Class<T>, name: String): T {
         return Room.databaseBuilder(
             CoreConfig.get().application!!,
@@ -125,14 +127,21 @@ object RoomUtils {
     }
 
     fun getDataBase(name: String = "books.db"): AppDatabase {
-        return getBase(AppDatabase::class.java, name)
+        if (appDatabase == null) {
+            appDatabase = getBase(AppDatabase::class.java, name)
+        }
+
+        return appDatabase!!
 
     }
 
     fun getChapterDataBase(
         name: String,
     ): ChapterDatabase {
-        return getBase(ChapterDatabase::class.java, name)
+        if (chapterDatabase == null) {
+            chapterDatabase = getBase(ChapterDatabase::class.java, name);
+        }
+        return chapterDatabase!!
 
     }
 

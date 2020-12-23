@@ -140,7 +140,7 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
                             totalSize: Int,
                             successSize: Int
                         ) {
-                            LogUtils.e(" ----- 收到 service 回调  当前position: " + int + "      ---   " + totalSize + "         " + successSize)
+                            LogUtils.e(" ----- 收到 service 回调  当前position: " + int + "      ---   总数量" + totalSize + "         已完成" + successSize)
                             if (int == pageLoader.chapterPos) {
                                 hintMenu()
                                 if (boolean) {
@@ -259,8 +259,10 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
             binding.llLight.visibility = View.GONE
             binding.llBottomMenu.visibility = View.GONE
             binding.flLayout.visibility = View.GONE
+            binding.llCache.visibility = View.GONE
             return false
         } else {
+            binding.llCache.visibility = View.GONE
             binding.llLight.visibility = View.GONE
             binding.llBottomMenu.visibility = View.GONE
             return true

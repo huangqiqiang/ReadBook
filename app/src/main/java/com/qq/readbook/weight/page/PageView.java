@@ -4,11 +4,14 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.RectF;
+import android.provider.Settings;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 
+import com.hqq.core.utils.ToastUtils;
+import com.hqq.core.utils.log.LogUtils;
 import com.novel.read.widget.page.anim.CoverPageAnim;
 import com.novel.read.widget.page.anim.HorizonPageAnim;
 import com.novel.read.widget.page.anim.NonePageAnim;
@@ -114,6 +117,7 @@ public class PageView extends View {
 
     /**
      * 设置翻页的模式
+     *
      * @param pageMode
      */
     public void setPageMode(PageMode pageMode) {
@@ -219,12 +223,20 @@ public class PageView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-
         //绘制背景
         canvas.drawColor(mBgColor);
-
         //绘制动画
         mPageAnim.draw(canvas);
+    }
+
+    @Override
+    public void invalidate() {
+        super.invalidate();
+    }
+
+    @Override
+    public void postInvalidate() {
+        super.postInvalidate();
     }
 
     @Override
@@ -244,6 +256,7 @@ public class PageView extends View {
                 isMove = false;
                 canTouch = mTouchListener.onTouch();
                 mPageAnim.onTouchEvent(event);
+
                 break;
             case MotionEvent.ACTION_MOVE:
                 // 判断是否大于最小滑动值。
@@ -251,7 +264,6 @@ public class PageView extends View {
                 if (!isMove) {
                     isMove = Math.abs(mStartX - event.getX()) > slop || Math.abs(mStartY - event.getY()) > slop;
                 }
-
                 // 如果滑动了，则进行翻页。
                 if (isMove) {
                     mPageAnim.onTouchEvent(event);
@@ -271,6 +283,10 @@ public class PageView extends View {
                             mTouchListener.center();
                         }
                         return true;
+                    } else if (mPageLoader.getPageStatus() == PageLoader.STATUS_ERROR) {
+
+                        // 加载失败了
+                        ToastUtils.showToast("1");
                     }
                 }
                 mPageAnim.onTouchEvent(event);
@@ -285,14 +301,28 @@ public class PageView extends View {
      */
     private boolean hasPrevPage() {
         mTouchListener.prePage();
+        //  1 秒内只能滑动章
+        if (System.currentTimeMillis() - hasTime < 200 ) {
+            return false;
+        }
+        hasTime = System.currentTimeMillis();
+
         return mPageLoader.prev();
     }
+
+    Long hasTime = 0L;
+
 
     /**
      * 判断是否下一页存在
      */
     private boolean hasNextPage() {
         mTouchListener.nextPage();
+        //  1 秒内只能滑动章
+        if (System.currentTimeMillis() - hasTime < 200 ) {
+            return false;
+        }
+        hasTime = System.currentTimeMillis();
         return mPageLoader.next();
     }
 
@@ -357,6 +387,7 @@ public class PageView extends View {
 
         mPageLoader.drawPage(getNextBitmap(), isUpdate);
     }
+
 
     @Override
     protected void onDetachedFromWindow() {

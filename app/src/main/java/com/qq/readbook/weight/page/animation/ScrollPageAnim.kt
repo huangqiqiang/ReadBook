@@ -35,6 +35,7 @@ class ScrollPageAnim(
 
     // 被废弃的图片列表
     private var mScrapViews: ArrayDeque<BitmapView>? = null
+
     // 正在被利用的图片列表
     private val mActiveViews = ArrayList<BitmapView>(2)
 
@@ -142,7 +143,6 @@ class ScrollPageAnim(
 
             if (!isRefresh) {
                 val hasNext = mListener.hasNext() //如果不成功则无法滑动
-LogUtils.e("------------------------"+ hasNext)
                 // 如果不存在next,则进行还原
                 if (!hasNext) {
                     mNextBitmap = cancelBitmap
@@ -163,14 +163,12 @@ LogUtils.e("------------------------"+ hasNext)
             // 添加到存活的Bitmap中
             mActiveViews.add(view)
             mDirection = PageAnimation.Direction.DOWN
-
             // 设置Bitmap的范围
             view.top = realEdge
             view.bottom = realEdge + view.bitmap!!.height
             // 设置允许显示的范围
             view.destRect!!.top = view.top
             view.destRect!!.bottom = view.bottom
-
             realEdge += view.bitmap!!.height
         }
     }
@@ -407,6 +405,7 @@ LogUtils.e("------------------------"+ hasNext)
 
     companion object {
         private val TAG = "ScrollAnimation"
+
         // 滑动追踪的时间
         private val VELOCITY_DURATION = 1000
     }

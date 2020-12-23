@@ -68,7 +68,6 @@ public abstract class PageLoader {
     protected Book mCollBook;
     // 监听器
     protected OnPageChangeListener mPageChangeListener;
-
     private Context mContext;
     // 页面显示类
     private PageView mPageView;
@@ -105,7 +104,9 @@ public abstract class PageLoader {
     // 判断章节列表是否加载完成
     protected boolean isChapterListPrepare;
 
-    // 是否打开过章节
+    /**
+     * 是否打开过章节
+     */
     private boolean isChapterOpen;
     private boolean isFirstOpen = true;
     private boolean isClose;
