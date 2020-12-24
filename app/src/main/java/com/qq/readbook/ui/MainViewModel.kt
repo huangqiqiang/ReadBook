@@ -4,6 +4,7 @@ import android.os.Bundle
 import com.hqq.core.CoreConfig
 import com.hqq.core.ui.list.BaseListViewModel
 import com.qq.readbook.utils.room.RoomUtils
+import kotlinx.coroutines.*
 
 /**
  * @Author : huangqiqiang
@@ -14,11 +15,13 @@ import com.qq.readbook.utils.room.RoomUtils
  */
 class MainViewModel : BaseListViewModel() {
 
-    override fun initData(extras: Bundle?) {
-        super.initData(extras)
 
-        var list = RoomUtils.getDataBase().bookDao().getAll()
-        setData(list)
+    override fun onResume() {
+        CoroutineScope(Dispatchers.Main).launch {
+            delay(500)
+            onLoadMore()
+
+        }
     }
 
     override fun onLoadMore() {

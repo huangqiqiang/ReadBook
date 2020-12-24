@@ -35,17 +35,14 @@ public class NetPageLoader extends PageLoader {
         if (mCollBook.getBookChapterList() == null) {
             return;
         }
-
-        // 将 BookChapter 转换成当前可用的 Chapter
+//         将 BookChapter 转换成当前可用的 Chapter
 //        mChapterList = convertTxtChapter(mCollBook.getBookChapters());
         mChapterList = mCollBook.getBookChapterList();
         isChapterListPrepare = true;
-
         // 目录加载完成，执行回调操作。
         if (mPageChangeListener != null) {
             mPageChangeListener.onCategoryFinish(mChapterList);
         }
-
         // 如果章节未打开
         if (!isChapterOpen()) {
             // 打开章节

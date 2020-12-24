@@ -24,12 +24,8 @@ class SearchActivity : BaseVmListActivity<SearchViewModel, ActivitySearchBinding
     override val layoutId: Int = R.layout.activity_search
     override val bindingViewModelId: Int = BR.vm
     override val adapter: BookAdapter = BookAdapter().apply {
-        setOnItemChildClickListener { _, view, position ->
-            when (view.id) {
-                R.id.ll_content -> {
-                    BookDetailActivity.open(activity, getItem(position))
-                }
-            }
+        setOnItemClickListener { adapter, view, position ->
+            BookDetailActivity.open(activity, getItem(position))
         }
     }
 

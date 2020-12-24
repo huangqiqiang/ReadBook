@@ -605,8 +605,7 @@ public abstract class PageLoader {
      */
     public void openChapter() {
         isFirstOpen = false;
-
-        if (!mPageView.isPrepare()) {
+        if (mPageView == null ||!mPageView.isPrepare()) {
             return;
         }
 

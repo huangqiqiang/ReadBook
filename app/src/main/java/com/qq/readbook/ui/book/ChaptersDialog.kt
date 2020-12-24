@@ -24,6 +24,7 @@ import com.qq.readbook.weight.page.loader.PageLoader
  */
 class ChaptersDialog(var mPageLoader: PageLoader, var bookChapterList: List<Chapter>?) :
     BaseDialog() {
+
     override val layoutId: Int = R.layout.dialog_chapters
 
     /**
@@ -66,9 +67,9 @@ class ChaptersDialog(var mPageLoader: PageLoader, var bookChapterList: List<Chap
             var listView = rootView?.findViewById<RecyclerView>(R.id.rc_list)
             var manager = listView?.layoutManager as? LinearLayoutManager
             if (soft) {
-                (it as TextView).text = "升序"
-            } else {
                 (it as TextView).text = "降序"
+            } else {
+                (it as TextView).text = "升序"
             }
             soft = !soft
             manager?.stackFromEnd = !soft

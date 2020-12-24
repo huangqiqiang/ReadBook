@@ -14,8 +14,8 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:background="@color/white"
+        android:orientation="vertical"
         tools:context=".ui.book.BookDetailActivity">
 
         <RelativeLayout
@@ -91,7 +91,7 @@
                 android:layout_toRightOf="@id/ivBookCover"
                 android:ellipsize="end"
                 android:singleLine="true"
-
+                android:text='@{"更新时间: "+vm.book.updateDate}'
                 android:textSize="13sp"
                 tools:text="4月前" />
 
@@ -107,15 +107,15 @@
 
 
         <TextView
+            style="@style/def_text.28.999"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="-10dp"
             android:ellipsize="end"
             android:maxLines="4"
             android:padding="@dimen/x20"
-            tools:text="123"
             android:text="@{vm.book.desc}"
-            style="@style/def_text.28.999" />
+            tools:text="123" />
 
 
         <LinearLayout

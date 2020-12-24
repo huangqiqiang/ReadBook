@@ -20,7 +20,7 @@ import com.qq.readbook.weight.page.BookRecordBean
  */
 @Dao
 interface BookDao {
-    @Query("SELECT * FROM Book")
+    @Query("SELECT * FROM Book  ORDER BY lastRead DESC")
     fun getAll(): List<Book>
 
     @Query("SELECT * FROM Book where bookId =:bookId")
@@ -106,8 +106,10 @@ abstract class ChapterDatabase : RoomDatabase() {
  *  3.  缓存成本地文件 使用文件读取
  */
 object RoomUtils {
-    var chapterDatabase: ChapterDatabase? = null
+    // LRU
+    val mapDataBase = HashMap<String, ChapterDatabase>()
     var appDatabase: AppDatabase? = null
+
     fun <T : RoomDatabase> getBase(java: Class<T>, name: String): T {
         return Room.databaseBuilder(
             CoreConfig.get().application!!,
@@ -130,7 +132,6 @@ object RoomUtils {
         if (appDatabase == null) {
             appDatabase = getBase(AppDatabase::class.java, name)
         }
-
         return appDatabase!!
 
     }
@@ -138,10 +139,13 @@ object RoomUtils {
     fun getChapterDataBase(
         name: String,
     ): ChapterDatabase {
-        if (chapterDatabase == null) {
-            chapterDatabase = getBase(ChapterDatabase::class.java, name);
+        var dataBase = mapDataBase.get(name)
+        if (dataBase == null) {
+            dataBase = getBase(ChapterDatabase::class.java, name);
+            mapDataBase.put(name, dataBase)
         }
-        return chapterDatabase!!
+
+        return dataBase
 
     }
 

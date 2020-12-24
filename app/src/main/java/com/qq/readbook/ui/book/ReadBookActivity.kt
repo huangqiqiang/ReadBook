@@ -6,6 +6,7 @@ import android.os.IBinder
 import android.view.View
 import android.widget.SeekBar
 import com.hqq.core.ui.base.BaseVmActivity
+import com.hqq.core.utils.DateUtils
 import com.hqq.core.utils.ToastUtils
 import com.hqq.core.utils.log.LogUtils
 import com.qq.readbook.BR
@@ -21,6 +22,7 @@ import com.qq.readbook.weight.page.ReadSettingManager
 import com.qq.readbook.weight.page.loader.OnPageChangeListener
 import com.qq.readbook.weight.page.loader.PageLoader
 import kotlinx.coroutines.*
+import org.jsoup.helper.DataUtil
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -52,7 +54,6 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
 
     lateinit var pageLoader: PageLoader
 
-
     // 接收电池信息和时间更新的广播
     private val mReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -72,9 +73,6 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
         initService(book)
         binding.tvBarTitle.text = book?.name
         pageLoader = binding.pageView.getPageLoader(book)
-
-
-
         pageLoader.refreshChapterList()
         pageLoader.setOnPageChangeListener(object :
             OnPageChangeListener {
@@ -84,7 +82,7 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
 
             override fun requestChapters(requestChapters: MutableList<Chapter>?) {
                 // 理论上需要用队列去维护 避免重复请求
-                taskBuilder?.dataList?.postValue(requestChapters)
+                taskBuilder?.dataList?.value = (requestChapters)
             }
 
             override fun onCategoryFinish(chapters: MutableList<Chapter>?) {
@@ -92,11 +90,11 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
             }
 
             override fun onPageCountChange(count: Int) {
-                LogUtils.e("onPageCountChange")
+                LogUtils.e("onPageCountChange : " + count)
             }
 
             override fun onPageChange(pos: Int) {
-                LogUtils.e("onPageChange")
+                LogUtils.e("onPageChange  :  " + pos)
             }
         })
         loadingView.show()
@@ -107,13 +105,13 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
             launch(Dispatchers.Main) {
                 if (charpters.isNullOrEmpty()) {
                     // 数据库中没有查询到章节数据
-                    loadingView.dismiss()
                     BookDetailActivity.open(activity, book)
+                    finish()
                 } else {
                     book.bookChapterList = (charpters)
                     pageLoader.refreshChapterList()
-                    loadingView.dismiss()
                 }
+                loadingView.dismiss()
             }
 
         }
@@ -210,23 +208,30 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
         }
 
         binding.tvCache50.setOnClickListener {
-            taskBuilder?.dataList?.postValue(
-                getCacheList(book, 50)
-            )
+            doCache(book, 50)
         }
         binding.tvCache100.setOnClickListener {
-            taskBuilder?.dataList?.postValue(
-                getCacheList(book, 100)
-            )
+            doCache(book, 100)
         }
         binding.tvCacheAll.setOnClickListener {
-            taskBuilder?.dataList?.postValue(
-                getCacheList(book, 9999999)
-            )
+            doCache(book, 9999999)
 
         }
     }
 
+    /**
+     * 执行缓存
+     */
+    private fun doCache(book: Book?, i: Int) {
+        taskBuilder?.dataList?.value = (
+                getCacheList(book, i)
+                )
+        hintMenu()
+    }
+
+    /**
+     *  获取需要缓存的章节
+     */
     private fun getCacheList(book: Book?, size: Int): MutableList<Chapter>? {
         var newChacheList = ArrayList<Chapter>()
         book?.bookChapterList?.let {
@@ -276,6 +281,14 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
 
     override fun onDestroy() {
         super.onDestroy()
+
+        intent.getParcelableExtra<Book>("book")?.apply {
+            lastRead = DateUtils.nowDate
+            RoomUtils.getDataBase().bookDao().update(this)
+
+        }
+
+
         pageLoader.closeBook()
         unregisterReceiver(mReceiver)
     }

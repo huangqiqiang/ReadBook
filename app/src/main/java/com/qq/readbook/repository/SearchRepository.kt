@@ -73,7 +73,7 @@ class SearchRepository {
                 } else if (infoStr.contains("类型：")) {
                     book.setType(infoStr.replace("类型：", "").replace(" ", ""))
                 } else if (infoStr.contains("更新时间：")) {
-                    book.setUpdateDate(infoStr.replace("更新时间：", "").replace(" ", ""))
+                    book.setUpdateDate(infoStr.replace("更新时间：", "").trim())
                 } else {
                     val newChapter = element1.child(1)
                     book.setNewestChapterUrl(newChapter.attr("href"))

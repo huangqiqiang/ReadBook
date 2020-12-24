@@ -40,6 +40,7 @@
             android:label="阅读" />
 
         <service android:name=".DownService" />
+
     </application>
 
 </manifest>

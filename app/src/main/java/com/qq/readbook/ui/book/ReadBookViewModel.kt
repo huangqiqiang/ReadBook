@@ -43,4 +43,5 @@ class ReadBookViewModel : BaseViewModel() {
     fun onLayoutMenu(view: View) {
 
     }
+
 }

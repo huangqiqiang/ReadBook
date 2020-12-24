@@ -15,14 +15,17 @@ import java.util.*
 class SearchViewModel : BaseListViewModel() {
 
     fun onSearch(key: String) {
+        pageCount = 1
+        pageSize = 20
         setShowLoading(true)
         SearchRepository().search(key, object : SearchRepository.SearchRepositoryCallback {
             override fun onSearchBook(book: ArrayList<Book>?, isSuccess: Boolean) {
                 if (isSuccess) {
                     data.value = book
+                } else {
+                    setShowToast("请检查网络")
                 }
                 setShowLoading(false)
-
             }
 
         })

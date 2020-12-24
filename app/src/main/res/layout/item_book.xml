@@ -7,21 +7,6 @@
     android:clickable="true"
     android:orientation="vertical">
 
-    <com.qq.readbook.weight.EasySwipeMenuLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:contentView="@id/ll_content"
-        app:leftMenuView="@id/ll_left"
-        app:rightMenuView="@id/ll_right">
-
-
-        <TextView
-            android:id="@+id/ll_left"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" />
-
         <LinearLayout
             android:id="@+id/ll_content"
             android:layout_width="match_parent"
@@ -95,32 +80,5 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/ll_right"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:paddingBottom="@dimen/x20">
 
-            <TextView
-                android:id="@+id/tv_delete"
-                style="@style/def_text.36.white"
-                android:layout_width="@dimen/x200"
-                android:layout_height="match_parent"
-                android:background="@color/color_red"
-                android:gravity="center"
-                android:text="删除" />
-
-            <TextView
-                android:id="@+id/tv_detail"
-                style="@style/def_text.36.white"
-                android:layout_width="@dimen/x200"
-                android:layout_height="match_parent"
-                android:background="@color/color_blue"
-                android:gravity="center"
-                android:text="详情" />
-
-
-        </LinearLayout>
-    </com.qq.readbook.weight.EasySwipeMenuLayout>
 </LinearLayout>

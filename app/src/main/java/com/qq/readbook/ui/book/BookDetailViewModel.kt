@@ -30,7 +30,6 @@ class BookDetailViewModel : BaseViewModel() {
     override fun onCrete() {
         book.value?.let {
             BookChaptersRepository.getBookChapters(it)
-
             var b = RoomUtils.getDataBase().bookDao().getBookById(it.bookId)
             b?.let {
                 if (it.name.equals(it.name)) {

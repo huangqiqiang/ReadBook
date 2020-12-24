@@ -2,6 +2,7 @@ package com.qq.readbook.repository
 
 import com.hqq.core.net.ok.OkHttp
 import com.hqq.core.net.ok.OkNetCallback
+import com.hqq.core.utils.log.LogUtils
 import com.qq.readbook.bean.Book
 import com.qq.readbook.bean.Chapter
 import com.qq.readbook.utils.room.RoomUtils
@@ -22,6 +23,7 @@ object BookChaptersRepository {
      *  读取数据量 目录列表
      */
     fun getBookChapters(book: Book) {
+        LogUtils.d("加载目录  :   " + book.chapterUrl)
         OkHttp.newHttpCompat()[book.chapterUrl, OkHttp.newParamsCompat(), object : OkNetCallback {
             override fun onSuccess(statusCode: String, response: String) {
                 val arrayList = getChaptersFromHtml(response, book)
