@@ -13,14 +13,15 @@ import java.util.ArrayList
  * @Package : com.qq.readbook.repository
  * @Date : 上午 10:24
  * @Email : qiqiang213@gmail.com
- * @Describe :
+ * @Describe :搜索小说
  */
-class SearchRepository {
+object SearchRepository {
     /**
-     * 搜索小说
+     *
      * @param key
      */
-    fun search(key: String, callback: SearchRepositoryCallback) {
+    @JvmStatic
+    fun doSearch(key: String, callback: SearchRepositoryCallback) {
         OkHttp.newHttpCompat().get(
             "https://www.23txt.com/search.php",
             OkHttp.newParamsCompat("q", key),

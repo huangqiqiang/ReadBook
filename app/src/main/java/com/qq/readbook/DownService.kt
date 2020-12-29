@@ -31,7 +31,7 @@ class DownService : BaseService() {
         //  liveData 观察数据  监听需要缓存的 数据
         taskBuilder.dataList.observe(this@DownService, object : Observer<List<Chapter>> {
             override fun onChanged(t: List<Chapter>) {
-                GlobalScope.launch(Dispatchers.IO) {
+                CoroutineScope(Dispatchers.IO).launch {
                     LogUtils.e("onBind: observe   ")
                     for (chapter in t) {
                         LogUtils.e("onBind:   " + chapter.title)

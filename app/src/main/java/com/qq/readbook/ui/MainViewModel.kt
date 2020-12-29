@@ -3,6 +3,8 @@ package com.qq.readbook.ui
 import android.os.Bundle
 import com.hqq.core.CoreConfig
 import com.hqq.core.ui.list.BaseListViewModel
+import com.qq.readbook.bean.Book
+import com.qq.readbook.repository.LatestChapterRepository
 import com.qq.readbook.utils.room.RoomUtils
 import kotlinx.coroutines.*
 
@@ -20,7 +22,6 @@ class MainViewModel : BaseListViewModel() {
         CoroutineScope(Dispatchers.Main).launch {
             delay(500)
             onLoadMore()
-
         }
     }
 
@@ -28,7 +29,23 @@ class MainViewModel : BaseListViewModel() {
         super.onLoadMore()
         var list = RoomUtils.getDataBase().bookDao().getAll()
         setData(list)
+        CoroutineScope(Dispatchers.IO).launch {
+            for (book in list) {
+                doChapterUrl(book)
+            }
+        }
+    }
 
+    private suspend fun doChapterUrl(book: Book) {
+        withContext(Dispatchers.IO) {
+            LatestChapterRepository.doChapterUrl(book,
+                object : LatestChapterRepository.LatestChapter {
+                    override fun onEnd(book: Book, isSuccess: Boolean) {
+
+                    }
+                })
+
+        }
     }
 
 }

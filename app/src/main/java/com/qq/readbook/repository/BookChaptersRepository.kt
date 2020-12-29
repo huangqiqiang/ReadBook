@@ -16,7 +16,7 @@ import java.util.*
  * @Package : com.qq.readbook.repository
  * @Date : 下午 1:45
  * @Email : qiqiang213@gmail.com
- * @Describe :
+ * @Describe : 数据目录
  */
 object BookChaptersRepository {
     /**
@@ -33,12 +33,8 @@ object BookChaptersRepository {
                         resetId()
                         insert(arrayList)
                     }
-
-
                 }
-
             }
-
             override fun onFailure(statusCode: String, errMsg: String, response: String) {}
         }]
     }

@@ -18,7 +18,7 @@ class SearchViewModel : BaseListViewModel() {
         pageCount = 1
         pageSize = 20
         setShowLoading(true)
-        SearchRepository().search(key, object : SearchRepository.SearchRepositoryCallback {
+        SearchRepository.doSearch(key, object : SearchRepository.SearchRepositoryCallback {
             override fun onSearchBook(book: ArrayList<Book>?, isSuccess: Boolean) {
                 if (isSuccess) {
                     data.value = book

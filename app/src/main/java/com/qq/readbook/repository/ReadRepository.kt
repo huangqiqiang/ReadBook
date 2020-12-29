@@ -9,12 +9,13 @@ import com.qq.readbook.weight.page.BookRecordBean
  * @Package : com.qq.readbook.repository
  * @Date : 下午 5:01
  * @Email : qiqiang213@gmail.com
- * @Describe :
+ * @Describe : 阅读记录
  */
 object ReadRepository {
     @JvmStatic
     fun getBookRecord(book: Book, bookId: String): BookRecordBean? {
-        var list = RoomUtils.getChapterDataBase(book.name + "_" + book.author).bookRecordBeanDao().getAll()
+        var list =
+            RoomUtils.getChapterDataBase(book.name + "_" + book.author).bookRecordBeanDao().getAll()
         if (list.isNotEmpty()) {
             return list[0]
         }

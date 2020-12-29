@@ -14,7 +14,7 @@ import org.jsoup.Jsoup
  * @Package : com.qq.readbook.repository
  * @Date : 下午 4:34
  * @Email : qiqiang213@gmail.com
- * @Describe :
+ * @Describe :  书籍正文
  */
 object BookArticleRepository {
     /**
