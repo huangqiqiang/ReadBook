@@ -1,8 +1,7 @@
 package com.qq.readbook.ui
 
-import android.os.Bundle
-import com.hqq.core.CoreConfig
 import com.hqq.core.ui.list.BaseListViewModel
+import com.hqq.core.utils.log.LogUtils
 import com.qq.readbook.bean.Book
 import com.qq.readbook.repository.LatestChapterRepository
 import com.qq.readbook.utils.room.RoomUtils
@@ -16,8 +15,6 @@ import kotlinx.coroutines.*
  * @Describe :
  */
 class MainViewModel : BaseListViewModel() {
-
-
     override fun onResume() {
         CoroutineScope(Dispatchers.Main).launch {
             delay(500)
@@ -25,23 +22,34 @@ class MainViewModel : BaseListViewModel() {
         }
     }
 
+    var updateTime = System.currentTimeMillis()
+
+
     override fun onLoadMore() {
         super.onLoadMore()
         var list = RoomUtils.getDataBase().bookDao().getAll()
-        setData(list)
-        CoroutineScope(Dispatchers.IO).launch {
-            for (book in list) {
-                doChapterUrl(book)
+        if (System.currentTimeMillis() - updateTime > 1000 * 60) {
+            // 同步更新数据
+            val newList = ArrayList<Book>()
+            CoroutineScope(Dispatchers.Main).launch {
+                for (book in list) {
+                    doChapterUrl(book, newList)
+                }
+                setData(newList)
             }
+            updateTime = System.currentTimeMillis()
+        } else {
+            setData(list)
         }
     }
 
-    private suspend fun doChapterUrl(book: Book) {
+    private suspend fun doChapterUrl(book: Book, newList: ArrayList<Book>) {
         withContext(Dispatchers.IO) {
             LatestChapterRepository.doChapterUrl(book,
                 object : LatestChapterRepository.LatestChapter {
                     override fun onEnd(book: Book, isSuccess: Boolean) {
-
+                        LogUtils.e(book.name + "   " + book.newestChapterTitle)
+                        newList.add(book)
                     }
                 })
 
