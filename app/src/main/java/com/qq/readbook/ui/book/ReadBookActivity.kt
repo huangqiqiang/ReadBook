@@ -98,7 +98,7 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
             }
         })
         loadingView.show()
-        GlobalScope.launch {
+        GlobalScope.launch(Dispatchers.IO) {
             // 需要异步加载
             var charpters =
                 RoomUtils.getChapterDataBase(book!!.name + "_" + book.author).chapterDao().getAll()
@@ -108,7 +108,7 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
                     BookDetailActivity.open(activity, book)
                     finish()
                 } else {
-                    book.bookChapterList = (charpters)
+                    book.bookChapterList = charpters
                     pageLoader.refreshChapterList()
                 }
                 loadingView.dismiss()
@@ -281,14 +281,11 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
 
     override fun onDestroy() {
         super.onDestroy()
-
         intent.getParcelableExtra<Book>("book")?.apply {
             lastRead = DateUtils.nowDate
             RoomUtils.getDataBase().bookDao().update(this)
 
         }
-
-
         pageLoader.closeBook()
         unregisterReceiver(mReceiver)
     }

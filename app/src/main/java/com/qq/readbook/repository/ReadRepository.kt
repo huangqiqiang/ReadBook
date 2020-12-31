@@ -13,7 +13,7 @@ import com.qq.readbook.weight.page.BookRecordBean
  */
 object ReadRepository {
     @JvmStatic
-    fun getBookRecord(book: Book, bookId: String): BookRecordBean? {
+    fun getBookRecord(book: Book): BookRecordBean? {
         var list =
             RoomUtils.getChapterDataBase(book.name + "_" + book.author).bookRecordBeanDao().getAll()
         if (list.isNotEmpty()) {

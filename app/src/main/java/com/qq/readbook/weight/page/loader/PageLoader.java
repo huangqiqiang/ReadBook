@@ -590,12 +590,10 @@ public abstract class PageLoader {
      */
     private void prepareBook() {
         //todo 获取阅读记录
-        mBookRecord = ReadRepository.getBookRecord(mCollBook, mCollBook.getBookId());
-
+        mBookRecord = ReadRepository.getBookRecord(mCollBook);
         if (mBookRecord == null) {
             mBookRecord = new BookRecordBean();
         }
-
         mCurChapterPos = mBookRecord.getChapter();
         mLastChapterPos = mCurChapterPos;
     }

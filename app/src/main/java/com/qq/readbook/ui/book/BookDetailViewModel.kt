@@ -6,7 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import com.hqq.core.ui.base.BaseViewModel
 import com.qq.readbook.Keys
 import com.qq.readbook.bean.Book
+import com.qq.readbook.bean.Chapter
 import com.qq.readbook.repository.BookChaptersRepository
+import com.qq.readbook.repository.ReadRepository.getBookRecord
 import com.qq.readbook.utils.room.RoomUtils
 
 /**
@@ -19,7 +21,9 @@ import com.qq.readbook.utils.room.RoomUtils
 class BookDetailViewModel : BaseViewModel() {
 
     val book = MutableLiveData<Book>()
+    val chapters = MutableLiveData<List<Chapter>>()
     var addBookMenu = MutableLiveData<Boolean>(true)
+    val currChapter = MutableLiveData<Int>(0)
     override fun initData(extras: Bundle?) {
         super.initData(extras)
         extras?.getParcelable<Book>(Keys.BOOK).let {
@@ -28,16 +32,36 @@ class BookDetailViewModel : BaseViewModel() {
     }
 
     override fun onCrete() {
+
+
         book.value?.let {
-            BookChaptersRepository.getBookChapters(it)
+
+            RoomUtils.getChapterDataBase(it.name + "_" + it.author).chapterDao().apply {
+                chapters.value = getAll()
+            }
+
+            // 爬取最新目录
+            BookChaptersRepository.getBookChapters(it,
+                object : BookChaptersRepository.BookChaptersCall {
+                    override fun onSuccess(arrayList: List<Chapter>) {
+                        chapters.value = arrayList
+                    }
+                })
             var b = RoomUtils.getDataBase().bookDao().getBookById(it.bookId)
             b?.let {
-                if (it.name.equals(it.name)) {
-                    //
-                    //移出书架
-                    addBookMenu.value = !(addBookMenu.value as Boolean)
+                // t
+                book.value = b
+                //有查询到本地数据  那就是有收藏的 目前是真删除
+                addBookMenu.value = !(addBookMenu.value as Boolean)
+                //todo 获取阅读记录
+                getBookRecord(b)?.let {
+                    if (chapters.value != null) {
+                        currChapter.value=it.chapter
+                    }
                 }
+
             }
+
         }
     }
 
@@ -60,7 +84,7 @@ class BookDetailViewModel : BaseViewModel() {
     /**
      *  开始阅读
      */
-    fun onRead(view: View) {
+    fun onReadBook(view: View) {
         book.value?.let {
             startActivity(ReadBookActivity::class.java, Bundle().apply {
                 putParcelable("book", book.value)

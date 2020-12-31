@@ -13,8 +13,14 @@ public class FileUtils {
 
     public static void main(String[] args) {
         //放置文件目录
-        File file = new File("C://Users//Administrator//Desktop//Documents");
-        showFile(file);
+//        File file = new File("C://Users//Administrator//Desktop//Documents");
+//        showFile(file);
+        System.out.println("--------------------- " + 1/3);
+        System.out.println("--------------------- " + 1/3.0);
+        System.out.println("--------------------- " + 1.0/3);
+        System.out.println("--------------------- " + 1.0/3.0);
+
+
     }
 
     static String newPath = "D://wx//";

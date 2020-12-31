@@ -22,7 +22,6 @@ class BookDetailActivity : BaseVmActivity<BookDetailViewModel, ActivityBookeDeta
         fun open(context: Activity, item: Book) {
             context.startActivityForResult(Intent(context, BookDetailActivity::class.java).apply {
                 putExtra(Keys.BOOK, item)
-
             }, -1)
         }
     }
@@ -30,7 +29,6 @@ class BookDetailActivity : BaseVmActivity<BookDetailViewModel, ActivityBookeDeta
     override val layoutId: Int = R.layout.activity_booke_detail
     override val bindingViewModelId: Int = BR.vm
     override fun initViews() {
-
 
     }
 

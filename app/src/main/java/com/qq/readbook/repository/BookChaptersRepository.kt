@@ -22,19 +22,24 @@ object BookChaptersRepository {
     /**
      *  读取数据量 目录列表
      */
-    fun getBookChapters(book: Book) {
+    fun getBookChapters(book: Book, bookChaptersCall: BookChaptersCall?) {
         LogUtils.d("加载目录  :   " + book.chapterUrl)
         OkHttp.newHttpCompat()[book.chapterUrl, OkHttp.newParamsCompat(), object : OkNetCallback {
             override fun onSuccess(statusCode: String, response: String) {
                 val arrayList = getChaptersFromHtml(response, book)
+                bookChaptersCall?.onSuccess(arrayList)
                 RoomUtils.getDataBase().run {
                     RoomUtils.getChapterDataBase(book.name + "_" + book.author).chapterDao().apply {
-                        deleteAll()
-                        resetId()
-                        insert(arrayList)
+                        // 获取的章节数量不一致 则出现了新的章节
+                        if (getAll().size != arrayList.size) {
+                            deleteAll()
+                            resetId()
+                            insert(arrayList)
+                        }
                     }
                 }
             }
+
             override fun onFailure(statusCode: String, errMsg: String, response: String) {}
         }]
     }
@@ -77,4 +82,9 @@ object BookChaptersRepository {
         }
         return chapters
     }
+
+    interface BookChaptersCall {
+        fun onSuccess(arrayList: List<Chapter>);
+    }
+
 }

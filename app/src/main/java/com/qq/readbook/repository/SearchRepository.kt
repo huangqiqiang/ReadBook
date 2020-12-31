@@ -2,7 +2,9 @@ package com.qq.readbook.repository
 
 import com.hqq.core.net.ok.OkHttp
 import com.hqq.core.net.ok.OkNetCallback
+import com.qq.readbook.SourceUtils
 import com.qq.readbook.bean.Book
+import com.qq.readbook.bean.SourceModel
 import com.qq.readbook.utils.MD5Utils
 import org.jsoup.Jsoup
 import java.util.ArrayList
@@ -21,14 +23,14 @@ object SearchRepository {
      * @param key
      */
     @JvmStatic
-    fun doSearch(key: String, callback: SearchRepositoryCallback) {
+    fun doSearch(source: SourceModel, key: String, callback: SearchRepositoryCallback) {
         OkHttp.newHttpCompat().get(
-            "https://www.23txt.com/search.php",
-            OkHttp.newParamsCompat("q", key),
+            String.format(SourceUtils.getInstance().sourceList[0].bookSearchUrl,key),
+          null,
             object : OkNetCallback {
                 override fun onSuccess(statusCode: String?, response: String?) {
                     response?.let {
-                        var book = getBooksFromSearchHtml(it)
+                        var book = getBooksFromSearchHtml(it,source)
                         callback.onSearchBook(book, true)
                     }
 
@@ -49,7 +51,7 @@ object SearchRepository {
      * @param html
      * @return
      */
-    fun getBooksFromSearchHtml(html: String): ArrayList<Book> {
+    fun getBooksFromSearchHtml(html: String, source: SourceModel): ArrayList<Book> {
         val books: ArrayList<Book> = ArrayList<Book>()
         val doc = Jsoup.parse(html)
         //        Element node = doc.getElementById("results");
@@ -63,7 +65,7 @@ object SearchRepository {
             book.setImgUrl(img.attr("src"))
             val title = element.getElementsByClass("result-item-title result-game-item-title")[0]
             book.setName(title.child(0).attr("title"))
-            book.setChapterUrl("https://www.23txt.com/" + title.child(0).attr("href"))
+            book.setChapterUrl(source.bookSourceUrl + title.child(0).attr("href"))
             val desc = element.getElementsByClass("result-game-item-desc")[0]
             book.setDesc(desc.text())
             val info = element.getElementsByClass("result-game-item-info")[0]
@@ -81,7 +83,7 @@ object SearchRepository {
                     book.setNewestChapterTitle(newChapter.text())
                 }
             }
-            book.setSource("天籁小说")
+            book.setSource(source.bookSourceName)
             book.setBookId(MD5Utils.getStringMD5(book.name + book.author))
             books.add(book)
 
