@@ -24,7 +24,7 @@ class SearchActivity : BaseVmListActivity<SearchViewModel, ActivitySearchBinding
     override val layoutId: Int = R.layout.activity_search
     override val bindingViewModelId: Int = BR.vm
     override val adapter: BookAdapter = BookAdapter().apply {
-        setOnItemClickListener { adapter, view, position ->
+        setOnItemClickListener { _, _, position ->
             BookDetailActivity.open(activity, getItem(position))
         }
     }
@@ -36,7 +36,7 @@ class SearchActivity : BaseVmListActivity<SearchViewModel, ActivitySearchBinding
 
     override fun initData() {
         rootViewImpl.iCreateToolbar as BaseToolBarSearch
-        (rootViewImpl.iCreateToolbar as BaseToolBarSearch).searchView.setOnEditorActionListener { v, actionId, event ->
+        (rootViewImpl.iCreateToolbar as BaseToolBarSearch).searchView.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 onSearch()
                 return@setOnEditorActionListener true
@@ -46,6 +46,8 @@ class SearchActivity : BaseVmListActivity<SearchViewModel, ActivitySearchBinding
         (rootViewImpl.iCreateToolbar as BaseToolBarSearch).setRightTextView() {
             onSearch()
         }
+        (rootViewImpl.iCreateToolbar as BaseToolBarSearch).searchView.setText("宠魅")
+
     }
 
     private fun onSearch() {

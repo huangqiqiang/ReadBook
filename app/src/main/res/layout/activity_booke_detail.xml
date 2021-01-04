@@ -139,7 +139,6 @@
                     android:padding="@dimen/x20"
                     android:text="来源" />
 
-
                 <TextView
                     style="@style/def_text.28.666"
                     android:layout_width="match_parent"

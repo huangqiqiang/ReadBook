@@ -77,7 +77,7 @@ class DownService : BaseService() {
     }
 
 
-    open interface OnDownloadListener {
+    interface OnDownloadListener {
         fun onSuccess(boolean: Boolean, int: Int, totalSize: Int, successSize: Int)
     }
 

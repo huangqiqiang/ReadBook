@@ -2,12 +2,12 @@ package com.qq.readbook.repository
 
 import com.hqq.core.net.ok.OkHttp
 import com.hqq.core.net.ok.OkNetCallback
-import com.qq.readbook.SourceUtils
+import com.hqq.core.utils.log.LogUtils
 import com.qq.readbook.bean.Book
-import com.qq.readbook.bean.SourceModel
-import com.qq.readbook.utils.MD5Utils
-import org.jsoup.Jsoup
-import java.util.ArrayList
+import com.qq.readbook.bean.BookSource
+import java.lang.reflect.Method
+import java.net.URLEncoder
+import java.util.*
 
 
 /**
@@ -23,77 +23,36 @@ object SearchRepository {
      * @param key
      */
     @JvmStatic
-    fun doSearch(source: SourceModel, key: String, callback: SearchRepositoryCallback) {
+    fun doSearch(source: BookSource, key: String, callback: SearchRepositoryCallback) {
+        val url = if (source.searchEncode.isNotEmpty()) {
+            String.format(source.bookSearchUrl, URLEncoder.encode(key, source.searchEncode))
+        } else {
+            String.format(source.bookSearchUrl, key)
+        }
+        LogUtils.e("doSearch     " + url)
         OkHttp.newHttpCompat().get(
-            String.format(SourceUtils.getInstance().sourceList[0].bookSearchUrl,key),
-          null,
+            url,
+            null,
             object : OkNetCallback {
                 override fun onSuccess(statusCode: String?, response: String?) {
-                    response?.let {
-                        var book = getBooksFromSearchHtml(it,source)
-                        callback.onSearchBook(book, true)
+                    response?.let { it ->
+                        val threadClazz = SearchRead::class.java
+                        var books = threadClazz.methods.firstOrNull {
+                            it.name == source.searchMethod
+                        }?.invoke(null, it, source)
+                        callback.onSearchBook(books as ArrayList<Book>?, true)
                     }
-
                 }
 
                 override fun onFailure(statusCode: String?, errMsg: String?, response: String?) {
                     callback.onSearchBook(null, false)
-
                 }
-
             }
         )
     }
 
-    /**
-     * 从搜索html中得到书列表
-     *
-     * @param html
-     * @return
-     */
-    fun getBooksFromSearchHtml(html: String, source: SourceModel): ArrayList<Book> {
-        val books: ArrayList<Book> = ArrayList<Book>()
-        val doc = Jsoup.parse(html)
-        //        Element node = doc.getElementById("results");
-//        for (Element div : node.children()) {
-        val divs = doc.getElementsByClass("result-list")
-        val div = divs[0]
-        //        if (!StringHelper.isEmpty(div.className()) && div.className().equals("result-list")) {
-        for (element in div.children()) {
-            val book = Book()
-            val img = element.child(0).child(0).child(0)
-            book.setImgUrl(img.attr("src"))
-            val title = element.getElementsByClass("result-item-title result-game-item-title")[0]
-            book.setName(title.child(0).attr("title"))
-            book.setChapterUrl(source.bookSourceUrl + title.child(0).attr("href"))
-            val desc = element.getElementsByClass("result-game-item-desc")[0]
-            book.setDesc(desc.text())
-            val info = element.getElementsByClass("result-game-item-info")[0]
-            for (element1 in info.children()) {
-                val infoStr = element1.text()
-                if (infoStr.contains("作者：")) {
-                    book.setAuthor(infoStr.replace("作者：", "").replace(" ", ""))
-                } else if (infoStr.contains("类型：")) {
-                    book.setType(infoStr.replace("类型：", "").replace(" ", ""))
-                } else if (infoStr.contains("更新时间：")) {
-                    book.setUpdateDate(infoStr.replace("更新时间：", "").trim())
-                } else {
-                    val newChapter = element1.child(1)
-                    book.setNewestChapterUrl(newChapter.attr("href"))
-                    book.setNewestChapterTitle(newChapter.text())
-                }
-            }
-            book.setSource(source.bookSourceName)
-            book.setBookId(MD5Utils.getStringMD5(book.name + book.author))
-            books.add(book)
 
-
-        }
-        return books
-    }
-
-
-    open interface SearchRepositoryCallback {
+    interface SearchRepositoryCallback {
         fun onSearchBook(book: ArrayList<Book>?, isSuccess: Boolean)
 
     }

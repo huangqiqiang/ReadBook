@@ -32,14 +32,10 @@ class BookDetailViewModel : BaseViewModel() {
     }
 
     override fun onCrete() {
-
-
         book.value?.let {
-
             RoomUtils.getChapterDataBase(it.name + "_" + it.author).chapterDao().apply {
                 chapters.value = getAll()
             }
-
             // 爬取最新目录
             BookChaptersRepository.getBookChapters(it,
                 object : BookChaptersRepository.BookChaptersCall {
@@ -56,7 +52,7 @@ class BookDetailViewModel : BaseViewModel() {
                 //todo 获取阅读记录
                 getBookRecord(b)?.let {
                     if (chapters.value != null) {
-                        currChapter.value=it.chapter
+                        currChapter.value = it.chapter
                     }
                 }
 

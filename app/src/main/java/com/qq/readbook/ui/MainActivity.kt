@@ -20,7 +20,7 @@ class MainActivity : BaseVmListActivity<MainViewModel, ActivityMainBinding>() {
     override val bindingViewModelId: Int = BR.vm
 
     override val adapter: MainAdapter = MainAdapter().apply {
-        setOnItemChildClickListener { adapter, view, position ->
+        setOnItemChildClickListener { _, view, position ->
             when (view.id) {
                 R.id.tv_detail -> {
                     BookDetailActivity.open(activity, getItem(position))

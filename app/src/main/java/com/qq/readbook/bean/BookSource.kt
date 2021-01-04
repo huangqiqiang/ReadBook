@@ -7,10 +7,10 @@ package com.qq.readbook.bean
  * @Email : qiqiang213@gmail.com
  * @Describe :
  */
-class SourceModel {
-
+class BookSource {
     var bookSourceName: String = ""
     var bookSourceUrl: String = ""
     var bookSearchUrl: String = ""
-
+    var searchMethod: String = ""
+    var searchEncode = ""
 }

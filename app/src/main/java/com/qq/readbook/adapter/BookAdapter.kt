@@ -19,7 +19,6 @@ import com.qq.readbook.bean.Book
  */
 class BookAdapter : BaseQuickAdapter<Book, BaseViewHolder>(R.layout.item_book), LoadMoreModule {
 
-
     override fun convert(holder: BaseViewHolder, item: Book) {
         holder.setText(R.id.tv_book_name, item.name)
         holder.setText(R.id.tv_book_desc, item.desc)

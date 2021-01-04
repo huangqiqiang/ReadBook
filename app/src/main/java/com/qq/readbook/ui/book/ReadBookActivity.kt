@@ -217,6 +217,11 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
             doCache(book, 9999999)
 
         }
+        binding.flLayout.setOnClickListener {}
+        binding.tvRight.setOnClickListener {
+
+        }
+
     }
 
     /**
