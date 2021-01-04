@@ -43,13 +43,18 @@ class BookDetailViewModel : BaseViewModel() {
                         chapters.value = arrayList
                     }
                 })
+
+            if (it.source == "笔趣阁") {
+
+
+            }
+
             var b = RoomUtils.getDataBase().bookDao().getBookById(it.bookId)
             b?.let {
                 // t
                 book.value = b
                 //有查询到本地数据  那就是有收藏的 目前是真删除
                 addBookMenu.value = !(addBookMenu.value as Boolean)
-                //todo 获取阅读记录
                 getBookRecord(b)?.let {
                     if (chapters.value != null) {
                         currChapter.value = it.chapter

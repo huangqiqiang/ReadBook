@@ -27,7 +27,9 @@ class BookDetailActivity : BaseVmActivity<BookDetailViewModel, ActivityBookeDeta
     }
 
     override val layoutId: Int = R.layout.activity_booke_detail
+
     override val bindingViewModelId: Int = BR.vm
+
     override fun initViews() {
 
     }
