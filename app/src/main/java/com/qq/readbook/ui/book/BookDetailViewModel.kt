@@ -93,5 +93,11 @@ class BookDetailViewModel : BaseViewModel() {
         }
     }
 
+    /**
+     *  切换源
+     */
+    fun onOtherSources(view: View) {
+        startActivity(BookSourceActivity::class.java)
+    }
 
 }

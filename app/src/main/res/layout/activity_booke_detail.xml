@@ -149,10 +149,20 @@
                     android:text='@{"当前来源: "+ vm.book.source}' />
 
 
+                <TextView
+                    style="@style/def_text.30.666"
+                    android:background="@color/white"
+                    android:paddingBottom="@dimen/x20"
+                    android:paddingHorizontal="@dimen/x20"
+                    android:text="其他源"
+                    android:onClick="@{vm::onOtherSources}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
                     android:layout_marginTop="@dimen/x20"
                     android:background="@color/white">
 
@@ -203,9 +213,9 @@
         </androidx.core.widget.NestedScrollView>
 
         <LinearLayout
-            android:layout_marginTop="@dimen/x2"
             android:layout_width="match_parent"
             android:layout_height="@dimen/x100"
+            android:layout_marginTop="@dimen/x2"
             android:background="@color/white">
 
             <TextView

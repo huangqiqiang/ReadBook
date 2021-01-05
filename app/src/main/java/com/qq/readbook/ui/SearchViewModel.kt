@@ -18,7 +18,6 @@ class SearchViewModel : BaseListViewModel() {
     fun onSearch(key: String) {
         pageCount = 1
         pageSize = 20
-
         for (bookSource in BookSourceUtils.getInstance().sourceList) {
             SearchRepository.doSearch(
                 bookSource,

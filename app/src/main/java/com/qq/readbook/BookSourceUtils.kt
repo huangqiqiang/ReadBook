@@ -39,7 +39,14 @@ class BookSourceUtils {
             this.bookSearchUrl = "https://www.52bqg.net/modules/article/search.php?searchkey=%s"
             this.bookSourceUrl = "https://www.23txt.com/"
             this.searchMethod = "searchFormatBiQuGe"
-            this.searchEncode="gb2312"
+            this.searchEncode = "gb2312"
+        })
+        sourceList.add(BookSource().apply {
+            this.bookSourceName = "丹书铁卷⑫"
+            this.bookSearchUrl = "https://www.dstiejuan.com/search.html@searchkey"
+            this.bookSourceUrl = "https://www.dstiejuan.com"
+            this.searchMethod = "searchFormatDSTieJuan"
+            this.searchEncode = "gb2312"
         })
     }
 

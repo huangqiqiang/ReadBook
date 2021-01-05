@@ -48,7 +48,7 @@ object SearchRead {
                     }
                 }
             }
-            book.imgUrl=""
+            book.imgUrl = ""
             book.setSource(source.bookSourceName)
             book.setBookId(MD5Utils.getStringMD5(book.name + book.author))
             books.add(book);
@@ -66,11 +66,8 @@ object SearchRead {
     fun searchFormatTianLai(html: String, source: BookSource): ArrayList<Book> {
         val books: ArrayList<Book> = ArrayList<Book>()
         val doc = Jsoup.parse(html)
-        //        Element node = doc.getElementById("results");
-//        for (Element div : node.children()) {
         val divs = doc.getElementsByClass("result-list")
         val div = divs[0]
-        //        if (!StringHelper.isEmpty(div.className()) && div.className().equals("result-list")) {
         for (element in div.children()) {
             val book = Book()
             val img = element.child(0).child(0).child(0)
@@ -102,6 +99,49 @@ object SearchRead {
 
         }
         return books
+    }
+
+    /**
+     *  丹书铁券解析
+     */
+    @JvmStatic
+    fun searchFormatDSTieJuan(html: String, source: BookSource): ArrayList<Book> {
+        val books: ArrayList<Book> = ArrayList<Book>()
+        val doc = Jsoup.parse(html)
+        val lib = doc.getElementsByClass("library")
+        if (lib.isNotEmpty()) {
+            for (element in lib[0].children()) {
+                val book = Book()
+                for (div in element.children()) {
+                    when (div.className()) {
+                        "bookimg" -> {
+                            book.chapterUrl = source.bookSourceUrl + div.attr("href")
+                            book.imgUrl = div.getElementsByTag("img").find {
+                                it.hasAttr("src")
+                            }?.attr("src")
+                        }
+                        "bookname" -> {
+                            book.name = div.text()
+                        }
+                        "author" -> {
+                            book.author = div.text()
+                        }
+                        "intro" -> {
+                            book.desc = div.text()
+                        }
+                        "chapter" -> {
+                            book.newestChapterTitle = div.text()
+                        }
+                    }
+                }
+                book.source = source.bookSourceName
+                book.bookId = MD5Utils.getStringMD5(book.name + book.author)
+                books.add(book)
+            }
+        }
+
+        return books
+
     }
 
 
