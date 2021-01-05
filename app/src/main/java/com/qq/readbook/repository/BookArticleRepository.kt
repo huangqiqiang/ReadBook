@@ -5,6 +5,7 @@ import com.hqq.core.net.ok.OkNetCallback
 import com.hqq.core.utils.log.LogUtils
 import com.qq.readbook.bean.BookContent
 import com.qq.readbook.bean.Chapter
+import com.qq.readbook.repository.read.TianlaiRead
 import com.qq.readbook.utils.room.RoomUtils
 
 /**
@@ -23,7 +24,7 @@ object BookArticleRepository {
         OkHttp.newHttpCompat().getExecute(
             chapter.url, OkHttp.newParamsCompat(), object : OkNetCallback {
                 override fun onSuccess(statusCode: String?, response: String?) {
-                    var content = TianlaiReadUtils.getContentFormHtml(response)
+                    var content = TianlaiRead.getContentFormHtml(response)
                     if (!content.isNullOrBlank()) {
                         var bookContent = BookContent().apply {
                             number = chapter.number

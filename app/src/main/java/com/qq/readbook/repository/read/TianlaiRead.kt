@@ -1,9 +1,10 @@
-package com.qq.readbook.repository
+package com.qq.readbook.repository.read
 
 import android.text.Html
 import com.qq.readbook.bean.Book
 import com.qq.readbook.bean.Chapter
 import com.qq.readbook.bean.BookSource
+import com.qq.readbook.repository.read.face.Read
 import com.qq.readbook.utils.MD5Utils
 import com.qq.readbook.weight.page.StringUtils
 import org.jsoup.Jsoup
@@ -16,7 +17,7 @@ import java.util.ArrayList
  * @Email : qiqiang213@gmail.com
  * @Describe :
  */
-object TianlaiReadUtils {
+object TianlaiRead : Read {
 
     /**
      * 获取最新章节
@@ -80,61 +81,31 @@ object TianlaiReadUtils {
         return chapters
     }
 
-
     /**
-     *  笔趣阁的解析
-     */
-    fun searchFormatBiQuGe(html: String, source: BookSource): ArrayList<Book> {
-        val books: ArrayList<Book> = ArrayList<Book>()
-        val doc = Jsoup.parse(html)
-        var lis = doc.getElementById("main").getElementsByTag("li")
-        for (li in lis) {
-            var book = Book()
-            if (li.childrenSize() == 6) {
-                for (child in li.children()) {
-                    when (child.className()) {
-                        "s1" -> {
-                            book.type = child.text()
-                        }
-                        "s2" -> {
-                            book.chapterUrl = child.children().attr("href");
-                            book.name = child.text()
-                        }
-                        "s3" -> {
-                            book.newestChapterUrl = child.children().attr("href");
-                            book.newestChapterTitle = child.text()
-                        }
-                        "s4" -> {
-                            book.author = child.text()
-                        }
-                        "s5" -> {
-                            book.updateDate = child.text()
-                        }
-                    }
-                }
-            }
-            book.imgUrl=""
-            book.setSource(source.bookSourceName)
-            book.setBookId(MD5Utils.getStringMD5(book.name + book.author))
-            books.add(book);
-        }
-        return books;
-    }
-
-    /**
-     * 从搜索html中得到书列表
+     * 从html中获取章节正文
      *
      * @param html
      * @return
      */
-    fun getBooksFromSearchHtml(html: String, source: BookSource): ArrayList<Book> {
+    fun getContentFormHtml(html: String?): String? {
+        val doc = Jsoup.parse(html)
+        val divContent = doc.getElementById("content")
+        return if (divContent != null) {
+            var content = Html.fromHtml(divContent.html()).toString()
+            val c = 160.toChar()
+            val spaec = "" + c
+            content = content.replace(spaec, "  ")
+            content
+        } else {
+            ""
+        }
+    }
+
+    override fun readSearch(html: String, source: BookSource): ArrayList<Book> {
         val books: ArrayList<Book> = ArrayList<Book>()
         val doc = Jsoup.parse(html)
-        //        Element node = doc.getElementById("results");
-//        for (Element div : node.children()) {
         val divs = doc.getElementsByClass("result-list")
         val div = divs[0]
-        //        if (!StringHelper.isEmpty(div.className()) && div.className().equals("result-list")) {
         for (element in div.children()) {
             val book = Book()
             val img = element.child(0).child(0).child(0)
@@ -163,29 +134,18 @@ object TianlaiReadUtils {
             book.setBookId(MD5Utils.getStringMD5(book.name + book.author))
             books.add(book)
 
-
         }
         return books
     }
 
-    /**
-     * 从html中获取章节正文
-     *
-     * @param html
-     * @return
-     */
-    fun getContentFormHtml(html: String?): String? {
-        val doc = Jsoup.parse(html)
-        val divContent = doc.getElementById("content")
-        return if (divContent != null) {
-            var content = Html.fromHtml(divContent.html()).toString()
-            val c = 160.toChar()
-            val spaec = "" + c
-            content = content.replace(spaec, "  ")
-            content
-        } else {
-            ""
-        }
+    override fun readBookDetail() {
     }
+
+    override fun readNewestChapter() {
+    }
+
+    override fun readChapters() {
+    }
+
 
 }

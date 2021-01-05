@@ -16,7 +16,7 @@ import java.util.*
  * @Email : qiqiang213@gmail.com
  * @Describe :搜索小说
  */
-object SearchRepository {
+object BookSearchRepository {
     /**
      *
      * @param key
@@ -26,9 +26,15 @@ object SearchRepository {
         var call = object : OkNetCallback {
             override fun onSuccess(statusCode: String?, response: String?) {
                 response?.let { it ->
-                    val books = SearchRead::class.java.methods.firstOrNull {
-                        it.name == source.searchMethod
-                    }?.invoke(null, it, source)
+
+
+
+                    val method =
+                        Class.forName("com.qq.readbook.repository.read." + source.searchMethod)
+                            .methods.firstOrNull {
+                                it.name == "readSearch"
+                            }
+                    val books = method?.invoke(null, it, source)
                     callback.onSearchBook(books as ArrayList<Book>?, true)
                 }
             }

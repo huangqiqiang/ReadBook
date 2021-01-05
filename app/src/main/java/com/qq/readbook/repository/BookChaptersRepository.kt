@@ -3,8 +3,10 @@ package com.qq.readbook.repository
 import com.hqq.core.net.ok.OkHttp
 import com.hqq.core.net.ok.OkNetCallback
 import com.hqq.core.utils.log.LogUtils
+import com.qq.readbook.BookSourceUtils
 import com.qq.readbook.bean.Book
 import com.qq.readbook.bean.Chapter
+import com.qq.readbook.repository.read.TianlaiRead
 import com.qq.readbook.utils.room.RoomUtils
 
 
@@ -20,10 +22,18 @@ object BookChaptersRepository {
      *  读取数据量 目录列表
      */
     fun getBookChapters(book: Book, bookChaptersCall: BookChaptersCall?) {
+        var source = BookSourceUtils.getInstance().sourceList.first {
+            it.bookSourceName == book.source
+        }
         LogUtils.d("加载目录  :   " + book.chapterUrl)
         OkHttp.newHttpCompat()[book.chapterUrl, OkHttp.newParamsCompat(), object : OkNetCallback {
             override fun onSuccess(statusCode: String, response: String) {
-                val arrayList = TianlaiReadUtils.getChaptersFromHtml(response, book)
+                val arrayList = TianlaiRead.getChaptersFromHtml(response, book)
+//                Class.forName("com.example.rbq.MyClass")
+//                ChaptersRead::class.java.methods.firstOrNull {
+//                    it.name == source.searchMethod
+//                }?.invoke(null, it, source)
+
                 bookChaptersCall?.onSuccess(arrayList)
                 RoomUtils.getDataBase().run {
                     RoomUtils.getChapterDataBase(book.name + "_" + book.author).chapterDao().apply {

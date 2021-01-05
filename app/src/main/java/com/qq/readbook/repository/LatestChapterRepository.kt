@@ -3,6 +3,7 @@ package com.qq.readbook.repository
 import com.hqq.core.net.ok.OkHttp
 import com.hqq.core.net.ok.OkNetCallback
 import com.qq.readbook.bean.Book
+import com.qq.readbook.repository.read.TianlaiRead
 
 /**
  * @Author : huangqiqiang
@@ -16,7 +17,7 @@ object LatestChapterRepository {
         OkHttp.newHttpCompat()
             .getExecute(book.chapterUrl, OkHttp.newParamsCompat(), object : OkNetCallback {
                 override fun onSuccess(statusCode: String, response: String) {
-                    var b = TianlaiReadUtils.getNewChapterFormHtml(response, book)
+                    var b = TianlaiRead.getNewChapterFormHtml(response, book)
                     latestChapter.onEnd(b, true)
 
                 }
