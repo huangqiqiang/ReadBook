@@ -5,6 +5,10 @@ import com.hqq.core.net.ok.OkNetCallback
 import com.hqq.core.utils.log.LogUtils
 import com.qq.readbook.bean.Book
 import com.qq.readbook.bean.BookSource
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import org.jsoup.Jsoup
 import java.net.URLEncoder
 import java.util.*
 
@@ -23,18 +27,15 @@ object BookSearchRepository {
      */
     @JvmStatic
     fun doSearch(source: BookSource, key: String, callback: SearchRepositoryCallback) {
-        var call = object : OkNetCallback {
+        val call = object : OkNetCallback {
             override fun onSuccess(statusCode: String?, response: String?) {
                 response?.let { it ->
-
-
-
-                    val method =
-                        Class.forName("com.qq.readbook.repository.read." + source.searchMethod)
-                            .methods.firstOrNull {
-                                it.name == "readSearch"
-                            }
-                    val books = method?.invoke(null, it, source)
+                    val clas =
+                        Class.forName("com.qq.readbook.repository.read." + source.sourcesClass)
+                    val method = clas.methods.firstOrNull {
+                        it.name == "readSearch"
+                    }
+                    val books = method?.invoke(clas.newInstance(), it, source)
                     callback.onSearchBook(books as ArrayList<Book>?, true)
                 }
             }
@@ -43,7 +44,7 @@ object BookSearchRepository {
                 callback.onSearchBook(null, false)
             }
         }
-
+        LogUtils.e("doSearch     " + source.bookSearchUrl + "  " + key)
         if (source.bookSearchUrl.contains("@")) {
             //post 表单请求
             doPost(source, key, call)
@@ -53,6 +54,11 @@ object BookSearchRepository {
         }
     }
 
+
+    /**
+     *  post 提交
+     *
+     */
     private fun doPost(
         source: BookSource,
         key: String,
@@ -78,14 +84,12 @@ object BookSearchRepository {
         } else {
             String.format(source.bookSearchUrl, key)
         }
-        LogUtils.e("doSearch     " + url)
         OkHttp.newHttpCompat().get(url, null, callback)
     }
 
 
     interface SearchRepositoryCallback {
         fun onSearchBook(book: ArrayList<Book>?, isSuccess: Boolean)
-
     }
 
 

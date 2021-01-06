@@ -28,12 +28,15 @@ object BookChaptersRepository {
         LogUtils.d("加载目录  :   " + book.chapterUrl)
         OkHttp.newHttpCompat()[book.chapterUrl, OkHttp.newParamsCompat(), object : OkNetCallback {
             override fun onSuccess(statusCode: String, response: String) {
-                val arrayList = TianlaiRead.getChaptersFromHtml(response, book)
-//                Class.forName("com.example.rbq.MyClass")
-//                ChaptersRead::class.java.methods.firstOrNull {
-//                    it.name == source.searchMethod
-//                }?.invoke(null, it, source)
 
+                val clas =
+                    Class.forName("com.qq.readbook.repository.read." + source.sourcesClass)
+                val method = clas.methods.firstOrNull {
+                    it.name == "readChapters"
+                }
+                val arrayList =
+                    method?.invoke(clas.newInstance(), response, book, source) as ArrayList<Chapter>
+//                val arrayList = TianlaiRead().getChaptersFromHtml(response, book,source)
                 bookChaptersCall?.onSuccess(arrayList)
                 RoomUtils.getDataBase().run {
                     RoomUtils.getChapterDataBase(book.name + "_" + book.author).chapterDao().apply {
@@ -41,7 +44,7 @@ object BookChaptersRepository {
                         if (getAll().size != arrayList.size) {
                             deleteAll()
                             resetId()
-                            insert(arrayList)
+                            insert(arrayList )
                         }
                     }
                 }

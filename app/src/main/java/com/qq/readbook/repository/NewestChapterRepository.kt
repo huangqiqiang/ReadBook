@@ -12,16 +12,15 @@ import com.qq.readbook.repository.read.TianlaiRead
  * @Email : qiqiang213@gmail.com
  * @Describe : 最新章节
  */
-object LatestChapterRepository {
+object NewestChapterRepository {
     fun doChapterUrl(book: Book, latestChapter: LatestChapter) {
         OkHttp.newHttpCompat()
             .getExecute(book.chapterUrl, OkHttp.newParamsCompat(), object : OkNetCallback {
                 override fun onSuccess(statusCode: String, response: String) {
-                    var b = TianlaiRead.getNewChapterFormHtml(response, book)
+                    val b = TianlaiRead().getNewChapterFormHtml(response, book)
                     latestChapter.onEnd(b, true)
 
                 }
-
                 override fun onFailure(statusCode: String?, errMsg: String?, response: String?) {
                     latestChapter.onEnd(book, false)
                 }

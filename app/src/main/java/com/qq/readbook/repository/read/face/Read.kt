@@ -2,6 +2,7 @@ package com.qq.readbook.repository.read.face
 
 import com.qq.readbook.bean.Book
 import com.qq.readbook.bean.BookSource
+import com.qq.readbook.bean.Chapter
 import java.util.ArrayList
 
 /**
@@ -13,12 +14,17 @@ import java.util.ArrayList
  */
 interface Read {
     /**
-     * 搜索解析
+     * 读取搜索数据
      */
     fun readSearch(html: String, source: BookSource): ArrayList<Book>
 
     /**
-     * 书籍详情解析
+     * 读取所有章节
+     */
+    fun readChapters(html: String?, book: Book,source: BookSource): ArrayList<Chapter>
+
+    /**
+     * 书籍详情
      */
     fun readBookDetail()
 
@@ -27,8 +33,5 @@ interface Read {
      */
     fun readNewestChapter()
 
-    /**
-     * 读取所有章节
-     */
-    fun readChapters()
+
 }

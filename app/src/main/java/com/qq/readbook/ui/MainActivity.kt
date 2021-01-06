@@ -12,6 +12,8 @@ import com.qq.readbook.ui.book.BookDetailActivity
 import com.qq.readbook.ui.book.ReadBookActivity
 import com.qq.readbook.utils.room.RoomUtils
 import kotlinx.coroutines.*
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 
 class MainActivity : BaseVmListActivity<MainViewModel, ActivityMainBinding>() {
 
@@ -37,6 +39,8 @@ class MainActivity : BaseVmListActivity<MainViewModel, ActivityMainBinding>() {
                 }
             }
         }
+
+
     }
 
     override fun initData() {
@@ -44,5 +48,11 @@ class MainActivity : BaseVmListActivity<MainViewModel, ActivityMainBinding>() {
         (iToolBar as DefToolBar).addRightImageView(R.mipmap.ic_search) {
             startActivity(Intent(this@MainActivity, SearchActivity::class.java))
         }
+        startActivity(Intent(this@MainActivity, SearchActivity::class.java))
+    }
+
+    private fun readSearch(doucument: Document?, className: String) {
+        var list = doucument?.getElementsByClass(className)?.first()?.children()
+
     }
 }

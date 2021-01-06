@@ -1,5 +1,8 @@
 package com.qq.readbook;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.File;
 
 /**
@@ -13,14 +16,12 @@ public class FileUtils {
 
     public static void main(String[] args) {
         //放置文件目录
-//        File file = new File("C://Users//Administrator//Desktop//Documents");
-//        showFile(file);
-        System.out.println("--------------------- " + 1/3);
-        System.out.println("--------------------- " + 1/3.0);
-        System.out.println("--------------------- " + 1.0/3);
-        System.out.println("--------------------- " + 1.0/3.0);
-
-
+        File file = new File("C://Users//Administrator//Desktop//Documents");
+        showFile(file);
+        System.out.println("--------------------- " + 1 / 3);
+        System.out.println("--------------------- " + 1 / 3.0);
+        System.out.println("--------------------- " + 1.0 / 3);
+        System.out.println("--------------------- " + 1.0 / 3.0);
     }
 
     static String newPath = "D://wx//";
@@ -28,10 +29,12 @@ public class FileUtils {
     public static void showFile(File file) {
         if (file.isFile()) {
             //判断是否为文件 ，如是打印文件名
-            System.out.println(file.getAbsolutePath() + "   ==" + file.getName());
             String oFileName = file.getName();
             String file4name = file.getParent().substring(file.getParent().lastIndexOf("\\"));
-            System.out.println("--------------------- " + file4name);
+            if (!file.getName().endsWith(".aud")) {
+                System.out.println(file.getAbsolutePath() + "   ==" + file.getName());
+                System.out.println("--------------------- " + file4name);
+            }
             if (oFileName.endsWith(".pic_hd")) {
                 String newFileName = oFileName.replace(".pic_hd", "_t.jpg");
                 File newFile = new File(newPath + "imgh", file4name + newFileName);
@@ -75,9 +78,25 @@ public class FileUtils {
                 } else {
                     System.out.println("failure  :       " + newFile.getAbsolutePath());
                 }
+            } else if (oFileName.contains(".video_thum")) {
+                String newFileName = oFileName.replace(".video_thum", ".jpg");
+                File newFile = new File(newPath + "video_thum", file4name + newFileName);
+                boolean flag = file.renameTo(newFile);
+                if (flag) {
+                    System.out.println("success  :       " + newFile.getAbsolutePath());
+                } else {
+                    System.out.println("failure  :       " + newFile.getAbsolutePath());
+                }
+            } else if (oFileName.contains(".pic_mid")) {
+                String newFileName = oFileName.replace(".pic_mid", ".jpg");
+                File newFile = new File(newPath + "pic_mid", file4name + newFileName);
+                boolean flag = file.renameTo(newFile);
+                if (flag) {
+                    System.out.println("success  :       " + newFile.getAbsolutePath());
+                } else {
+                    System.out.println("failure  :       " + newFile.getAbsolutePath());
+                }
             }
-
-
         } else {
             File[] files = file.listFiles();
             //如不是文件，则将文件夹下的所有文件夹定义为数组

@@ -24,7 +24,7 @@ object BookArticleRepository {
         OkHttp.newHttpCompat().getExecute(
             chapter.url, OkHttp.newParamsCompat(), object : OkNetCallback {
                 override fun onSuccess(statusCode: String?, response: String?) {
-                    var content = TianlaiRead.getContentFormHtml(response)
+                    var content = TianlaiRead().getContentFormHtml(response)
                     if (!content.isNullOrBlank()) {
                         var bookContent = BookContent().apply {
                             number = chapter.number

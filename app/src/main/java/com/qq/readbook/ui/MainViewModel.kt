@@ -3,7 +3,7 @@ package com.qq.readbook.ui
 import com.hqq.core.ui.list.BaseListViewModel
 import com.hqq.core.utils.log.LogUtils
 import com.qq.readbook.bean.Book
-import com.qq.readbook.repository.LatestChapterRepository
+import com.qq.readbook.repository.NewestChapterRepository
 import com.qq.readbook.utils.room.RoomUtils
 import kotlinx.coroutines.*
 
@@ -46,8 +46,8 @@ class MainViewModel : BaseListViewModel() {
 
     private suspend fun doChapterUrl(book: Book, newList: ArrayList<Book>) {
         withContext(Dispatchers.IO) {
-            LatestChapterRepository.doChapterUrl(book,
-                object : LatestChapterRepository.LatestChapter {
+            NewestChapterRepository.doChapterUrl(book,
+                object : NewestChapterRepository.LatestChapter {
                     override fun onEnd(book: Book, isSuccess: Boolean) {
                         LogUtils.e(book.name + "   " + book.newestChapterTitle)
                         newList.add(book)

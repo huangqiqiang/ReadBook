@@ -2,6 +2,7 @@ package com.qq.readbook.repository.read
 
 import com.qq.readbook.bean.Book
 import com.qq.readbook.bean.BookSource
+import com.qq.readbook.bean.Chapter
 import com.qq.readbook.repository.read.face.Read
 import com.qq.readbook.utils.MD5Utils
 import org.jsoup.Jsoup
@@ -14,7 +15,7 @@ import java.util.ArrayList
  * @Email : qiqiang213@gmail.com
  * @Describe :
  */
-object BiQuGeRead  : Read{
+class BiQuGeRead  : Read{
     override fun readSearch(html: String, source: BookSource): ArrayList<Book> {
         val books: ArrayList<Book> = ArrayList<Book>()
         val doc = Jsoup.parse(html)
@@ -52,6 +53,10 @@ object BiQuGeRead  : Read{
         return books;
     }
 
+    override fun readChapters(html: String?, book: Book, source: BookSource): ArrayList<Chapter> {
+        return BaseRead.getChaptersFromHtml(html,book)
+    }
+
     override fun readBookDetail() {
 
     }
@@ -59,8 +64,7 @@ object BiQuGeRead  : Read{
     override fun readNewestChapter() {
     }
 
-    override fun readChapters() {
-    }
+
 
 
 }

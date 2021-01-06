@@ -11,6 +11,7 @@ class BookSource {
     var bookSourceName: String = ""
     var bookSourceUrl: String = ""
     var bookSearchUrl: String = ""
-    var searchMethod: String = ""
+    var sourcesClass: String = ""
     var searchEncode = ""
+    var ruleChapterList=""
 }
