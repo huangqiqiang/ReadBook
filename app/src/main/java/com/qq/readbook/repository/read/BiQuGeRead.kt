@@ -1,10 +1,12 @@
 package com.qq.readbook.repository.read
 
 import com.qq.readbook.bean.Book
-import com.qq.readbook.bean.BookSource
+import com.qq.readbook.bean.BookSources
+import com.qq.readbook.bean.ReadSource
 import com.qq.readbook.bean.Chapter
 import com.qq.readbook.repository.read.face.Read
 import com.qq.readbook.utils.MD5Utils
+import com.qq.readbook.utils.room.RoomUtils
 import org.jsoup.Jsoup
 import java.util.ArrayList
 
@@ -16,7 +18,7 @@ import java.util.ArrayList
  * @Describe :
  */
 class BiQuGeRead  : Read{
-    override fun readSearch(html: String, source: BookSource): ArrayList<Book> {
+    override fun readSearch(html: String, source: ReadSource): ArrayList<Book> {
         val books: ArrayList<Book> = ArrayList<Book>()
         val doc = Jsoup.parse(html)
         var lis = doc.getElementById("main").getElementsByTag("li")
@@ -49,11 +51,16 @@ class BiQuGeRead  : Read{
             book.setSource(source.bookSourceName)
             book.setBookId(MD5Utils.getStringMD5(book.name + book.author))
             books.add(book);
+            val bookSources = BookSources()
+            bookSources.bookId = book.bookId
+            bookSources.sourcesName = book.source
+            bookSources.bookDetailUrl = book.chapterUrl
+            RoomUtils.getBook().bookSources().insertAll(bookSources);
         }
         return books;
     }
 
-    override fun readChapters(html: String?, book: Book, source: BookSource): ArrayList<Chapter> {
+    override fun readChapters(html: String?, book: Book, source: ReadSource): ArrayList<Chapter> {
         return BaseRead.getChaptersFromHtml(html,book)
     }
 

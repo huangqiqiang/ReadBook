@@ -11,6 +11,7 @@ import com.hqq.core.utils.ToastUtils
 import com.hqq.core.utils.log.LogUtils
 import com.qq.readbook.BR
 import com.qq.readbook.DownService
+import com.qq.readbook.Keys
 import com.qq.readbook.R
 import com.qq.readbook.bean.Book
 import com.qq.readbook.bean.Chapter
@@ -22,7 +23,6 @@ import com.qq.readbook.weight.page.ReadSettingManager
 import com.qq.readbook.weight.page.loader.OnPageChangeListener
 import com.qq.readbook.weight.page.loader.PageLoader
 import kotlinx.coroutines.*
-import org.jsoup.helper.DataUtil
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -38,7 +38,7 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
         fun open(context: Activity, item: Book) {
             context.startActivityForResult(
                 Intent(context, ReadBookActivity::class.java)
-                    .putExtra("book", item), -1
+                    .putExtra(Keys.BOOK, item), -1
             )
         }
     }
@@ -69,7 +69,7 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
     var taskBuilder: DownService.TaskBuilder? = null;
 
     override fun initViews() {
-        var book = intent.getParcelableExtra<Book>("book")
+        var book = intent.getParcelableExtra<Book>(Keys.BOOK)
         initService(book)
         binding.tvBarTitle.text = book?.name
         pageLoader = binding.pageView.getPageLoader(book)
@@ -101,14 +101,20 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
         GlobalScope.launch(Dispatchers.IO) {
             // 需要异步加载
             var charpters =
-                RoomUtils.getChapterDataBase(book!!.name + "_" + book.author).chapterDao().getAll()
+                book?.source?.let {
+                    RoomUtils.getChapterDataBase(book.name + "_" + book.author).chapterDao().getAll(
+                        it
+                    )
+                }
             launch(Dispatchers.Main) {
                 if (charpters.isNullOrEmpty()) {
                     // 数据库中没有查询到章节数据
-                    BookDetailActivity.open(activity, book)
+                    if (book != null) {
+                        BookDetailActivity.open(activity, book)
+                    }
                     finish()
                 } else {
-                    book.bookChapterList = charpters
+                    book?.bookChapterList = charpters
                     pageLoader.refreshChapterList()
                 }
                 loadingView.dismiss()
@@ -126,7 +132,7 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
 
     private fun initService(book: Book?) {
         bindService(Intent(this, DownService::class.java).apply {
-            putExtra("book", book)
+            putExtra(Keys.BOOK, book)
         }, object : ServiceConnection {
             override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
                 taskBuilder = service as DownService.TaskBuilder
@@ -286,9 +292,9 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
 
     override fun onDestroy() {
         super.onDestroy()
-        intent.getParcelableExtra<Book>("book")?.apply {
+        intent.getParcelableExtra<Book>(Keys.BOOK)?.apply {
             lastRead = DateUtils.nowDate
-            RoomUtils.getDataBase().bookDao().update(this)
+            RoomUtils.getBook().bookDao().update(this)
 
         }
         pageLoader.closeBook()

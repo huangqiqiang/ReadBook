@@ -1,10 +1,12 @@
 package com.qq.readbook.repository.read
 
 import com.qq.readbook.bean.Book
-import com.qq.readbook.bean.BookSource
+import com.qq.readbook.bean.BookSources
+import com.qq.readbook.bean.ReadSource
 import com.qq.readbook.bean.Chapter
 import com.qq.readbook.repository.read.face.Read
 import com.qq.readbook.utils.MD5Utils
+import com.qq.readbook.utils.room.RoomUtils
 import org.jsoup.Jsoup
 import java.util.ArrayList
 
@@ -16,57 +18,49 @@ import java.util.ArrayList
  * @Describe :
  */
 class DSTieJuanRead : Read {
-    override fun readSearch(html: String, source: BookSource): ArrayList<Book> {
+    override fun readSearch(html: String, source: ReadSource): ArrayList<Book> {
         val books: ArrayList<Book> = ArrayList<Book>()
         val doc = Jsoup.parse(html)
-        val lib = doc.getElementsByClass("library")
-        if (lib.isNotEmpty()) {
-            for (element in lib[0].children()) {
+        doc.getElementsByClass("library").first()?.let {
+            for (element in it.children()) {
                 val book = Book()
-                for (div in element.children()) {
-                    when (div.className()) {
-                        "bookimg" -> {
-                            book.chapterUrl =
-                                source.bookSourceUrl + div.attr("href").replace(".html", "")
-                            book.imgUrl = div.getElementsByTag("img").find {
-                                it.hasAttr("src")
-                            }?.attr("src")
-                        }
-                        "bookname" -> {
-                            book.name = div.text()
-                        }
-                        "author" -> {
-                            book.author = div.text()
-                        }
-                        "intro" -> {
-                            book.desc = div.text()
-                        }
-                        "chapter" -> {
-                            book.newestChapterTitle = div.text()
-                        }
-                    }
+                element.getElementsByClass("bookimg").first()?.let {
+                    book.chapterUrl =
+                        source.bookSourceUrl + it.attr("href").replace(".html", "")
+                    book.imgUrl = it.getElementsByTag("img").find {
+                        it.hasAttr("src")
+                    }?.attr("src")
                 }
+                book.name = element.getElementsByClass("bookname").first()?.text()
+                book.desc = element.getElementsByClass("intro").first()?.text()
+                book.newestChapterTitle = element.getElementsByClass("chapter").first()?.text()
+                book.author = element.getElementsByClass("author").first()?.text()
                 book.source = source.bookSourceName
                 book.bookId = MD5Utils.getStringMD5(book.name + book.author)
                 books.add(book)
+
+                val bookSources = BookSources()
+                bookSources.bookId = book.bookId
+                bookSources.sourcesName = book.source
+                bookSources.bookDetailUrl = book.chapterUrl
+                RoomUtils.getBook().bookSources().insertAll(bookSources);
             }
         }
         return books
     }
 
-    override fun readChapters(html: String?, book: Book, source: BookSource): ArrayList<Chapter> {
+    override fun readChapters(html: String?, book: Book, source: ReadSource): ArrayList<Chapter> {
         val chapters = ArrayList<Chapter>()
         val doc = Jsoup.parse(html)
-
         var list = doc.getElementsByClass("read").firstOrNull()?.getElementsByTag("dl")?.get(1)
         if (list != null) {
-            for ((index,child) in list.children().withIndex()) {
+            for ((index, child) in list.children().withIndex()) {
                 val chapter = Chapter()
                 child.getElementsByTag("a").apply {
-                    chapter.title=text();
-                    chapter.url =source.bookSourceUrl+ attr("href")
+                    chapter.title = text();
+                    chapter.url = source.bookSourceUrl + attr("href")
                 }
-                chapter.number=index
+                chapter.number = index
                 chapter.bookId = book.bookId
                 chapters.add(chapter)
             }

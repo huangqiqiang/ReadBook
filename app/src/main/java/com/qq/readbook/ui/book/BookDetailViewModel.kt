@@ -34,7 +34,7 @@ class BookDetailViewModel : BaseViewModel() {
     override fun onCrete() {
         book.value?.let {
             RoomUtils.getChapterDataBase(it.name + "_" + it.author).chapterDao().apply {
-                chapters.value = getAll()
+                chapters.value = it.source?.let { it1 -> getAll(it1) }
             }
             // 爬取最新目录
             BookChaptersRepository.getBookChapters(it,
@@ -43,13 +43,7 @@ class BookDetailViewModel : BaseViewModel() {
                         chapters.value = arrayList
                     }
                 })
-
-            if (it.source == "笔趣阁") {
-
-
-            }
-
-            var b = RoomUtils.getDataBase().bookDao().getBookById(it.bookId)
+            val b = RoomUtils.getBook().bookDao().getBookById(it.bookId)
             b?.let {
                 // t
                 book.value = b
@@ -72,10 +66,10 @@ class BookDetailViewModel : BaseViewModel() {
     fun onAddBook(view: View) {
         book.value?.let {
             if (addBookMenu.value == true) {
-                RoomUtils.getDataBase().bookDao().insertAll(it)
+                RoomUtils.getBook().bookDao().insertAll(it)
                 setShowToast("添加成功")
             } else {
-                RoomUtils.getDataBase().bookDao().delete(it)
+                RoomUtils.getBook().bookDao().delete(it)
                 setShowToast("删除成功")
             }
             addBookMenu.value = !(addBookMenu.value as Boolean)
@@ -88,7 +82,7 @@ class BookDetailViewModel : BaseViewModel() {
     fun onReadBook(view: View) {
         book.value?.let {
             startActivity(ReadBookActivity::class.java, Bundle().apply {
-                putParcelable("book", book.value)
+                putParcelable(Keys.BOOK, book.value)
             })
         }
     }
@@ -97,7 +91,9 @@ class BookDetailViewModel : BaseViewModel() {
      *  切换源
      */
     fun onOtherSources(view: View) {
-        startActivity(BookSourceActivity::class.java)
+        startActivity(BookSourceActivity::class.java, Bundle().apply {
+            putParcelable(Keys.BOOK, book.value)
+        })
     }
 
 }

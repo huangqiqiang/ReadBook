@@ -6,7 +6,6 @@ import com.hqq.core.utils.log.LogUtils
 import com.qq.readbook.BookSourceUtils
 import com.qq.readbook.bean.Book
 import com.qq.readbook.bean.Chapter
-import com.qq.readbook.repository.read.TianlaiRead
 import com.qq.readbook.utils.room.RoomUtils
 
 
@@ -28,7 +27,6 @@ object BookChaptersRepository {
         LogUtils.d("加载目录  :   " + book.chapterUrl)
         OkHttp.newHttpCompat()[book.chapterUrl, OkHttp.newParamsCompat(), object : OkNetCallback {
             override fun onSuccess(statusCode: String, response: String) {
-
                 val clas =
                     Class.forName("com.qq.readbook.repository.read." + source.sourcesClass)
                 val method = clas.methods.firstOrNull {
@@ -38,13 +36,13 @@ object BookChaptersRepository {
                     method?.invoke(clas.newInstance(), response, book, source) as ArrayList<Chapter>
 //                val arrayList = TianlaiRead().getChaptersFromHtml(response, book,source)
                 bookChaptersCall?.onSuccess(arrayList)
-                RoomUtils.getDataBase().run {
+                RoomUtils.getBook().run {
                     RoomUtils.getChapterDataBase(book.name + "_" + book.author).chapterDao().apply {
                         // 获取的章节数量不一致 则出现了新的章节
-                        if (getAll().size != arrayList.size) {
+                        if (book.source?.let { getAll(it).size } != arrayList.size) {
                             deleteAll()
                             resetId()
-                            insert(arrayList )
+                            insert(arrayList)
                         }
                     }
                 }

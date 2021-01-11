@@ -7,7 +7,7 @@ package com.qq.readbook.bean
  * @Email : qiqiang213@gmail.com
  * @Describe :
  */
-class BookSource {
+class ReadSource {
     var bookSourceName: String = ""
     var bookSourceUrl: String = ""
     var bookSearchUrl: String = ""

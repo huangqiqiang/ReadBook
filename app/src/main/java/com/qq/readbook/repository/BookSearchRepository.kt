@@ -4,11 +4,7 @@ import com.hqq.core.net.ok.OkHttp
 import com.hqq.core.net.ok.OkNetCallback
 import com.hqq.core.utils.log.LogUtils
 import com.qq.readbook.bean.Book
-import com.qq.readbook.bean.BookSource
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import org.jsoup.Jsoup
+import com.qq.readbook.bean.ReadSource
 import java.net.URLEncoder
 import java.util.*
 
@@ -26,7 +22,7 @@ object BookSearchRepository {
      * @param key
      */
     @JvmStatic
-    fun doSearch(source: BookSource, key: String, callback: SearchRepositoryCallback) {
+    fun doSearch(source: ReadSource, key: String, callback: SearchRepositoryCallback) {
         val call = object : OkNetCallback {
             override fun onSuccess(statusCode: String?, response: String?) {
                 response?.let { it ->
@@ -60,13 +56,13 @@ object BookSearchRepository {
      *
      */
     private fun doPost(
-        source: BookSource,
+        source: ReadSource,
         key: String,
         callback: OkNetCallback
     ) {
         val keys = source.bookSearchUrl.split("@")
         OkHttp.newHttpCompat()
-            .post(keys[0], OkHttp.newParamsCompat().apply { put(keys[1], key) }, callback)
+            .postExecute(keys[0], OkHttp.newParamsCompat().apply { put(keys[1], key) }, callback)
 
 
     }
@@ -75,7 +71,7 @@ object BookSearchRepository {
      *  get 请求
      */
     private fun doGet(
-        source: BookSource,
+        source: ReadSource,
         key: String,
         callback: OkNetCallback
     ) {
@@ -84,7 +80,7 @@ object BookSearchRepository {
         } else {
             String.format(source.bookSearchUrl, key)
         }
-        OkHttp.newHttpCompat().get(url, null, callback)
+        OkHttp.newHttpCompat().getExecute(url, null, callback)
     }
 
 

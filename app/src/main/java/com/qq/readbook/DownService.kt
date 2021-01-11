@@ -26,7 +26,7 @@ class DownService : BaseService() {
     private val taskBuilder = TaskBuilder()
     val successMap = ArrayMap<Int, Chapter>()
     override fun onBind(intent: Intent): IBinder {
-        var book = intent.getParcelableExtra<Book>("book")
+        var book = intent.getParcelableExtra<Book>(Keys.BOOK)
         LogUtils.e("----------onBind")
         //  liveData 观察数据  监听需要缓存的 数据
         taskBuilder.dataList.observe(this@DownService, object : Observer<List<Chapter>> {

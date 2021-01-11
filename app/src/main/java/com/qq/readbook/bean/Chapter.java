@@ -42,6 +42,23 @@ public class Chapter implements Parcelable {
      */
     private boolean isCache;
 
+    /**
+     * 当前源
+     */
+    private String sources;
+
+
+    public String getSources() {
+        return sources;
+    }
+
+    public void setSources(String sources) {
+        this.sources = sources;
+    }
+
+    public static Creator<Chapter> getCREATOR() {
+        return CREATOR;
+    }
 
     public int getId() {
         return id;

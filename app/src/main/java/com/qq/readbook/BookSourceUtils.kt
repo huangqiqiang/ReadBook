@@ -1,6 +1,6 @@
 package com.qq.readbook
 
-import com.qq.readbook.bean.BookSource
+import com.qq.readbook.bean.ReadSource
 
 /**
  * @Author : huangqiqiang
@@ -24,23 +24,23 @@ class BookSourceUtils {
         val M_INSTANCE: BookSourceUtils = BookSourceUtils()
     }
 
-    var sourceList = ArrayList<BookSource>()
+    var sourceList = ArrayList<ReadSource>()
 
     init {
-        sourceList.add(BookSource().apply {
+        sourceList.add(ReadSource().apply {
             this.bookSourceName = "丹书铁卷⑫"
             this.bookSearchUrl = "https://www.dstiejuan.com/search.html@searchkey"
             this.bookSourceUrl = "https://www.dstiejuan.com"
             this.sourcesClass = "DSTieJuanRead"
         })
-        sourceList.add(BookSource().apply {
+        sourceList.add(ReadSource().apply {
             this.bookSourceName = "天籁小说"
             this.bookSearchUrl = "https://www.23txt.com/search.php?q=%s"
             this.bookSourceUrl = "https://www.23txt.com/"
             this.sourcesClass = "TianlaiRead"
             this.ruleChapterList = "result-game-item-detail"
         })
-        sourceList.add(BookSource().apply {
+        sourceList.add(ReadSource().apply {
             this.bookSourceName = "笔趣阁"
             this.bookSearchUrl = "https://www.52bqg.net/modules/article/search.php?searchkey=%s"
             this.bookSourceUrl = "https://www.23txt.com/"

@@ -12,7 +12,6 @@ import com.qq.readbook.ui.book.BookDetailActivity
 import com.qq.readbook.ui.book.ReadBookActivity
 import com.qq.readbook.utils.room.RoomUtils
 import kotlinx.coroutines.*
-import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
 class MainActivity : BaseVmListActivity<MainViewModel, ActivityMainBinding>() {
@@ -28,7 +27,7 @@ class MainActivity : BaseVmListActivity<MainViewModel, ActivityMainBinding>() {
                     BookDetailActivity.open(activity, getItem(position))
                 }
                 R.id.tv_delete -> {
-                    RoomUtils.getDataBase().bookDao().delete(getItem(position))
+                    RoomUtils.getBook().bookDao().delete(getItem(position))
                     removeAt(position)
                 }
                 R.id.ll_content -> {

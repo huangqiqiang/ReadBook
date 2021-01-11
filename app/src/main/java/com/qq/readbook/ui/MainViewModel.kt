@@ -27,7 +27,7 @@ class MainViewModel : BaseListViewModel() {
 
     override fun onLoadMore() {
         super.onLoadMore()
-        var list = RoomUtils.getDataBase().bookDao().getAll()
+        var list = RoomUtils.getBook().bookDao().getAll()
         //1分钟
         if (System.currentTimeMillis() - updateTime > 1000 * 60) {
             // 同步更新数据

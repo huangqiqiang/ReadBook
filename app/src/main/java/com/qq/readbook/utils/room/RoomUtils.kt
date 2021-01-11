@@ -1,12 +1,12 @@
 package com.qq.readbook.utils.room
 
-import android.app.Application
 import androidx.room.*
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.hqq.core.CoreConfig
 import com.qq.readbook.bean.Book
 import com.qq.readbook.bean.BookContent
+import com.qq.readbook.bean.BookSources
 import com.qq.readbook.bean.Chapter
 import com.qq.readbook.weight.page.BookRecordBean
 
@@ -38,9 +38,23 @@ interface BookDao {
 }
 
 @Dao
+interface BookSourcesDao {
+    @Query("SELECT * FROM BookSources  ")
+    fun getAll(): List<BookSources>
+
+    @Query("SELECT * FROM BookSources WHERE sourcesName =:sourcesName AND bookId =:bookId")
+    fun getBookSource(sourcesName: String, bookId: String): BookSources?
+
+
+    @Insert
+    fun insertAll(vararg source: BookSources)
+}
+
+
+@Dao
 interface ChapterDao {
-    @Query("SELECT * FROM Chapter")
-    fun getAll(): List<Chapter>
+    @Query("SELECT * FROM Chapter WHERE sources =:sources")
+    fun getAll(sources: String): List<Chapter>
 
     @Insert
     fun insertAll(vararg chapter: Chapter)
@@ -83,9 +97,11 @@ interface BookContentDao {
     fun insert(bookContent: BookContent)
 }
 
-@Database(entities = [Book::class], version = 1, exportSchema = false)
+@Database(entities = [Book::class, BookSources::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun bookDao(): BookDao
+
+    abstract fun bookSources(): BookSourcesDao
 }
 
 @Database(
@@ -106,11 +122,17 @@ abstract class ChapterDatabase : RoomDatabase() {
  *  3.  缓存成本地文件 使用文件读取
  */
 object RoomUtils {
-    // LRU
-    val mapDataBase = HashMap<String, ChapterDatabase>()
-    var appDatabase: AppDatabase? = null
+    /**
+     *
+     */
+    private val chapterDatabase = HashMap<String, ChapterDatabase>()
 
-    fun <T : RoomDatabase> getBase(java: Class<T>, name: String): T {
+    /**
+     *
+     */
+    private var bookDatabase: AppDatabase? = null
+
+    private fun <T : RoomDatabase> getBase(java: Class<T>, name: String): T {
         return Room.databaseBuilder(
             CoreConfig.get().application!!,
             java, name
@@ -128,21 +150,21 @@ object RoomUtils {
             .build()
     }
 
-    fun getDataBase(name: String = "books.db"): AppDatabase {
-        if (appDatabase == null) {
-            appDatabase = getBase(AppDatabase::class.java, name)
+    fun getBook(name: String = "books.db"): AppDatabase {
+        if (bookDatabase == null) {
+            bookDatabase = getBase(AppDatabase::class.java, name)
         }
-        return appDatabase!!
+        return bookDatabase!!
 
     }
 
     fun getChapterDataBase(
         name: String,
     ): ChapterDatabase {
-        var dataBase = mapDataBase.get(name)
+        var dataBase = chapterDatabase.get(name)
         if (dataBase == null) {
             dataBase = getBase(ChapterDatabase::class.java, name);
-            mapDataBase.put(name, dataBase)
+            chapterDatabase.put(name, dataBase)
         }
 
         return dataBase
