@@ -1,12 +1,18 @@
 package com.qq.readbook
 
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
-
+import androidx.test.platform.app.InstrumentationRegistry
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import com.google.gson.stream.JsonReader
+import com.qq.readbook.bean.ReadSource
+import com.qq.readbook.repository.SearchBookRepository
+import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
-
-import org.junit.Assert.*
+import java.io.IOException
+import java.io.InputStream
+import java.io.InputStreamReader
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -20,5 +26,31 @@ class ExampleInstrumentedTest {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         assertEquals("com.qq.readbook", appContext.packageName)
+
+        var sourceList=ArrayList<ReadSource>()
+        try {
+            val inputStream = appContext.assets.open("test.json")
+            val inputStreamReader = InputStreamReader(inputStream)
+            val jsonReader = JsonReader(inputStreamReader)
+            sourceList = Gson().fromJson<ArrayList<ReadSource>>(
+                jsonReader,
+                object : TypeToken<ArrayList<ReadSource>>() {}.type
+            )
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+        val `is`: InputStream = appContext.getAssets().open("test.html")
+        val lenght: Int = `is`.available()
+        val buffer = ByteArray(lenght)
+        `is`.read(buffer)
+        val result = String(buffer)
+
+        sourceList
+
+
+
+        SearchBookRepository.doReadBookList(result,sourceList[0])
     }
+
 }

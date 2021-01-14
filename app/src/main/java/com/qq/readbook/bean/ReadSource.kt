@@ -8,10 +8,35 @@ package com.qq.readbook.bean
  * @Describe :
  */
 class ReadSource {
+    /**
+     *  资源名称
+     */
     var bookSourceName: String = ""
+
+    /**
+     *  资源地址
+     */
     var bookSourceUrl: String = ""
+
+    /**
+     *  资源搜索地址
+     */
     var bookSearchUrl: String = ""
-    var sourcesClass: String = ""
+
+    /**
+     *   是否需要encode
+     */
     var searchEncode = ""
-    var ruleChapterList=""
+
+    /**
+     *  搜索规则
+     */
+    var searchRule: String = ""
+
+
+    /**
+     *  章节规则
+     */
+    var chapterRule: String = ""
+
 }

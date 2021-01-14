@@ -8,6 +8,7 @@ import android.util.ArrayMap
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import com.hqq.core.lifecycle.BaseService
 import com.hqq.core.utils.log.LogUtils
 import com.qq.readbook.bean.Book
 import com.qq.readbook.bean.Chapter
@@ -40,7 +41,7 @@ class DownService : BaseService() {
                 }
             }
         })
-        mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
+       mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
         return taskBuilder
     }
 

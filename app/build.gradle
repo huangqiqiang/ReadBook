@@ -74,12 +74,11 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-    implementation 'com.github.huangqiqiang:CoreLibrary:1.2.36'
+    implementation 'com.github.huangqiqiang:CoreLibrary:1.2.41'
     implementation Room.runtime
     kapt Room.compiler
 
     debugImplementation Leakcanary.leakcanary
-
 
 
     implementation Jsoup.jsoup

@@ -21,19 +21,18 @@ object BookChaptersRepository {
      *  读取数据量 目录列表
      */
     fun getBookChapters(book: Book, bookChaptersCall: BookChaptersCall?) {
-        var source = BookSourceUtils.getInstance().sourceList.first {
+        var source = BookSourceUtils.getInstance().sourceList?.first {
             it.bookSourceName == book.source
         }
         LogUtils.d("加载目录  :   " + book.chapterUrl)
         OkHttp.newHttpCompat()[book.chapterUrl, OkHttp.newParamsCompat(), object : OkNetCallback {
             override fun onSuccess(statusCode: String, response: String) {
-                val clas =
-                    Class.forName("com.qq.readbook.repository.read." + source.sourcesClass)
-                val method = clas.methods.firstOrNull {
-                    it.name == "readChapters"
-                }
-                val arrayList =
-                    method?.invoke(clas.newInstance(), response, book, source) as ArrayList<Chapter>
+//                val clas =
+//                    Class.forName("com.qq.readbook.repository.read.")
+//                val method = clas.methods.firstOrNull {
+//                    it.name == "readChapters"
+//                }
+                val arrayList =JsoupUtils.readChapter(response,source)
 //                val arrayList = TianlaiRead().getChaptersFromHtml(response, book,source)
                 bookChaptersCall?.onSuccess(arrayList)
                 RoomUtils.getBook().run {

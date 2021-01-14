@@ -2,6 +2,7 @@ package com.qq.readbook.repository
 
 import com.hqq.core.net.ok.OkHttp
 import com.hqq.core.net.ok.OkNetCallback
+import com.hqq.core.utils.log.LogUtils
 import com.qq.readbook.bean.Book
 import com.qq.readbook.repository.read.TianlaiRead
 import org.jsoup.Jsoup
@@ -20,7 +21,6 @@ object BookDetailRepository {
                 override fun onSuccess(statusCode: String, response: String) {
                     val b = getNewChapterFormHtml(response, book)
                     latestChapter.onEnd(b, true)
-
                 }
                 override fun onFailure(statusCode: String?, errMsg: String?, response: String?) {
                     latestChapter.onEnd(book, false)
@@ -30,6 +30,10 @@ object BookDetailRepository {
     }
 
     fun getNewChapterFormHtml(html: String?, book: Book): Book {
+        LogUtils.e("-----------------------")
+        LogUtils.e("解析最新章节")
+        LogUtils.e(book.name)
+        LogUtils.e(book.source)
         val doc = Jsoup.parse(html)
         val info = doc.getElementById("info")
         for (child in info.children()) {
@@ -43,6 +47,9 @@ object BookDetailRepository {
                 }
             }
         }
+        LogUtils.e("解析最新章节结束")
+        LogUtils.e("-----------------------")
+
         return book;
     }
 

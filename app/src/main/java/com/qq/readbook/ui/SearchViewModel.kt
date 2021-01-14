@@ -6,7 +6,7 @@ import com.hqq.core.ui.list.BaseListViewModel
 import com.qq.readbook.BookSourceUtils
 import com.qq.readbook.bean.Book
 import com.qq.readbook.bean.ReadSource
-import com.qq.readbook.repository.BookSearchRepository
+import com.qq.readbook.repository.SearchBookRepository
 import kotlinx.coroutines.*
 import java.util.*
 
@@ -24,16 +24,16 @@ class SearchViewModel : BaseListViewModel() {
         pageCount = 1
         pageSize = 20
         CoroutineScope(Dispatchers.Main).launch {
-            for (bookSource in BookSourceUtils.getInstance().sourceList) {
+            for (bookSource in BookSourceUtils.getInstance().sourceList!!) {
                 doSearch(bookSource, key)
             }
         }
     }
     private suspend fun doSearch(readSource: ReadSource, key: String) {
         withContext(Dispatchers.IO) {
-            BookSearchRepository.doSearch(
+            SearchBookRepository.doSearch(
                 readSource, key,
-                object : BookSearchRepository.SearchRepositoryCallback {
+                object : SearchBookRepository.SearchRepositoryCallback {
                     override fun onSearchBook(book: ArrayList<Book>?, isSuccess: Boolean) {
                         GlobalScope.launch(Dispatchers.Main) {
                             liveBooks.value = book

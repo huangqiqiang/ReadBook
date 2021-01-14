@@ -13,6 +13,9 @@ import com.qq.readbook.bean.Book
 import com.qq.readbook.bean.ReadSource
 import com.qq.readbook.repository.BookDetailRepository
 import com.qq.readbook.utils.room.RoomUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * @Author : huangqiqiang
@@ -41,7 +44,7 @@ class BookSourceActivity : BaseListActivity() {
     override fun initData() {
         book = intent.getParcelableExtra<Book>(Keys.BOOK)!!
 
-        listModel.fillingData(getInstance().sourceList)
+        getInstance().sourceList?.let { listModel.fillingData(it) }
     }
 
     inner class BookSourceAdapter :
@@ -58,11 +61,15 @@ class BookSourceActivity : BaseListActivity() {
             } else {
                 // 请求url   查询源是否可用
                 LogUtils.e("BookSourceAdapter   " + book.name + "---" + readSource.bookSourceName + " :   " + url)
-                BookDetailRepository.doChapterUrl(book,object :BookDetailRepository.LatestChapter{
-                    override fun onEnd(book: Book, isSuccess: Boolean) {
+                CoroutineScope(Dispatchers.IO).launch {
 
-                    }
-                })
+                    BookDetailRepository.doChapterUrl(book,
+                        object : BookDetailRepository.LatestChapter {
+                            override fun onEnd(book: Book, isSuccess: Boolean) {
+
+                            }
+                        })
+                }
 
             }
         }

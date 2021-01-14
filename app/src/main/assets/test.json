@@ -1,0 +1,9 @@
+[
+  {
+    "bookSearchUrl": "https://www.dstiejuan.com/search.html@searchkey",
+    "bookSourceName": "丹书铁卷⑫",
+    "bookSourceUrl": "https://www.dstiejuan.com",
+    "searchEncode": "",
+    "searchRule": "{\"ruleSearchList\":[{\"elementType\":\"class\",\"elementValue\":\"library\"}],\"ruleBookName\":[{\"elementType\":\"class\",\"elementValue\":\"bookname\",\"attrValue\":\"text\"}],\"ruleDesc\":[{\"elementType\":\"class\",\"elementValue\":\"intro\",\"attrValue\":\"text\"}],\"ruleAuthor\":[{\"elementType\":\"class\",\"elementValue\":\"author\",\"attrValue\":\"text\"}],\"newestChapterTitle\":[{\"elementType\":\"class\",\"elementValue\":\"chapter\",\"attrValue\":\"text\"}],\"chapterUrl\":[{\"elementType\":\"class\",\"elementValue\":\"bookimg\",\"attrValue\":\"href\",\"chapterRule\":{\"end\":\".html\"}}],\"ruleImg\":[{\"elementType\":\"tag\",\"elementValue\":\"img\",\"attrValue\":\"src\",\"position\":0}]}"
+  }
+]

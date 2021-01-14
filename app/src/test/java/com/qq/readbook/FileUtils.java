@@ -1,5 +1,7 @@
 package com.qq.readbook;
 
+import com.google.gson.stream.JsonReader;
+
 import java.io.File;
 
 /**
@@ -23,6 +25,7 @@ public class FileUtils {
     static String newPath = "D://wx//";
 
     public static void showFile(File file) {
+
         if (file.isFile()) {
             //判断是否为文件 ，如是打印文件名
             String oFileName = file.getName();
