@@ -1,6 +1,7 @@
 package com.qq.readbook.repository
 
 import com.google.gson.*
+import com.hqq.core.utils.log.LogUtils
 import com.qq.readbook.Keys
 import com.qq.readbook.bean.Book
 import com.qq.readbook.bean.Chapter
@@ -68,10 +69,11 @@ object JsoupUtils {
      */
     fun doElementValue(element: Element, jsonObject: JsonObject?): String {
         when (jsonObject?.get(Keys.ELEMENT_TYPE)?.asString) {
-            Keys.CLASS -> {
+            Keys.ATTR_CLASS -> {
                 return getClassElementValue(element, jsonObject)
             }
-            Keys.TAG -> {
+            Keys.LABEL_TAG
+            -> {
                 return getTagElementValue(element, jsonObject)
             }
         }
@@ -86,13 +88,19 @@ object JsoupUtils {
      * @return String
      */
     fun getTagElementValue(element: Element, rule: JsonObject): String {
+        val value = element.getElementsByTag(rule.get(Keys.ELEMENT_VALUE)?.asString)
         when (rule.get(Keys.ATTR_VALUE)?.asString) {
-            Keys.SRC -> {
+            Keys.ATTR_SRC -> {
                 //预留一个Position
-                return element.getElementsByTag(rule.get(Keys.ELEMENT_VALUE)?.asString).find {
-                    it.hasAttr(Keys.SRC)
-                }?.attr(Keys.SRC).toString()
-
+                return value.find {
+                    it.hasAttr(Keys.ATTR_SRC)
+                }?.attr(Keys.ATTR_SRC).toString()
+            }
+            Keys.ATTR_TEXT -> {
+                return value.text()
+            }
+            Keys.ATTR_HREF -> {
+                return doFormatHref(value, rule)
             }
         }
 
@@ -107,16 +115,30 @@ object JsoupUtils {
      * @return String
      */
     fun getClassElementValue(element: Element?, rule: JsonObject?): String {
+        val elements = element?.getElementsByClass(rule?.get(Keys.ELEMENT_VALUE)?.asString)
         when (rule?.get(Keys.ATTR_VALUE)?.asString) {
-            Keys.TEXT -> {
-                return element?.getElementsByClass(rule.get(Keys.ELEMENT_VALUE).asString)?.first()?.text().toString()
+            Keys.ATTR_TEXT -> {
+                return elements?.first()?.text().toString()
             }
-            Keys.HREF -> {
-                var url = element?.getElementsByClass(rule.get(Keys.ELEMENT_VALUE).asString)?.attr(Keys.HREF).toString()
-                return formatUrl(rule, url)
+            Keys.ATTR_HREF -> {
+                return doFormatHref(elements, rule)
             }
         }
 
+        return ""
+    }
+
+    /**
+     *  格式化 Href
+     * @param elements Elements?
+     * @param rule JsonObject?
+     * @return String
+     */
+    private fun doFormatHref(elements: Elements?, rule: JsonObject?): String {
+        val url = elements?.attr(Keys.ATTR_HREF).toString()
+        rule?.let {
+            return formatUrl(rule, url)
+        }
         return ""
     }
 
@@ -128,41 +150,93 @@ object JsoupUtils {
      */
     private fun formatUrl(rule: JsonObject, url: String): String {
         var url1 = url
-        val jsonElement = rule.get(Keys.CHAPTER_RULE);
+        val jsonElement = rule.get(Keys.FORMAT_RULE);
         if (true == jsonElement?.toString()?.isEmpty()) {
             return url1
         } else {
             val jsonObject = jsonElement.asJsonObject
-            if (jsonObject.get(Keys.END).asString.isNotEmpty()) {
-                url1 = url1.replace(jsonObject.get(Keys.END).asString, "")
+            when (jsonObject.get(Keys.TYPE)?.asString) {
+                Keys.REPLACE_END -> {
+                    url1 = url1.replace(jsonObject.get(Keys.VALUE).asString, "")
+                }
+                Keys.ADD_START -> {
+                    url1 = jsonObject.get(Keys.VALUE)?.asString + url1
+                }
             }
             return url1
         }
     }
 
     /**
-     *  读取 搜索列表
+     *  读取List数据  JsonArray
      * @param doc Document
      * @param rule JsonElement
      * @return Elements?
      */
-    fun getBookElementList(doc: Document, rule: JsonElement): Elements? {
-        if (rule is JsonArray) {
-            var jsonArray = rule.asJsonArray
-            for (jsonElement in jsonArray) {
-                if (jsonElement.asJsonObject.get(Keys.ELEMENT_TYPE).asString == Keys.CLASS) {
-                    return doc.getElementsByClass(
-                        jsonElement.asJsonObject.get(Keys.ELEMENT_VALUE).asString
-                    )
+    fun getElementList(doc: Document, rule: JsonElement?): Elements? {
+        rule?.let {
+            if (rule is JsonArray) {
+                var jsonArray = rule.asJsonArray
+                for (jsonElement in jsonArray) {
+                    return doElementList(doc, jsonElement)
                 }
-            }
-        } else if (rule is JsonObject) {
-            val jsonObject = rule.asJsonObject
-            if (jsonObject.get(Keys.ELEMENT_TYPE).asString == Keys.CLASS) {
-                return doc.getElementsByClass(jsonObject.get(Keys.ELEMENT_VALUE).asString)
+            } else if (rule is JsonObject) {
+                return doElementList(doc, rule.asJsonObject)
+
             }
         }
         return null
+    }
+
+    /**
+     *  读取逻辑
+     * @param doc Document
+     * @param jsonElement JsonElement
+     * @return Elements?
+     */
+    private fun doElementList(doc: Document, jsonElement: JsonElement): Elements? {
+        var elements: Elements? = getElementsByValue(jsonElement, doc)
+        //  判断是否需要迭代数据
+        val child = jsonElement.asJsonObject.get(Keys.RULE_CHILD)
+        if (child != null && child is JsonObject) {
+            // 递归调用
+            return getElementList(doc, child)
+        } else {
+            return elements
+        }
+        return null
+    }
+
+    /**
+     *  根据 Value 读取数据
+     * @param jsonElement JsonElement
+     * @param doc Document
+     * @return Elements?
+     */
+    private fun getElementsByValue(jsonElement: JsonElement, doc: Document): Elements? {
+        val type = jsonElement.asJsonObject.get(Keys.ELEMENT_TYPE)?.asString
+        val value = jsonElement.asJsonObject.get(Keys.ELEMENT_VALUE)?.asString
+        var elements: Elements? = null
+        when (type) {
+            Keys.ATTR_CLASS -> {
+                elements = doc.getElementsByClass(value)
+            }
+            Keys.LABEL_TAG -> {
+                elements = doc.getElementsByTag(value)
+            }
+        }
+        val postion = jsonElement.asJsonObject.get(Keys.POSITION)?.asInt
+        if (postion != null && postion > 0) {
+            val positionValue = elements?.get(postion)
+            if (positionValue is Elements) {
+                return positionValue
+            } else {
+                LogUtils.e("getElementsByValue :  $jsonElement")
+                elements = positionValue?.children()
+            }
+        }
+
+        return elements
     }
 
     /**
@@ -195,14 +269,26 @@ object JsoupUtils {
      * @param source ReadSource?
      * @return ArrayList<Chapter>
      */
-    fun readChapter(html: String, source: ReadSource?): ArrayList<Chapter> {
+    fun readChapter(html: String, source: ReadSource?, book: Book): ArrayList<Chapter> {
         val chapters = ArrayList<Chapter>()
         val doc = Jsoup.parse(html)
         if (source != null) {
-            val searchElement = getJsonElement(source.chapterRule)
-
-
-            var list = doc.getElementsByClass("read").firstOrNull()?.getElementsByTag("dl")?.get(1)
+            val chapterElement = getJsonElement(source.chapterRule)
+            chapterElement?.let {
+                if (it is JsonObject) {
+                    var list = getElementList(doc, it.asJsonObject.get(Keys.CHAPTER_LIST))
+                    if (list != null) {
+                        for ((index, child) in list.withIndex()) {
+                            val chapter = Chapter()
+                            chapter.title = getElementValue(child, chapterElement.asJsonObject.get(Keys.TITLE))
+                            chapter.url = getElementValue(child, chapterElement.asJsonObject.get(Keys.URL))
+                            chapter.number = index
+                            chapter.bookId = book.bookId
+                            chapters.add(chapter)
+                        }
+                    }
+                }
+            }
         }
 
         return chapters;

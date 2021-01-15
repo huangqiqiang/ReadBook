@@ -69,8 +69,8 @@ object SearchBookRepository {
             if (array is JsonArray) {
                 for (jsonElement in array.asJsonArray) {
                     if (jsonElement is JsonObject) {
-                        if ((jsonElement.asJsonObject).get(Keys.ELEMENT_TYPE).asString == Keys.CLASS) {
-                            JsoupUtils.getBookElementList(doc, jsonElement)?.first()?.let {
+                        if ((jsonElement.asJsonObject).get(Keys.ELEMENT_TYPE).asString == Keys.ATTR_CLASS) {
+                            JsoupUtils.getElementList(doc, jsonElement)?.first()?.let {
                                 for (child in it.children()) {
                                     val book = JsoupUtils.doReadBook(child, source, searchElement)
                                     books.add(book)
