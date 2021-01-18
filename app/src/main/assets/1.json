@@ -6,19 +6,7 @@
     "searchDetail": false,
     "searchRule": "{\"ruleSearchList\":[{\"elementType\":\"class\",\"elementValue\":\"library\",\"ruleChild\":{\"elementType\":\"tag\",\"elementValue\":\"li\"}}],\"ruleBookName\":[{\"elementType\":\"class\",\"elementValue\":\"bookname\",\"attrValue\":\"text\"}],\"ruleDesc\":[{\"elementType\":\"class\",\"elementValue\":\"intro\",\"attrValue\":\"text\"}],\"ruleAuthor\":[{\"elementType\":\"class\",\"elementValue\":\"author\",\"attrValue\":\"text\"}],\"newestChapterTitle\":[{\"elementType\":\"class\",\"elementValue\":\"chapter\",\"attrValue\":\"text\"}],\"chapterUrl\":[{\"elementType\":\"class\",\"elementValue\":\"bookimg\",\"attrValue\":\"href\",\"formatRule\":{\"type\":\"replaceEnd\",\"value\":\".html\",\"formatRule\":{\"type\":\"addStart\",\"value\":\"https://www.dstiejuan.com\"}}}],\"ruleImg\":[{\"elementType\":\"tag\",\"elementValue\":\"img\",\"attrValue\":\"src\",\"position\":0}],\"ruleType\":{\"elementType\":\"tag\",\"elementValue\":\"p\",\"ruleChild\":{\"elementType\":\"tag\",\"elementValue\":\"a\",\"position\":1}}}",
     "chapterRule": "{\"chapterList\":{\"elementType\":\"class\",\"elementValue\":\"read\",\"ruleChild\":{\"elementType\":\"tag\",\"elementValue\":\"dl\",\"position\":1}},\"title\":{\"elementType\":\"tag\",\"elementValue\":\"dd\",\"attrValue\":\"text\"},\"url\":{\"elementType\":\"tag\",\"elementValue\":\"a\",\"attrValue\":\"href\",\"formatRule\":{\"value\":\"https://www.dstiejuan.com\",\"type\":\"addStart\"}}}",
-    "articleContent": "{\"elementType\":\"id\",\"elementValue\":\"content\"}"
-  },
-  {
-    "bookSourceName": "天籁小说",
-    "bookSearchUrl": "https://www.23txt.com/search.php?q=%s",
-    "bookSourceUrl": "https://www.23txt.com/",
-    "searchRule": "{\"ruleSearchList\":[{\"elementType\":\"class\",\"elementValue\":\"library\"}],\"ruleBookName\":[{\"elementType\":\"class\",\"elementValue\":\"bookname\",\"attrValue\":\"text\"}],\"ruleDesc\":[{\"elementType\":\"class\",\"elementValue\":\"intro\",\"attrValue\":\"text\"}],\"ruleAuthor\":[{\"elementType\":\"class\",\"elementValue\":\"author\",\"attrValue\":\"text\"}],\"newestChapterTitle\":[{\"elementType\":\"class\",\"elementValue\":\"chapter\",\"attrValue\":\"text\"}],\"chapterUrl\":[{\"elementType\":\"class\",\"elementValue\":\"bookimg\",\"attrValue\":\"href\"}],\"ruleImg\":[{\"elementType\":\"tag\",\"elementValue\":\"img\",\"attrValue\":\"src\",\"position\":0}]}"
-  },
-  {
-    "bookSourceName": "笔趣阁",
-    "bookSearchUrl": "https://www.52bqg.net/modules/article/search.php?searchkey=%s",
-    "bookSourceUrl": "https://www.23txt.com/",
-    "searchRule": "{\"ruleSearchList\":[{\"elementType\":\"class\",\"elementValue\":\"novelslistss\",\"ruleChild\":{\"elementType\":\"tag\",\"elementValue\":\"li\"}}],\"ruleBookName\":[{\"elementType\":\"class\",\"elementValue\":\"s2\",\"ruleChild\":{\"elementType\":\"tag\",\"elementValue\":\"s2\",\"attrValue\":\"text\"}}],\"ruleAuthor\":[{\"elementType\":\"class\",\"elementValue\":\"s4\",\"attrValue\":\"text\"}],\"newestChapterTitle\":[{\"elementType\":\"class\",\"elementValue\":\"s3\",\"attrValue\":\"text\"}],\"chapterUrl\":[{\"elementType\":\"class\",\"elementValue\":\"s2\",\"ruleChild\":{\"elementType\":\"tag\",\"elementValue\":\"a\",\"attrValue\":\"href\"}}]}",
-    "searchEncode": "gb2312"
+    "articleContent": "{\"elementType\":\"id\",\"elementValue\":\"content\"}",
+    "newestChapter": "{\"elementType\":\"class\",\"elementValue\":\"read\",\"ruleChild\":{\"elementType\":\"tag\",\"elementValue\":\"dl\",\"ruleChild\":{\"elementType\":\"tag\",\"elementValue\":\"dd\",\"ruleChild\":{\"elementType\":\"tag\",\"elementValue\":\"a\",\"attrValue\":\"text\"}}}}"
   }
 ]

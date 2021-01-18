@@ -6,6 +6,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.google.gson.stream.JsonReader
 import com.qq.readbook.bean.ReadSource
+import com.qq.readbook.repository.JsoupUtils
 import com.qq.readbook.repository.SearchBookRepository
 import org.junit.Assert.*
 import org.junit.Test
@@ -25,29 +26,15 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.qq.readbook", appContext.packageName)
-        var sourceList=ArrayList<ReadSource>()
-        try {
-            val inputStream = appContext.assets.open("test.json")
-            val inputStreamReader = InputStreamReader(inputStream)
-            val jsonReader = JsonReader(inputStreamReader)
-            sourceList = Gson().fromJson<ArrayList<ReadSource>>(
-                jsonReader,
-                object : TypeToken<ArrayList<ReadSource>>() {}.type
-            )
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-
-        val `is`: InputStream = appContext.getAssets().open("test.html")
-        val lenght: Int = `is`.available()
+        val inputStream: InputStream = appContext.getAssets().open("test.html")
+        val lenght: Int = inputStream.available()
         val buffer = ByteArray(lenght)
-        `is`.read(buffer)
+        inputStream.read(buffer)
         val result = String(buffer)
 
+        val json= JsoupUtils.getJsonElement("{\"ruleSearchList\":[{\"elementType\":\"class\",\"elementValue\":\"library\",\"ruleChild\":{\"elementType\":\"tag\",\"elementValue\":\"li\"}}],\"ruleBookName\":[{\"elementType\":\"class\",\"elementValue\":\"bookname\",\"attrValue\":\"text\"}],\"ruleDesc\":[{\"elementType\":\"class\",\"elementValue\":\"intro\",\"attrValue\":\"text\"}],\"ruleAuthor\":[{\"elementType\":\"class\",\"elementValue\":\"author\",\"attrValue\":\"text\"}],\"newestChapterTitle\":[{\"elementType\":\"class\",\"elementValue\":\"chapter\",\"attrValue\":\"text\"}],\"chapterUrl\":[{\"elementType\":\"class\",\"elementValue\":\"bookimg\",\"attrValue\":\"href\",\"formatRule\":{\"type\":\"replaceEnd\",\"value\":\".html\",\"formatRule\":{\"type\":\"addStart\",\"value\":\"https://www.dstiejuan.com\"}}}],\"ruleImg\":[{\"elementType\":\"tag\",\"elementValue\":\"img\",\"attrValue\":\"src\",\"position\":0}],\"ruleType\":{\"elementType\":\"tag\",\"elementValue\":\"p\",\"ruleChild\":{\"elementType\":\"tag\",\"elementValue\":\"a\",\"position\":1}}}")
 
-
-        SearchBookRepository.doReadBookList(result,sourceList[0])
+        SearchBookRepository.doReadBookList4Source(json,result)
     }
 
 

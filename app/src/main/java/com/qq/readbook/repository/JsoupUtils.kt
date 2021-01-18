@@ -9,10 +9,9 @@ import com.qq.readbook.bean.Chapter
 import com.qq.readbook.bean.ReadSource
 import com.qq.readbook.utils.MD5Utils
 import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
-import java.util.ArrayList
+import java.util.*
 
 /**
  * @Author : huangqiqiang
@@ -152,9 +151,7 @@ object JsoupUtils {
     private fun formatUrl(rule: JsonObject, url: String): String {
         var url1 = url
         val jsonElement = rule.get(Keys.FORMAT_RULE);
-        if (true == jsonElement?.toString()?.isEmpty()) {
-            return url1
-        } else {
+        if (true == jsonElement?.toString()?.isNotEmpty()) {
             val jsonObject = jsonElement.asJsonObject
             when (jsonObject.get(Keys.TYPE)?.asString) {
                 Keys.REPLACE_END -> {
@@ -164,8 +161,14 @@ object JsoupUtils {
                     url1 = (jsonObject.get(Keys.VALUE)?.asString + url1)
                 }
             }
-            return url1
         }
+        rule.get(Keys.FORMAT_RULE)?.let {
+            if (it is JsonObject) {
+                return formatUrl(it, url1)
+            }
+        }
+
+        return url1
     }
 
     /**
@@ -175,7 +178,7 @@ object JsoupUtils {
      * @return Elements?
      */
     fun getElementList(doc: Element?, rule: JsonElement?): Elements? {
-        if (rule!=null && doc !=null) {
+        if (rule != null && doc != null) {
             if (rule is JsonArray) {
                 var jsonArray = rule.asJsonArray
                 for (jsonElement in jsonArray) {
@@ -200,7 +203,7 @@ object JsoupUtils {
         //  判断是否需要迭代数据
         val child = jsonElement.asJsonObject.get(Keys.RULE_CHILD)
         if (child != null && child is JsonObject) {
-         val  element=  elements?.first()
+            val element = elements?.first()
             // 递归调用
             return getElementList(element, child)
         } else {
@@ -226,6 +229,11 @@ object JsoupUtils {
             Keys.LABEL_TAG -> {
                 elements = doc.getElementsByTag(value)
             }
+            Keys.ID->{
+                val element = doc.getElementById(value)
+                elements=  Elements(element)
+
+            }
         }
         val postion = jsonElement.asJsonObject.get(Keys.POSITION)?.asInt
         if (postion != null && postion > 0) {
@@ -248,22 +256,21 @@ object JsoupUtils {
      * @param jsonElement JsonElement  key
      * @return Book
      */
-    fun doReadBook(element: Element, source: ReadSource, jsonElement: JsonElement): Book? {
+    fun doReadBook(element: Element, jsonElement: JsonElement): Book? {
         val book = Book()
         if (jsonElement is JsonObject) {
             jsonElement.apply {
                 book.imgUrl = getElementValue(element, get(Keys.RULE_IMG))
-                book.chapterUrl = (source.bookSourceUrl + getElementValue(element, get(Keys.CHAPTER_URL)))
+                book.chapterUrl = getElementValue(element, get(Keys.CHAPTER_URL))
                 book.newestChapterTitle = getElementValue(element, get(Keys.NEWEST_CHAPTER_TITLE))
                 book.author = getElementValue(element, get(Keys.RULE_AUTHOR))
                 book.name = getElementValue(element, get(Keys.RULE_BOOK_NAME))
                 book.desc = getElementValue(element, get(Keys.RULE_DESC))
                 book.type = getElementValue(element, get(Keys.RULE_TYPE))
-                book.source = source.bookSourceName
                 book.bookId = MD5Utils.getStringMD5(book.name + book.author)
             }
         }
-        if (book.name.isEmpty()&& book.author.isEmpty()){
+        if (book.name.isEmpty() && book.author.isEmpty()) {
             return null;
         }
         return book
@@ -292,7 +299,7 @@ object JsoupUtils {
                                 number = index
                                 sources = source.bookSourceName
                                 bookId = book.bookId
-                                if (title.isNotEmpty() || url.isNotEmpty()) {
+                                if (title.isNotEmpty() ) {
                                     chapters.add(chapter)
                                 }
                             }

@@ -30,9 +30,8 @@ object BookArticleRepository {
                         it.bookSourceName == chapter.sources
                     }
 
-                    JsoupUtils.getArticleDetail(response,source)
+                    var content= JsoupUtils.getArticleDetail(response,source)
 
-                    var content = TianlaiRead().getContentFormHtml(response)
                     if (!content.isNullOrBlank()) {
                         var bookContent = BookContent().apply {
                             number = chapter.number

@@ -33,7 +33,6 @@ class ReadSource {
      */
     var searchRule: String = ""
 
-
     /**
      *  章节规则
      */
@@ -42,10 +41,14 @@ class ReadSource {
     /**
      *  解析文章详情
      */
-    var articleContent: String = ""
+    var articleContent: String? = null
+
+    var newestChapter: String? = null
 
     /**
      *  搜索详情
      */
     var searchDetail: Boolean = false
+
+
 }

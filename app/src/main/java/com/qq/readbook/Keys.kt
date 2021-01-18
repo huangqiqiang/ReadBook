@@ -10,6 +10,7 @@ package com.qq.readbook
 object Keys {
 
 
+    const val ID: String = "id"
 
     /***********************Json key***********************************/
     const val RULE_SEARCH_LIST = "ruleSearchList"

@@ -1,6 +1,8 @@
 package com.qq.readbook.repository
 
-import com.google.gson.*
+import com.google.gson.JsonArray
+import com.google.gson.JsonElement
+import com.google.gson.JsonObject
 import com.hqq.core.net.ok.OkHttp
 import com.hqq.core.net.ok.OkNetCallback
 import com.hqq.core.utils.GsonUtil
@@ -61,10 +63,18 @@ object SearchBookRepository {
     }
 
     fun doReadBookList(html: String, source: ReadSource): ArrayList<Book> {
+        val searchElement = getJsonElement(source.searchRule)
+        val books = doReadBookList4Source(searchElement, html)
+        for (book in books) {
+            book.source = source.bookSourceName
+        }
+        return books
+    }
+
+     fun doReadBookList4Source(searchElement: JsonElement?, html: String): ArrayList<Book> {
         val books: ArrayList<Book> = ArrayList<Book>()
         val doc = Jsoup.parse(html)
-        val searchElement = getJsonElement(source.searchRule)
-        searchElement?.let {
+        searchElement?.let { it ->
             val array = it.asJsonObject.get(Keys.RULE_SEARCH_LIST)
             if (array is JsonArray) {
                 for (jsonElement in array.asJsonArray) {
@@ -72,7 +82,7 @@ object SearchBookRepository {
                         if ((jsonElement.asJsonObject).get(Keys.ELEMENT_TYPE).asString == Keys.ATTR_CLASS) {
                             JsoupUtils.getElementList(doc, jsonElement)?.let {
                                 for (child in it) {
-                                    val book = JsoupUtils.doReadBook(child, source, searchElement)
+                                    val book = JsoupUtils.doReadBook(child, searchElement)
                                     book?.let { it1 ->
                                         addSearchLog(it1)
                                         books.add(it1)
@@ -106,7 +116,6 @@ object SearchBookRepository {
         }
     }
 
-
     /**
      *  post 提交
      *
@@ -116,7 +125,6 @@ object SearchBookRepository {
         OkHttp.newHttpCompat()
             .postExecute(keys[0], OkHttp.newParamsCompat().apply { put(keys[1], key) }, callback)
     }
-
     /**
      *  get 请求
      */
@@ -128,7 +136,6 @@ object SearchBookRepository {
         }
         OkHttp.newHttpCompat().getExecute(url, null, callback)
     }
-
 
     interface SearchRepositoryCallback {
         fun onSearchBook(book: ArrayList<Book>?, isSuccess: Boolean)

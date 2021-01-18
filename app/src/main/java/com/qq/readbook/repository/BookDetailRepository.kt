@@ -3,8 +3,8 @@ package com.qq.readbook.repository
 import com.hqq.core.net.ok.OkHttp
 import com.hqq.core.net.ok.OkNetCallback
 import com.hqq.core.utils.log.LogUtils
+import com.qq.readbook.BookSourceUtils
 import com.qq.readbook.bean.Book
-import com.qq.readbook.repository.read.TianlaiRead
 import org.jsoup.Jsoup
 
 /**
@@ -16,12 +16,14 @@ import org.jsoup.Jsoup
  */
 object BookDetailRepository {
     fun doChapterUrl(book: Book, latestChapter: LatestChapter) {
+        LogUtils.e("最新章节:  " + book.chapterUrl)
         OkHttp.newHttpCompat()
             .getExecute(book.chapterUrl, OkHttp.newParamsCompat(), object : OkNetCallback {
                 override fun onSuccess(statusCode: String, response: String) {
                     val b = getNewChapterFormHtml(response, book)
                     latestChapter.onEnd(b, true)
                 }
+
                 override fun onFailure(statusCode: String?, errMsg: String?, response: String?) {
                     latestChapter.onEnd(book, false)
                 }
@@ -35,16 +37,16 @@ object BookDetailRepository {
         LogUtils.e(book.name)
         LogUtils.e(book.source)
         val doc = Jsoup.parse(html)
-        val info = doc.getElementById("info")
-        for (child in info.children()) {
-            val infoStr = child.text()
-            if (infoStr.contains("最后更新：")) {
-                book.updateDate = infoStr.replace("最后更新：", "").trim()
-            } else if (infoStr.contains("最新章节：")) {
-                if (child.childrenSize() > 0) {
-                    var c = child.child(0)
-                    book.newestChapterTitle = c.text()
-                }
+        var source = BookSourceUtils.getInstance().sourceList?.first {
+            it.bookSourceName == book.source
+        }
+        book.newestChapterTitle =
+            JsoupUtils.getElementValue(doc, source?.newestChapter?.let { JsoupUtils.getJsonElement(it) })
+
+        for (elementsByClass in doc.getElementsByClass("headline")) {
+            if (elementsByClass.text().contains("更新：")) {
+                book.updateDate = elementsByClass.text().replace("更新：", "").trim()
+
             }
         }
         LogUtils.e("解析最新章节结束")
