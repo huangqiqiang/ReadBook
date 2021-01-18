@@ -39,4 +39,13 @@ class ReadSource {
      */
     var chapterRule: String = ""
 
+    /**
+     *  解析文章详情
+     */
+    var articleContent: String = ""
+
+    /**
+     *  搜索详情
+     */
+    var searchDetail: Boolean = false
 }

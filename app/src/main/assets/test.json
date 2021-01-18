@@ -1,9 +1,12 @@
 [
   {
-    "bookSearchUrl": "https://www.dstiejuan.com/search.html@searchkey",
-    "bookSourceName": "丹书铁卷⑫",
-    "bookSourceUrl": "https://www.dstiejuan.com",
+    "articleContent": "",
+    "bookSearchUrl": "https://www.52bqg.net/modules/article/search.php?searchkey\u003d%s",
+    "bookSourceName": "笔趣阁",
+    "bookSourceUrl": "https://www.23txt.com/",
+    "chapterRule": "",
+    "searchDetail": false,
     "searchEncode": "",
-    "searchRule": "{\"ruleSearchList\":[{\"elementType\":\"class\",\"elementValue\":\"library\"}],\"ruleBookName\":[{\"elementType\":\"class\",\"elementValue\":\"bookname\",\"attrValue\":\"text\"}],\"ruleDesc\":[{\"elementType\":\"class\",\"elementValue\":\"intro\",\"attrValue\":\"text\"}],\"ruleAuthor\":[{\"elementType\":\"class\",\"elementValue\":\"author\",\"attrValue\":\"text\"}],\"newestChapterTitle\":[{\"elementType\":\"class\",\"elementValue\":\"chapter\",\"attrValue\":\"text\"}],\"chapterUrl\":[{\"elementType\":\"class\",\"elementValue\":\"bookimg\",\"attrValue\":\"href\",\"chapterRule\":{\"end\":\".html\"}}],\"ruleImg\":[{\"elementType\":\"tag\",\"elementValue\":\"img\",\"attrValue\":\"src\",\"position\":0}]}"
+    "searchRule": "{\"ruleSearchList\":[{\"elementType\":\"class\",\"elementValue\":\"novelslistss\",\"child\":{\"elementType\":\"tag\",\"elementValue\":\"li\"}}],\"ruleBookName\":[{\"elementType\":\"class\",\"elementValue\":\"s2\",\"attrValue\":\"text\"}],\"ruleAuthor\":[{\"elementType\":\"class\",\"elementValue\":\"s4\",\"attrValue\":\"text\"}],\"newestChapterTitle\":[{\"elementType\":\"class\",\"elementValue\":\"s3\",\"attrValue\":\"text\"}],\"chapterUrl\":[{\"elementType\":\"class\",\"elementValue\":\"s2\",\"child\":{\"elementType\":\"tag\",\"elementValue\":\"a\",\"attrValue\":\"href\"}}]}"
   }
 ]

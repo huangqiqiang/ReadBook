@@ -102,9 +102,7 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
             // 需要异步加载
             var charpters =
                 book?.source?.let {
-                    RoomUtils.getChapterDataBase(book.name + "_" + book.author).chapterDao().getAll(
-                        it
-                    )
+                    RoomUtils.getChapterDataBase(book.name + "_" + book.author).chapterDao().getAll(it)
                 }
             launch(Dispatchers.Main) {
                 if (charpters.isNullOrEmpty()) {

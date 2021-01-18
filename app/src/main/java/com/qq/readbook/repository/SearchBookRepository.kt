@@ -70,16 +70,13 @@ object SearchBookRepository {
                 for (jsonElement in array.asJsonArray) {
                     if (jsonElement is JsonObject) {
                         if ((jsonElement.asJsonObject).get(Keys.ELEMENT_TYPE).asString == Keys.ATTR_CLASS) {
-                            JsoupUtils.getElementList(doc, jsonElement)?.first()?.let {
-                                for (child in it.children()) {
+                            JsoupUtils.getElementList(doc, jsonElement)?.let {
+                                for (child in it) {
                                     val book = JsoupUtils.doReadBook(child, source, searchElement)
-                                    books.add(book)
-                                    // 保存搜索源记录
-                                    val bookSources = BookSources()
-                                    bookSources.bookId = book.bookId
-                                    bookSources.sourcesName = book.source
-                                    bookSources.bookDetailUrl = book.chapterUrl
-                                    RoomUtils.getBook().bookSources().insertAll(bookSources);
+                                    book?.let { it1 ->
+                                        addSearchLog(it1)
+                                        books.add(it1)
+                                    }
                                 }
                             }
                         }
@@ -88,8 +85,25 @@ object SearchBookRepository {
             }
         }
         return books
+    }
 
-
+    /**
+     *  保存搜索记录 以便切换数据源使用
+     * @param book Book
+     */
+    private fun addSearchLog(book: Book) {
+        val bookSources = BookSources()
+        bookSources.bookId = book.bookId
+        bookSources.bookName = book.name
+        bookSources.sourcesName = book.source
+        bookSources.bookDetailUrl = book.chapterUrl
+        RoomUtils.getBook().bookSources().apply {
+            book.source?.let { it1 ->
+                if (getBookSource(it1, book.bookId) == null) {
+                    insertAll(bookSources);
+                }
+            }
+        }
     }
 
 

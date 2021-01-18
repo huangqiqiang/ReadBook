@@ -1,0 +1,9 @@
+{
+  "bookSourceName": "丹书铁卷⑫",
+  "bookSearchUrl": "https://www.dstiejuan.com/search.html@searchkey",
+  "bookSourceUrl": "https://www.dstiejuan.com",
+  "searchDetail": false,
+  "searchRule": "{\"ruleSearchList\":[{\"elementType\":\"class\",\"elementValue\":\"library\"}],\"ruleBookName\":[{\"elementType\":\"class\",\"elementValue\":\"bookname\",\"attrValue\":\"text\"}],\"ruleDesc\":[{\"elementType\":\"class\",\"elementValue\":\"intro\",\"attrValue\":\"text\"}],\"ruleAuthor\":[{\"elementType\":\"class\",\"elementValue\":\"author\",\"attrValue\":\"text\"}],\"newestChapterTitle\":[{\"elementType\":\"class\",\"elementValue\":\"chapter\",\"attrValue\":\"text\"}],\"chapterUrl\":[{\"elementType\":\"class\",\"elementValue\":\"bookimg\",\"attrValue\":\"href\",\"formatRule\":{\"type\":\"replaceEnd\",\"value\":\".html\"}}],\"ruleImg\":[{\"elementType\":\"tag\",\"elementValue\":\"img\",\"attrValue\":\"src\",\"position\":0}]}",
+  "chapterRule": "{\"chapterList\":{\"elementType\":\"class\",\"elementValue\":\"read\",\"ruleChild\":{\"elementType\":\"tag\",\"elementValue\":\"dl\",\"position\":1}},\"title\":{\"elementType\":\"tag\",\"elementValue\":\"dd\",\"attrValue\":\"text\"},\"url\":{\"elementType\":\"tag\",\"elementValue\":\"a\",\"attrValue\":\"href\",\"formatRule\":{\"value\":\"https://www.dstiejuan.com\",\"type\":\"addStart\"}}}",
+  "articleContent": "{\"elementType\":\"id\",\"elementValue\":\"content\"}"
+}

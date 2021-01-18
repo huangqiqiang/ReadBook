@@ -26,7 +26,6 @@ class ExampleInstrumentedTest {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         assertEquals("com.qq.readbook", appContext.packageName)
-
         var sourceList=ArrayList<ReadSource>()
         try {
             val inputStream = appContext.assets.open("test.json")
@@ -46,11 +45,12 @@ class ExampleInstrumentedTest {
         `is`.read(buffer)
         val result = String(buffer)
 
-        sourceList
-
 
 
         SearchBookRepository.doReadBookList(result,sourceList[0])
     }
+
+
+
 
 }

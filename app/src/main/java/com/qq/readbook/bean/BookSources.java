@@ -18,16 +18,27 @@ public class BookSources {
      * 书籍id
      */
     String bookId;
-
+    /**
+     * 书籍名称
+     */
+    String bookName;
+    /**
+     * 书籍详情URL
+     */
+    String bookDetailUrl;
     /**
      * 源名称
      */
     String sourcesName;
 
-    /**
-     * 书籍详情URL
-     */
-    String bookDetailUrl;
+
+    public String getBookName() {
+        return bookName;
+    }
+
+    public void setBookName(String bookName) {
+        this.bookName = bookName;
+    }
 
     public int getId() {
         return id;

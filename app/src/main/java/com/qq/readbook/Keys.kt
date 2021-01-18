@@ -10,22 +10,26 @@ package com.qq.readbook
 object Keys {
 
 
+
     /***********************Json key***********************************/
     const val RULE_SEARCH_LIST = "ruleSearchList"
     const val CHAPTER_LIST: String = "chapterList"
+    const val RULE_TYPE: String="ruleType"
+    const val RULE_CHILD = "ruleChild"
 
     const val ELEMENT_VALUE = "elementValue"
     const val ELEMENT_TYPE = "elementType"
     const val FORMAT_RULE = "formatRule"
     const val ATTR_VALUE = "attrValue"
+    const val POSITION = "position"
+
+
     const val RULE_IMG = "ruleImg"
     const val CHAPTER_URL = "chapterUrl"
     const val NEWEST_CHAPTER_TITLE = "newestChapterTitle"
     const val RULE_AUTHOR = "ruleAuthor"
     const val RULE_BOOK_NAME = "ruleBookName"
     const val RULE_DESC = "ruleDesc"
-    const val RULE_CHILD = "ruleChild"
-    const val POSITION = "position"
     const val TITLE: String = "title"
     const val URL: String = "url"
     const val TYPE: String = "type"

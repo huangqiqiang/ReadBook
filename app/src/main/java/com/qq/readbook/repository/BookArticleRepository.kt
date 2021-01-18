@@ -3,6 +3,7 @@ package com.qq.readbook.repository
 import com.hqq.core.net.ok.OkHttp
 import com.hqq.core.net.ok.OkNetCallback
 import com.hqq.core.utils.log.LogUtils
+import com.qq.readbook.BookSourceUtils
 import com.qq.readbook.bean.BookContent
 import com.qq.readbook.bean.Chapter
 import com.qq.readbook.repository.read.TianlaiRead
@@ -24,6 +25,13 @@ object BookArticleRepository {
         OkHttp.newHttpCompat().getExecute(
             chapter.url, OkHttp.newParamsCompat(), object : OkNetCallback {
                 override fun onSuccess(statusCode: String?, response: String?) {
+
+                    var source = BookSourceUtils.getInstance().sourceList?.first {
+                        it.bookSourceName == chapter.sources
+                    }
+
+                    JsoupUtils.getArticleDetail(response,source)
+
                     var content = TianlaiRead().getContentFormHtml(response)
                     if (!content.isNullOrBlank()) {
                         var bookContent = BookContent().apply {

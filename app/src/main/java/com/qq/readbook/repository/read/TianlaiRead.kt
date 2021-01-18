@@ -55,9 +55,7 @@ class TianlaiRead : Read {
         val divContent = doc.getElementById("content")
         return if (divContent != null) {
             var content = Html.fromHtml(divContent.html()).toString()
-            val c = 160.toChar()
-            val spaec = "" + c
-            content = content.replace(spaec, "  ")
+            content = content.replace(" ", "  ")
             content
         } else {
             ""

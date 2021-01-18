@@ -45,7 +45,6 @@ interface BookSourcesDao {
     @Query("SELECT * FROM BookSources WHERE sourcesName =:sourcesName AND bookId =:bookId")
     fun getBookSource(sourcesName: String, bookId: String): BookSources?
 
-
     @Insert
     fun insertAll(vararg source: BookSources)
 }

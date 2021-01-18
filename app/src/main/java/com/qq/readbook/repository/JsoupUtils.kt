@@ -1,5 +1,6 @@
 package com.qq.readbook.repository
 
+import android.text.Html
 import com.google.gson.*
 import com.hqq.core.utils.log.LogUtils
 import com.qq.readbook.Keys
@@ -160,7 +161,7 @@ object JsoupUtils {
                     url1 = url1.replace(jsonObject.get(Keys.VALUE).asString, "")
                 }
                 Keys.ADD_START -> {
-                    url1 = jsonObject.get(Keys.VALUE)?.asString + url1
+                    url1 = (jsonObject.get(Keys.VALUE)?.asString + url1)
                 }
             }
             return url1
@@ -173,8 +174,8 @@ object JsoupUtils {
      * @param rule JsonElement
      * @return Elements?
      */
-    fun getElementList(doc: Document, rule: JsonElement?): Elements? {
-        rule?.let {
+    fun getElementList(doc: Element?, rule: JsonElement?): Elements? {
+        if (rule!=null && doc !=null) {
             if (rule is JsonArray) {
                 var jsonArray = rule.asJsonArray
                 for (jsonElement in jsonArray) {
@@ -194,13 +195,14 @@ object JsoupUtils {
      * @param jsonElement JsonElement
      * @return Elements?
      */
-    private fun doElementList(doc: Document, jsonElement: JsonElement): Elements? {
+    private fun doElementList(doc: Element, jsonElement: JsonElement): Elements? {
         var elements: Elements? = getElementsByValue(jsonElement, doc)
         //  判断是否需要迭代数据
         val child = jsonElement.asJsonObject.get(Keys.RULE_CHILD)
         if (child != null && child is JsonObject) {
+         val  element=  elements?.first()
             // 递归调用
-            return getElementList(doc, child)
+            return getElementList(element, child)
         } else {
             return elements
         }
@@ -213,7 +215,7 @@ object JsoupUtils {
      * @param doc Document
      * @return Elements?
      */
-    private fun getElementsByValue(jsonElement: JsonElement, doc: Document): Elements? {
+    private fun getElementsByValue(jsonElement: JsonElement, doc: Element): Elements? {
         val type = jsonElement.asJsonObject.get(Keys.ELEMENT_TYPE)?.asString
         val value = jsonElement.asJsonObject.get(Keys.ELEMENT_VALUE)?.asString
         var elements: Elements? = null
@@ -246,7 +248,7 @@ object JsoupUtils {
      * @param jsonElement JsonElement  key
      * @return Book
      */
-    fun doReadBook(element: Element, source: ReadSource, jsonElement: JsonElement): Book {
+    fun doReadBook(element: Element, source: ReadSource, jsonElement: JsonElement): Book? {
         val book = Book()
         if (jsonElement is JsonObject) {
             jsonElement.apply {
@@ -256,9 +258,13 @@ object JsoupUtils {
                 book.author = getElementValue(element, get(Keys.RULE_AUTHOR))
                 book.name = getElementValue(element, get(Keys.RULE_BOOK_NAME))
                 book.desc = getElementValue(element, get(Keys.RULE_DESC))
+                book.type = getElementValue(element, get(Keys.RULE_TYPE))
                 book.source = source.bookSourceName
                 book.bookId = MD5Utils.getStringMD5(book.name + book.author)
             }
+        }
+        if (book.name.isEmpty()&& book.author.isEmpty()){
+            return null;
         }
         return book
     }
@@ -280,18 +286,43 @@ object JsoupUtils {
                     if (list != null) {
                         for ((index, child) in list.withIndex()) {
                             val chapter = Chapter()
-                            chapter.title = getElementValue(child, chapterElement.asJsonObject.get(Keys.TITLE))
-                            chapter.url = getElementValue(child, chapterElement.asJsonObject.get(Keys.URL))
-                            chapter.number = index
-                            chapter.bookId = book.bookId
-                            chapters.add(chapter)
+                            chapter.apply {
+                                title = getElementValue(child, chapterElement.asJsonObject.get(Keys.TITLE))
+                                url = getElementValue(child, chapterElement.asJsonObject.get(Keys.URL))
+                                number = index
+                                sources = source.bookSourceName
+                                bookId = book.bookId
+                                if (title.isNotEmpty() || url.isNotEmpty()) {
+                                    chapters.add(chapter)
+                                }
+                            }
                         }
                     }
                 }
             }
         }
 
-        return chapters;
+        return chapters
+    }
+
+    /**
+     *  读取文章内容
+     * @param response String?
+     * @param source ReadSource?
+     * @return String
+     */
+    fun getArticleDetail(response: String?, source: ReadSource?): String {
+        val doc = Jsoup.parse(response)
+        val jsonElement = source?.articleContent?.let { getJsonElement(it) }
+        jsonElement?.let {
+            val divContent = getElementsByValue(it, doc)
+            if (divContent != null) {
+                var content = Html.fromHtml(divContent.html()).toString()
+                content = content.replace(" ", "  ")
+                return content
+            }
+        }
+        return ""
     }
 
 
