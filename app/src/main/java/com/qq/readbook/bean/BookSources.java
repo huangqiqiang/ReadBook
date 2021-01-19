@@ -22,14 +22,19 @@ public class BookSources {
      * 书籍名称
      */
     String bookName;
+
+    /**
+     * 源名称
+     */
+    String sourcesName;
     /**
      * 书籍详情URL
      */
     String bookDetailUrl;
     /**
-     * 源名称
+     * 章节Url
      */
-    String sourcesName;
+    String bookChapterUrl;
 
 
     public String getBookName() {
@@ -66,6 +71,14 @@ public class BookSources {
 
     public String getBookDetailUrl() {
         return bookDetailUrl;
+    }
+
+    public String getBookChapterUrl() {
+        return bookChapterUrl;
+    }
+
+    public void setBookChapterUrl(String bookChapterUrl) {
+        this.bookChapterUrl = bookChapterUrl;
     }
 
     public void setBookDetailUrl(String bookDetailUrl) {

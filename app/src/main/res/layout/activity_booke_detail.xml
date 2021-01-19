@@ -146,7 +146,7 @@
                     android:background="@color/white"
                     android:paddingHorizontal="@dimen/x20"
                     android:paddingBottom="@dimen/x20"
-                    android:text='@{"当前来源: "+ vm.book.source}' />
+                    android:text='@{"当前来源: "+ vm.book.sourceName}' />
 
 
                 <TextView

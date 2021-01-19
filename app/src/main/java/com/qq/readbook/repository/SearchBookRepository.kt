@@ -1,7 +1,6 @@
 package com.qq.readbook.repository
 
 import com.google.gson.JsonArray
-import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.hqq.core.net.ok.OkHttp
 import com.hqq.core.net.ok.OkNetCallback
@@ -11,7 +10,7 @@ import com.qq.readbook.Keys
 import com.qq.readbook.bean.Book
 import com.qq.readbook.bean.BookSources
 import com.qq.readbook.bean.ReadSource
-import com.qq.readbook.repository.JsoupUtils.getJsonElement
+import com.qq.readbook.bean.SearchRuleBean
 import com.qq.readbook.utils.room.RoomUtils
 import org.jsoup.Jsoup
 import java.net.URLEncoder
@@ -63,28 +62,29 @@ object SearchBookRepository {
     }
 
     fun doReadBookList(html: String, source: ReadSource): ArrayList<Book> {
-        val searchElement = getJsonElement(source.searchRule)
-        val books = doReadBookList4Source(searchElement, html)
+        val searchRuleBean = GsonUtil.fromJson<SearchRuleBean>(source.searchRule, SearchRuleBean::class.java)
+        val books = doReadBookList4Source(searchRuleBean, html)
         for (book in books) {
-            book.source = source.bookSourceName
+            book.sourceName = source.bookSourceName
+            addSearchLog(book)
         }
         return books
     }
 
-     fun doReadBookList4Source(searchElement: JsonElement?, html: String): ArrayList<Book> {
+    fun doReadBookList4Source(searchElement: SearchRuleBean?, html: String): ArrayList<Book> {
         val books: ArrayList<Book> = ArrayList<Book>()
         val doc = Jsoup.parse(html)
         searchElement?.let { it ->
-            val array = it.asJsonObject.get(Keys.RULE_SEARCH_LIST)
+            val array = it.ruleSearchList
             if (array is JsonArray) {
                 for (jsonElement in array.asJsonArray) {
                     if (jsonElement is JsonObject) {
-                        if ((jsonElement.asJsonObject).get(Keys.ELEMENT_TYPE).asString == Keys.ATTR_CLASS) {
-                            JsoupUtils.getElementList(doc, jsonElement)?.let {
+                        val nodeBean = JsoupUtils.getNodeBean(jsonElement)
+                        if (nodeBean?.elementType == Keys.ATTR_CLASS) {
+                            JsoupUtils.getElements(doc, jsonElement)?.let {
                                 for (child in it) {
                                     val book = JsoupUtils.doReadBook(child, searchElement)
                                     book?.let { it1 ->
-                                        addSearchLog(it1)
                                         books.add(it1)
                                     }
                                 }
@@ -105,10 +105,11 @@ object SearchBookRepository {
         val bookSources = BookSources()
         bookSources.bookId = book.bookId
         bookSources.bookName = book.name
-        bookSources.sourcesName = book.source
-        bookSources.bookDetailUrl = book.chapterUrl
+        bookSources.sourcesName = book.sourceName
+        bookSources.bookDetailUrl = book.bookDetailUrl
+        bookSources.bookChapterUrl = book.chapterUrl
         RoomUtils.getBook().bookSources().apply {
-            book.source?.let { it1 ->
+            book.sourceName?.let { it1 ->
                 if (getBookSource(it1, book.bookId) == null) {
                     insertAll(bookSources);
                 }
@@ -125,6 +126,7 @@ object SearchBookRepository {
         OkHttp.newHttpCompat()
             .postExecute(keys[0], OkHttp.newParamsCompat().apply { put(keys[1], key) }, callback)
     }
+
     /**
      *  get 请求
      */

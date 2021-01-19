@@ -98,6 +98,8 @@ class SearchActivity : BaseVmListActivity<SearchViewModel, ActivitySearchBinding
     private fun onSearch() {
         var key = binding.edtSearch.text.toString()
         rawData.clear()
+        adapter.data.clear()
+        adapter.notifyDataSetChanged()
         viewMode.onSearch(key)
     }
 

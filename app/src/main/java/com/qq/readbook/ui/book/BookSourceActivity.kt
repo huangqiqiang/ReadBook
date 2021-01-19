@@ -2,6 +2,8 @@ package com.qq.readbook.ui.book
 
 import android.app.Activity
 import android.content.Intent
+import android.view.View
+import android.widget.ProgressBar
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.hqq.core.ui.list.BaseListActivity
@@ -32,10 +34,11 @@ class BookSourceActivity : BaseListActivity() {
         }
     }
 
-
     override val adapter: BookSourceAdapter = BookSourceAdapter().apply {
-        setOnItemClickListener { adapter, view, position ->
-
+        setOnItemClickListener { _, _, position ->
+        setResult(Activity.RESULT_OK,Intent().apply {
+            putExtra(Keys.BOOK_SOURCE_NAME,getItem(position).bookSourceName)
+        })
         }
     }
 
@@ -51,10 +54,8 @@ class BookSourceActivity : BaseListActivity() {
         BaseQuickAdapter<ReadSource, BaseViewHolder>(R.layout.item_book_source) {
         override fun convert(baseViewHolder: BaseViewHolder, readSource: ReadSource) {
             baseViewHolder.setText(R.id.tv_title, readSource.bookSourceName)
-
-            var url = RoomUtils.getBook().bookSources()
+            val url = RoomUtils.getBook().bookSources()
                 .getBookSource(readSource.bookSourceName, book.bookId)?.bookDetailUrl
-
             if (url.isNullOrEmpty()) {
                 // 搜索查询详情页面
                 LogUtils.e("BookSourceAdapter   " + book.name + "---" + readSource.bookSourceName + " :   空的 ")
@@ -62,11 +63,12 @@ class BookSourceActivity : BaseListActivity() {
                 // 请求url   查询源是否可用
                 LogUtils.e("BookSourceAdapter   " + book.name + "---" + readSource.bookSourceName + " :   " + url)
                 CoroutineScope(Dispatchers.IO).launch {
-
                     BookDetailRepository.doChapterUrl(book,
                         object : BookDetailRepository.LatestChapter {
                             override fun onEnd(book: Book, isSuccess: Boolean) {
-
+                                CoroutineScope(Dispatchers.Main).launch {
+                                    baseViewHolder.getView<ProgressBar>(R.id.pb_bar).visibility = View.GONE
+                                }
                             }
                         })
                 }

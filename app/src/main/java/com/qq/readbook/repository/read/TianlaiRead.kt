@@ -91,12 +91,12 @@ class TianlaiRead : Read {
                     book.setNewestChapterTitle(newChapter.text())
                 }
             }
-            book.setSource(source.bookSourceName)
+            book.setSourceName(source.bookSourceName)
             book.setBookId(MD5Utils.getStringMD5(book.name + book.author))
             books.add(book)
             val bookSources = BookSources()
             bookSources.bookId = book.bookId
-            bookSources.sourcesName = book.source
+            bookSources.sourcesName = book.sourceName
             bookSources.bookDetailUrl = book.chapterUrl
             RoomUtils.getBook().bookSources().insertAll(bookSources);
         }

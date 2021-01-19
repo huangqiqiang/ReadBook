@@ -2,11 +2,9 @@ package com.qq.readbook.repository
 
 import android.text.Html
 import com.google.gson.*
-import com.hqq.core.utils.log.LogUtils
+import com.hqq.core.utils.GsonUtil
 import com.qq.readbook.Keys
-import com.qq.readbook.bean.Book
-import com.qq.readbook.bean.Chapter
-import com.qq.readbook.bean.ReadSource
+import com.qq.readbook.bean.*
 import com.qq.readbook.utils.MD5Utils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
@@ -21,6 +19,15 @@ import java.util.*
  * @Describe :
  */
 object JsoupUtils {
+    /**
+     *  转义成节点对象
+     * @param jsonElement JsonElement?
+     * @return NodeBean?
+     */
+    fun getNodeBean(jsonElement: JsonElement?): NodeBean? {
+        var nodeBoolean = GsonUtil.fromJson<NodeBean>(jsonElement.toString(), NodeBean::class.java)
+        return nodeBoolean
+    }
 
     /**
      * 转义成JsonObject
@@ -30,9 +37,7 @@ object JsoupUtils {
     fun getJsonElement(ruleJson: String): JsonElement? {
         try {
             var jsonElement = JsonParser.parseString(ruleJson)
-            if (jsonElement is JsonObject) {
-                return jsonElement
-            }
+            return jsonElement
         } catch (e: JsonSyntaxException) {
 
         }
@@ -46,16 +51,14 @@ object JsoupUtils {
      * @return String
      */
     fun getElementValue(element: Element?, rule: JsonElement?): String {
-        rule?.let {
-            element?.let {
-                if (rule is JsonArray) {
-                    val jsonArray = rule.asJsonArray
-                    for (jsonElement in jsonArray) {
-                        return doElementValue(element, jsonElement.asJsonObject)
-                    }
-                } else if (rule is JsonObject) {
-                    return doElementValue(element, rule.asJsonObject)
+        if (rule != null && element != null) {
+            if (rule is JsonArray) {
+                val jsonArray = rule.asJsonArray
+                for (jsonElement in jsonArray) {
+                    return doElementValue(element, getNodeBean(jsonElement.asJsonObject))
                 }
+            } else if (rule is JsonObject) {
+                return doElementValue(element, getNodeBean(rule.asJsonObject))
             }
         }
         return "";
@@ -67,14 +70,29 @@ object JsoupUtils {
      * @param jsonObject JsonObject?
      * @return String
      */
-    fun doElementValue(element: Element, jsonObject: JsonObject?): String {
-        when (jsonObject?.get(Keys.ELEMENT_TYPE)?.asString) {
-            Keys.ATTR_CLASS -> {
-                return getClassElementValue(element, jsonObject)
+    fun doElementValue(element: Element, jsonObject: NodeBean?): String {
+        val jsonElement = jsonObject?.ruleChild
+        if (jsonElement != null && jsonElement is JsonObject) {
+            val elements = getElements4Value(jsonObject, element)
+            if (!elements.isNullOrEmpty()) {
+                val position = jsonObject.position as? Int
+                if (position != null && position > 0) {
+                    if (elements.size > position) {
+                        return doElementValue(elements.get(position), getNodeBean(jsonElement))
+                    }
+                } else {
+                    return doElementValue(elements.get(0), getNodeBean(jsonElement))
+                }
             }
-            Keys.LABEL_TAG
-            -> {
-                return getTagElementValue(element, jsonObject)
+        } else {
+            when (jsonObject?.elementType) {
+                Keys.ATTR_CLASS -> {
+                    return getElementValue4Class(element, jsonObject)
+                }
+                Keys.LABEL_TAG
+                -> {
+                    return getElementValue4Tag(element, jsonObject)
+                }
             }
         }
 
@@ -87,9 +105,9 @@ object JsoupUtils {
      * @param rule JsonObject
      * @return String
      */
-    fun getTagElementValue(element: Element, rule: JsonObject): String {
-        val value = element.getElementsByTag(rule.get(Keys.ELEMENT_VALUE)?.asString)
-        when (rule.get(Keys.ATTR_VALUE)?.asString) {
+    fun getElementValue4Tag(element: Element, rule: NodeBean): String {
+        val value = element.getElementsByTag(rule.elementValue)
+        when (rule.attrValue) {
             Keys.ATTR_SRC -> {
                 //预留一个Position
                 return value.find {
@@ -114,9 +132,9 @@ object JsoupUtils {
      * @param rule JsonObject?
      * @return String
      */
-    fun getClassElementValue(element: Element?, rule: JsonObject?): String {
-        val elements = element?.getElementsByClass(rule?.get(Keys.ELEMENT_VALUE)?.asString)
-        when (rule?.get(Keys.ATTR_VALUE)?.asString) {
+    fun getElementValue4Class(element: Element?, rule: NodeBean?): String {
+        val elements = element?.getElementsByClass(rule?.elementValue)
+        when (rule?.attrValue) {
             Keys.ATTR_TEXT -> {
                 return elements?.first()?.text().toString()
             }
@@ -134,12 +152,12 @@ object JsoupUtils {
      * @param rule JsonObject?
      * @return String
      */
-    private fun doFormatHref(elements: Elements?, rule: JsonObject?): String {
+    private fun doFormatHref(elements: Elements?, rule: NodeBean?): String {
         val url = elements?.attr(Keys.ATTR_HREF).toString()
-        rule?.let {
-            return formatUrl(rule, url)
+        if (rule == null) {
+            return ""
         }
-        return ""
+        return formatUrl(rule, url)
     }
 
     /**
@@ -148,26 +166,32 @@ object JsoupUtils {
      * @param url String
      * @return String
      */
-    private fun formatUrl(rule: JsonObject, url: String): String {
+    private fun formatUrl(rule: NodeBean, url: String): String {
         var url1 = url
-        val jsonElement = rule.get(Keys.FORMAT_RULE);
+        val jsonElement = rule.formatRule
         if (true == jsonElement?.toString()?.isNotEmpty()) {
-            val jsonObject = jsonElement.asJsonObject
-            when (jsonObject.get(Keys.TYPE)?.asString) {
+            val jsonObject = getNodeBean(jsonElement.asJsonObject)
+
+            when (jsonObject?.elementType) {
                 Keys.REPLACE_END -> {
-                    url1 = url1.replace(jsonObject.get(Keys.VALUE).asString, "")
+                    val value = jsonObject.elementValue
+                    if (value != null) {
+                        url1 = url1.replace(value, "")
+                    }
                 }
                 Keys.ADD_START -> {
-                    url1 = (jsonObject.get(Keys.VALUE)?.asString + url1)
+                    url1 = (jsonObject.elementValue + url1)
                 }
             }
         }
-        rule.get(Keys.FORMAT_RULE)?.let {
-            if (it is JsonObject) {
-                return formatUrl(it, url1)
+        if (rule.formatRule != null) {
+            if (rule.formatRule is JsonObject) {
+                val nodeBean = getNodeBean(rule.formatRule)
+                if (nodeBean != null) {
+                    return formatUrl(nodeBean, url1)
+                }
             }
         }
-
         return url1
     }
 
@@ -177,15 +201,21 @@ object JsoupUtils {
      * @param rule JsonElement
      * @return Elements?
      */
-    fun getElementList(doc: Element?, rule: JsonElement?): Elements? {
+    fun getElements(doc: Element?, rule: JsonElement?): Elements? {
         if (rule != null && doc != null) {
             if (rule is JsonArray) {
                 var jsonArray = rule.asJsonArray
                 for (jsonElement in jsonArray) {
-                    return doElementList(doc, jsonElement)
+                    val nodeBean = getNodeBean(jsonElement)
+                    if (nodeBean != null) {
+                        return doElements(doc, nodeBean)
+                    }
                 }
             } else if (rule is JsonObject) {
-                return doElementList(doc, rule.asJsonObject)
+                val nodeBean = getNodeBean(rule)
+                if (nodeBean != null) {
+                    return doElements(doc, nodeBean)
+                }
 
             }
         }
@@ -198,14 +228,14 @@ object JsoupUtils {
      * @param jsonElement JsonElement
      * @return Elements?
      */
-    private fun doElementList(doc: Element, jsonElement: JsonElement): Elements? {
-        var elements: Elements? = getElementsByValue(jsonElement, doc)
+    private fun doElements(doc: Element, jsonElement: NodeBean): Elements? {
+        var elements: Elements? = getElements4Value(jsonElement, doc)
         //  判断是否需要迭代数据
-        val child = jsonElement.asJsonObject.get(Keys.RULE_CHILD)
-        if (child != null && child is JsonObject) {
+        val child = jsonElement.ruleChild
+        if (child != null) {
             val element = elements?.first()
             // 递归调用
-            return getElementList(element, child)
+            return getElements(element, child)
         } else {
             return elements
         }
@@ -218,9 +248,9 @@ object JsoupUtils {
      * @param doc Document
      * @return Elements?
      */
-    private fun getElementsByValue(jsonElement: JsonElement, doc: Element): Elements? {
-        val type = jsonElement.asJsonObject.get(Keys.ELEMENT_TYPE)?.asString
-        val value = jsonElement.asJsonObject.get(Keys.ELEMENT_VALUE)?.asString
+    private fun getElements4Value(jsonElement: NodeBean, doc: Element): Elements? {
+        val type = jsonElement.elementType
+        val value = jsonElement.elementValue
         var elements: Elements? = null
         when (type) {
             Keys.ATTR_CLASS -> {
@@ -229,19 +259,18 @@ object JsoupUtils {
             Keys.LABEL_TAG -> {
                 elements = doc.getElementsByTag(value)
             }
-            Keys.ID->{
+            Keys.ID -> {
                 val element = doc.getElementById(value)
-                elements=  Elements(element)
+                elements = Elements(element)
 
             }
         }
-        val postion = jsonElement.asJsonObject.get(Keys.POSITION)?.asInt
-        if (postion != null && postion > 0) {
-            val positionValue = elements?.get(postion)
+        val position = jsonElement.position
+        if (position != null && position > 0) {
+            val positionValue = elements?.get(position)
             if (positionValue is Elements) {
                 return positionValue
             } else {
-                LogUtils.e("getElementsByValue :  $jsonElement")
                 elements = positionValue?.children()
             }
         }
@@ -256,19 +285,18 @@ object JsoupUtils {
      * @param jsonElement JsonElement  key
      * @return Book
      */
-    fun doReadBook(element: Element, jsonElement: JsonElement): Book? {
+    fun doReadBook(element: Element, jsonElement: SearchRuleBean): Book? {
         val book = Book()
-        if (jsonElement is JsonObject) {
-            jsonElement.apply {
-                book.imgUrl = getElementValue(element, get(Keys.RULE_IMG))
-                book.chapterUrl = getElementValue(element, get(Keys.CHAPTER_URL))
-                book.newestChapterTitle = getElementValue(element, get(Keys.NEWEST_CHAPTER_TITLE))
-                book.author = getElementValue(element, get(Keys.RULE_AUTHOR))
-                book.name = getElementValue(element, get(Keys.RULE_BOOK_NAME))
-                book.desc = getElementValue(element, get(Keys.RULE_DESC))
-                book.type = getElementValue(element, get(Keys.RULE_TYPE))
-                book.bookId = MD5Utils.getStringMD5(book.name + book.author)
-            }
+        jsonElement.apply {
+            book.imgUrl = getElementValue(element, ruleImg)
+            book.chapterUrl = getElementValue(element, chapterUrl)
+            book.newestChapterTitle = getElementValue(element, newestChapterTitle)
+            book.author = getElementValue(element, ruleAuthor)
+            book.name = getElementValue(element, ruleBookName)
+            book.desc = getElementValue(element, ruleDesc)
+            book.type = getElementValue(element, ruleType)
+            book.bookDetailUrl = getElementValue(element, bookDetailUrl)
+            book.bookId = MD5Utils.getStringMD5(book.name + book.author)
         }
         if (book.name.isEmpty() && book.author.isEmpty()) {
             return null;
@@ -286,22 +314,21 @@ object JsoupUtils {
         val chapters = ArrayList<Chapter>()
         val doc = Jsoup.parse(html)
         if (source != null) {
-            val chapterElement = getJsonElement(source.chapterRule)
-            chapterElement?.let {
-                if (it is JsonObject) {
-                    var list = getElementList(doc, it.asJsonObject.get(Keys.CHAPTER_LIST))
-                    if (list != null) {
-                        for ((index, child) in list.withIndex()) {
-                            val chapter = Chapter()
-                            chapter.apply {
-                                title = getElementValue(child, chapterElement.asJsonObject.get(Keys.TITLE))
-                                url = getElementValue(child, chapterElement.asJsonObject.get(Keys.URL))
-                                number = index
-                                sources = source.bookSourceName
-                                bookId = book.bookId
-                                if (title.isNotEmpty() ) {
-                                    chapters.add(chapter)
-                                }
+            val chapterElement =
+                GsonUtil.fromJson<ChapterRuleBean>(source.chapterRule, ChapterRuleBean::class.java)
+            if (chapterElement != null) {
+                val list = getElements(doc, chapterElement.chapterList)
+                if (list != null) {
+                    for ((index, child) in list.withIndex()) {
+                        val chapter = Chapter()
+                        chapter.apply {
+                            title = getElementValue(child, chapterElement.title)
+                            url = getElementValue(child, chapterElement.url)
+                            number = index
+                            sources = source.bookSourceName
+                            bookId = book.bookId
+                            if (title.isNotEmpty()) {
+                                chapters.add(chapter)
                             }
                         }
                     }
@@ -320,9 +347,10 @@ object JsoupUtils {
      */
     fun getArticleDetail(response: String?, source: ReadSource?): String {
         val doc = Jsoup.parse(response)
-        val jsonElement = source?.articleContent?.let { getJsonElement(it) }
-        jsonElement?.let {
-            val divContent = getElementsByValue(it, doc)
+        val jsonElement = source?.articleContent
+        var nodeBoolean = getNodeBean(jsonElement)
+        if (nodeBoolean != null) {
+            val divContent = getElements4Value(nodeBoolean, doc)
             if (divContent != null) {
                 var content = Html.fromHtml(divContent.html()).toString()
                 content = content.replace(" ", "  ")
@@ -334,3 +362,4 @@ object JsoupUtils {
 
 
 }
+

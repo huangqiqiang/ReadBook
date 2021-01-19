@@ -1,10 +1,12 @@
 package com.qq.readbook
 
-import com.google.gson.internal.LinkedTreeMap
+import android.R.array
+import com.google.gson.JsonElement
+import com.google.gson.JsonObject
 import com.hqq.core.utils.GsonUtil
+import org.junit.Assert.*
 import org.junit.Test
 
-import org.junit.Assert.*
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -18,7 +20,7 @@ class ExampleUnitTest {
 
         var str: String? = null
 
-    var a=    "1aaab".trim(){
+        var a = "1aaab".trim() {
             it <= 'a'
         }
 
@@ -28,12 +30,14 @@ class ExampleUnitTest {
         print(' '.toString().trim { it <= ' ' })
 
 
-        var tt = "[{\"class\":\"library\"},{\"class\":\"library\"}]";
-
-        var list = GsonUtil.fromJson(tt, ArrayList<String>().javaClass)
+        var tt = "{\"tt\":[{\"class\":\"library\"},{\"class\":\"library\"}]}";
+        var t1= "{key:{\"class\":\"library\"},{\"class\":\"library\"}}";
+        var list = GsonUtil.fromJson(tt, JsonObject::class.java)
 
 
         print("")
 
     }
+
+
 }

@@ -101,7 +101,7 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
         GlobalScope.launch(Dispatchers.IO) {
             // 需要异步加载
             var charpters =
-                book?.source?.let {
+                book?.sourceName?.let {
                     RoomUtils.getChapterDataBase(book.name + "_" + book.author).chapterDao().getAll(it)
                 }
             launch(Dispatchers.Main) {

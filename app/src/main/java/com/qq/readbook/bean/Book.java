@@ -32,6 +32,19 @@ public class Book implements Parcelable {
      */
     private String name;
     /**
+     * 作者
+     */
+    private String author;
+    /**
+     * 资源
+     */
+    @Nullable
+    private String sourceName;
+    /**
+     * 书籍详情地址   正常情况与章节列表页面相同
+     */
+    private String bookDetailUrl;
+    /**
      * 书目Url
      */
     private String chapterUrl;
@@ -43,10 +56,6 @@ public class Book implements Parcelable {
      * 简介
      */
     private String desc;
-    /**
-     * 作者
-     */
-    private String author;
 
     /**
      * 类型
@@ -56,25 +65,12 @@ public class Book implements Parcelable {
      * 更新时间
      */
     private String updateDate;
-    /**
-     * 最新章节id
-     */
-    @Nullable
-    private String newestChapterId;
+
     /**
      * 最新章节标题
      */
     @Nullable
     private String newestChapterTitle;
-    /**
-     * 最新章节url
-     */
-    private String newestChapterUrl;
-    /**
-     * 资源
-     */
-    @Nullable
-    private String source;
 
     /**
      * 最新阅读日期
@@ -91,6 +87,13 @@ public class Book implements Parcelable {
     @Ignore
     List<Chapter> bookChapterList = new ArrayList();
 
+    public String getBookDetailUrl() {
+        return bookDetailUrl;
+    }
+
+    public void setBookDetailUrl(String bookDetailUrl) {
+        this.bookDetailUrl = bookDetailUrl;
+    }
 
     public List<Chapter> getBookChapterList() {
         if (bookChapterList == null) {
@@ -127,21 +130,13 @@ public class Book implements Parcelable {
         this.bookId = bookId;
     }
 
-    public String getNewestChapterUrl() {
-        return newestChapterUrl;
-    }
-
-    public void setNewestChapterUrl(String newestChapterUrl) {
-        this.newestChapterUrl = newestChapterUrl;
-    }
-
     @Nullable
-    public String getSource() {
-        return source;
+    public String getSourceName() {
+        return sourceName;
     }
 
-    public void setSource(@Nullable String source) {
-        this.source = source;
+    public void setSourceName(@Nullable String sourceName) {
+        this.sourceName = sourceName;
     }
 
     @Nullable
@@ -159,15 +154,6 @@ public class Book implements Parcelable {
 
     public void setUpdateDate(String updateDate) {
         this.updateDate = updateDate;
-    }
-
-    @Nullable
-    public String getNewestChapterId() {
-        return newestChapterId;
-    }
-
-    public void setNewestChapterId(@Nullable String newestChapterId) {
-        this.newestChapterId = newestChapterId;
     }
 
     @Nullable
@@ -233,16 +219,15 @@ public class Book implements Parcelable {
         dest.writeInt(this.id);
         dest.writeString(this.bookId);
         dest.writeString(this.name);
+        dest.writeString(this.author);
+        dest.writeString(this.sourceName);
+        dest.writeString(this.bookDetailUrl);
         dest.writeString(this.chapterUrl);
         dest.writeString(this.imgUrl);
         dest.writeString(this.desc);
-        dest.writeString(this.author);
         dest.writeString(this.type);
         dest.writeString(this.updateDate);
-        dest.writeString(this.newestChapterId);
         dest.writeString(this.newestChapterTitle);
-        dest.writeString(this.newestChapterUrl);
-        dest.writeString(this.source);
         dest.writeString(this.lastRead);
         dest.writeByte(this.isUpdate ? (byte) 1 : (byte) 0);
         dest.writeTypedList(this.bookChapterList);
@@ -252,16 +237,15 @@ public class Book implements Parcelable {
         this.id = in.readInt();
         this.bookId = in.readString();
         this.name = in.readString();
+        this.author = in.readString();
+        this.sourceName = in.readString();
+        this.bookDetailUrl = in.readString();
         this.chapterUrl = in.readString();
         this.imgUrl = in.readString();
         this.desc = in.readString();
-        this.author = in.readString();
         this.type = in.readString();
         this.updateDate = in.readString();
-        this.newestChapterId = in.readString();
         this.newestChapterTitle = in.readString();
-        this.newestChapterUrl = in.readString();
-        this.source = in.readString();
         this.lastRead = in.readString();
         this.isUpdate = in.readByte() != 0;
         this.bookChapterList = in.createTypedArrayList(Chapter.CREATOR);

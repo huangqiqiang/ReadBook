@@ -1,5 +1,7 @@
 package com.qq.readbook.bean
 
+import com.google.gson.JsonElement
+
 /**
  * @Author : huangqiqiang
  * @Package : com.qq.readbook.bean
@@ -31,19 +33,19 @@ class ReadSource {
     /**
      *  搜索规则
      */
-    var searchRule: String = ""
+    var searchRule: JsonElement? = null
 
     /**
      *  章节规则
      */
-    var chapterRule: String = ""
+    var chapterRule: JsonElement? = null
 
     /**
      *  解析文章详情
      */
-    var articleContent: String? = null
+    var articleContent: JsonElement? = null
 
-    var newestChapter: String? = null
+    var newestChapter: JsonElement? = null
 
     /**
      *  搜索详情

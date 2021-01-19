@@ -39,9 +39,9 @@ object BaseRead {
                 chapter.number = i++
                 chapter.title = title
                 var url = a.attr("href")
-                if (StringUtils.isEmpty(book.source) || "天籁小说" == book.source) {
+                if (StringUtils.isEmpty(book.sourceName) || "天籁小说" == book.sourceName) {
                     url = "https://www.23txt.com/$url"
-                } else if ("笔趣阁" == book.source) {
+                } else if ("笔趣阁" == book.sourceName) {
                     url = book.chapterUrl + url
                 }
                 chapter.bookId = book.bookId

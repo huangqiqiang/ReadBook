@@ -22,7 +22,7 @@ object BookChaptersRepository {
      */
     fun getBookChapters(book: Book, bookChaptersCall: BookChaptersCall?) {
         var source = BookSourceUtils.getInstance().sourceList?.first {
-            it.bookSourceName == book.source
+            it.bookSourceName == book.sourceName
         }
         LogUtils.d("加载目录  :   " + book.chapterUrl)
         OkHttp.newHttpCompat()[book.chapterUrl, OkHttp.newParamsCompat(), object : OkNetCallback {
@@ -38,7 +38,7 @@ object BookChaptersRepository {
                 RoomUtils.getBook().run {
                     RoomUtils.getChapterDataBase(book.name + "_" + book.author).chapterDao().apply {
                         // 获取的章节数量不一致 则出现了新的章节
-                        if (book.source?.let { getAll(it).size } != arrayList.size) {
+                        if (book.sourceName?.let { getAll(it).size } != arrayList.size) {
                             deleteAll()
                             resetId()
                             insert(arrayList)

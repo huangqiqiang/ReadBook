@@ -1,12 +1,9 @@
 package com.qq.readbook.adapter
 
-import android.view.View
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.module.LoadMoreModule
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.hqq.core.glide.ImageLoadUtils
-import com.hqq.core.utils.ToastUtils
-import com.hqq.core.utils.log.LogUtils
 import com.qq.readbook.R
 import com.qq.readbook.bean.Book
 
@@ -24,7 +21,7 @@ class BookAdapter : BaseQuickAdapter<Book, BaseViewHolder>(R.layout.item_book), 
         holder.setText(R.id.tv_book_desc, item.desc)
         holder.setText(R.id.tv_book_author, item.author)
         holder.setText(R.id.tv_book_type, item.type)
-        holder.setText(R.id.tv_sources, "来源: " + item.source)
+        holder.setText(R.id.tv_sources, "来源: " + item.sourceName)
         item.imgUrl?.let {
             ImageLoadUtils.with(item.imgUrl, holder.getView(R.id.iv_book_img))
         }

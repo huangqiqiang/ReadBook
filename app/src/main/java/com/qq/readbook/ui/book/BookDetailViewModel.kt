@@ -34,7 +34,7 @@ class BookDetailViewModel : BaseViewModel() {
     override fun onCrete() {
         book.value?.let {
             RoomUtils.getChapterDataBase(it.name + "_" + it.author).chapterDao().apply {
-                chapters.value = it.source?.let { it1 -> getAll(it1) }
+                chapters.value = it.sourceName?.let { it1 -> getAll(it1) }
             }
             // 爬取最新目录
             BookChaptersRepository.getBookChapters(it,

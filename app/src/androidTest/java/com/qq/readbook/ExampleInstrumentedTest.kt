@@ -31,10 +31,9 @@ class ExampleInstrumentedTest {
         val buffer = ByteArray(lenght)
         inputStream.read(buffer)
         val result = String(buffer)
-
         val json= JsoupUtils.getJsonElement("{\"ruleSearchList\":[{\"elementType\":\"class\",\"elementValue\":\"library\",\"ruleChild\":{\"elementType\":\"tag\",\"elementValue\":\"li\"}}],\"ruleBookName\":[{\"elementType\":\"class\",\"elementValue\":\"bookname\",\"attrValue\":\"text\"}],\"ruleDesc\":[{\"elementType\":\"class\",\"elementValue\":\"intro\",\"attrValue\":\"text\"}],\"ruleAuthor\":[{\"elementType\":\"class\",\"elementValue\":\"author\",\"attrValue\":\"text\"}],\"newestChapterTitle\":[{\"elementType\":\"class\",\"elementValue\":\"chapter\",\"attrValue\":\"text\"}],\"chapterUrl\":[{\"elementType\":\"class\",\"elementValue\":\"bookimg\",\"attrValue\":\"href\",\"formatRule\":{\"type\":\"replaceEnd\",\"value\":\".html\",\"formatRule\":{\"type\":\"addStart\",\"value\":\"https://www.dstiejuan.com\"}}}],\"ruleImg\":[{\"elementType\":\"tag\",\"elementValue\":\"img\",\"attrValue\":\"src\",\"position\":0}],\"ruleType\":{\"elementType\":\"tag\",\"elementValue\":\"p\",\"ruleChild\":{\"elementType\":\"tag\",\"elementValue\":\"a\",\"position\":1}}}")
+//        SearchBookRepository.doReadBookList4Source(json,result)
 
-        SearchBookRepository.doReadBookList4Source(json,result)
     }
 
 

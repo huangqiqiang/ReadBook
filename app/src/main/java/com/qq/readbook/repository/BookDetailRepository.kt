@@ -35,20 +35,19 @@ object BookDetailRepository {
         LogUtils.e("-----------------------")
         LogUtils.e("解析最新章节")
         LogUtils.e(book.name)
-        LogUtils.e(book.source)
+        LogUtils.e(book.sourceName)
         val doc = Jsoup.parse(html)
         var source = BookSourceUtils.getInstance().sourceList?.first {
-            it.bookSourceName == book.source
+            it.bookSourceName == book.sourceName
         }
         book.newestChapterTitle =
-            JsoupUtils.getElementValue(doc, source?.newestChapter?.let { JsoupUtils.getJsonElement(it) })
+            JsoupUtils.getElementValue(doc, source?.newestChapter?.let { it })
 
-        for (elementsByClass in doc.getElementsByClass("headline")) {
-            if (elementsByClass.text().contains("更新：")) {
-                book.updateDate = elementsByClass.text().replace("更新：", "").trim()
-
-            }
-        }
+//        for (elementsByClass in doc.getElementsByClass("headline")) {
+//            if (elementsByClass.text().contains("更新：")) {
+//                book.updateDate = elementsByClass.text().replace("更新：", "").trim()
+//            }
+//        }
         LogUtils.e("解析最新章节结束")
         LogUtils.e("-----------------------")
 

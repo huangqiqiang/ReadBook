@@ -35,13 +35,13 @@ class DSTieJuanRead : Read {
                 book.desc = element.getElementsByClass("intro").first()?.text()
                 book.newestChapterTitle = element.getElementsByClass("chapter").first()?.text()
                 book.author = element.getElementsByClass("author").first()?.text()
-                book.source = source.bookSourceName
+                book.sourceName = source.bookSourceName
                 book.bookId = MD5Utils.getStringMD5(book.name + book.author)
                 books.add(book)
 
                 val bookSources = BookSources()
                 bookSources.bookId = book.bookId
-                bookSources.sourcesName = book.source
+                bookSources.sourcesName = book.sourceName
                 bookSources.bookDetailUrl = book.chapterUrl
                 RoomUtils.getBook().bookSources().insertAll(bookSources);
             }
