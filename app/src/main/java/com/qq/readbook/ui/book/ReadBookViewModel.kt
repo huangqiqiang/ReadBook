@@ -16,8 +16,11 @@ class ReadBookViewModel : BaseViewModel() {
      *   是否点击亮度
      */
     var showLight = MutableLiveData<Boolean>(false)
-    var showCache = MutableLiveData<Boolean>(false)
 
+    /**
+     *显示缓存
+     */
+    var showCache = MutableLiveData<Boolean>(false)
 
     /**
      *  点击亮度

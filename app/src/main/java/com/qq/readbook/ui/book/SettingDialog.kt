@@ -52,14 +52,18 @@ class SettingDialog(private var mPageLoader: PageLoader) : BaseDialog() {
             tvSize?.text = "$fontSize"
         }
         when (settingManager.pageMode) {
-            PageMode.SIMULATION -> rootView?.findViewById<RadioButton>(R.id.rb_simulation)?.isChecked =
-                true
-            PageMode.COVER -> rootView?.findViewById<RadioButton>(R.id.rb_cover)?.isChecked =
-                true
-            PageMode.NONE -> rootView?.findViewById<RadioButton>(R.id.rb_scroll)?.isChecked =
-                true
-            PageMode.SCROLL -> rootView?.findViewById<RadioButton>(R.id.rb_none)?.isChecked =
-                true
+            PageMode.SIMULATION -> {
+                rootView?.findViewById<RadioButton>(R.id.rb_simulation)?.isChecked = true
+            }
+            PageMode.COVER -> {
+                rootView?.findViewById<RadioButton>(R.id.rb_cover)?.isChecked = true
+            }
+            PageMode.NONE -> {
+                rootView?.findViewById<RadioButton>(R.id.rb_scroll)?.isChecked = true
+            }
+            PageMode.SCROLL -> {
+                rootView?.findViewById<RadioButton>(R.id.rb_none)?.isChecked = true
+            }
         }
         tvSize?.text = settingManager.textSize.toString()
 

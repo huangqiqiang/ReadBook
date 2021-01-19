@@ -36,9 +36,15 @@ class BookSourceActivity : BaseListActivity() {
 
     override val adapter: BookSourceAdapter = BookSourceAdapter().apply {
         setOnItemClickListener { _, _, position ->
-        setResult(Activity.RESULT_OK,Intent().apply {
-            putExtra(Keys.BOOK_SOURCE_NAME,getItem(position).bookSourceName)
-        })
+            setResult(Activity.RESULT_OK, Intent().apply {
+                hashMap.get(getItem(position).bookSourceName)?.let {
+                    if (it) {
+                        putExtra(Keys.BOOK_SOURCE_NAME, getItem(position).bookSourceName)
+                        finish()
+                    }
+                }
+
+            })
         }
     }
 
@@ -50,12 +56,18 @@ class BookSourceActivity : BaseListActivity() {
         getInstance().sourceList?.let { listModel.fillingData(it) }
     }
 
-    inner class BookSourceAdapter :
-        BaseQuickAdapter<ReadSource, BaseViewHolder>(R.layout.item_book_source) {
+    inner class BookSourceAdapter : BaseQuickAdapter<ReadSource, BaseViewHolder>(R.layout.item_book_source) {
+        val hashMap = HashMap<String, Boolean>()
+
         override fun convert(baseViewHolder: BaseViewHolder, readSource: ReadSource) {
             baseViewHolder.setText(R.id.tv_title, readSource.bookSourceName)
-            val url = RoomUtils.getBook().bookSources()
-                .getBookSource(readSource.bookSourceName, book.bookId)?.bookDetailUrl
+            val url =
+                RoomUtils.getBook().bookSources().getBookSource(readSource.bookSourceName, book.bookId)?.bookDetailUrl
+
+            doNet(url, readSource, baseViewHolder)
+        }
+
+        private fun doNet(url: String?, readSource: ReadSource, baseViewHolder: BaseViewHolder) {
             if (url.isNullOrEmpty()) {
                 // 搜索查询详情页面
                 LogUtils.e("BookSourceAdapter   " + book.name + "---" + readSource.bookSourceName + " :   空的 ")
@@ -68,12 +80,13 @@ class BookSourceActivity : BaseListActivity() {
                             override fun onEnd(book: Book, isSuccess: Boolean) {
                                 CoroutineScope(Dispatchers.Main).launch {
                                     baseViewHolder.getView<ProgressBar>(R.id.pb_bar).visibility = View.GONE
+                                    hashMap.put(readSource.bookSourceName, true)
                                 }
                             }
                         })
                 }
-
             }
         }
     }
+
 }

@@ -35,7 +35,6 @@ class BiQuGeRead  : Read{
                             book.name = child.text()
                         }
                         "s3" -> {
-                            book.newestChapterUrl = child.children().attr("href");
                             book.newestChapterTitle = child.text()
                         }
                         "s4" -> {

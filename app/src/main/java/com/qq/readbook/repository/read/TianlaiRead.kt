@@ -87,7 +87,6 @@ class TianlaiRead : Read {
                     book.setUpdateDate(infoStr.replace("更新时间：", "").trim())
                 } else {
                     val newChapter = element1.child(1)
-                    book.setNewestChapterUrl(newChapter.attr("href"))
                     book.setNewestChapterTitle(newChapter.text())
                 }
             }
