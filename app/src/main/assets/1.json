@@ -3,7 +3,7 @@
     "bookSourceName": "丹书铁卷⑫",
     "bookSearchUrl": "https://www.dstiejuan.com/search.html@searchkey",
     "bookSourceUrl": "https://www.dstiejuan.com",
-    "searchDetail": false,
+    "searchDetail": 2,
     "searchRule": {
       "ruleSearchList": [
         {

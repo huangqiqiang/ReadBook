@@ -1,8 +1,10 @@
-package com.qq.readbook.repository
+package com.qq.readbook.repository.read
 
 import android.text.Html
 import com.google.gson.*
 import com.hqq.core.utils.GsonUtil
+import com.hqq.core.utils.log.LogUtils
+import com.qq.readbook.BookSourceUtils
 import com.qq.readbook.Keys
 import com.qq.readbook.bean.*
 import com.qq.readbook.utils.MD5Utils
@@ -19,14 +21,26 @@ import java.util.*
  * @Describe :
  */
 object JsoupUtils {
+
+    /**
+     *  查找资源
+     * @param sourceName String?
+     * @return ReadSource?
+     */
+    private fun findSource(sourceName: String?): ReadSource? {
+        return BookSourceUtils.getInstance().sourceList?.first {
+            it.bookSourceName == sourceName
+        }
+    }
+
+
     /**
      *  转义成节点对象
      * @param jsonElement JsonElement?
      * @return NodeBean?
      */
     fun getNodeBean(jsonElement: JsonElement?): NodeBean? {
-        var nodeBoolean = GsonUtil.fromJson<NodeBean>(jsonElement.toString(), NodeBean::class.java)
-        return nodeBoolean
+        return GsonUtil.fromJson(jsonElement.toString(), NodeBean::class.java)
     }
 
     /**
@@ -305,7 +319,7 @@ object JsoupUtils {
     }
 
     /**
-     *  读取章列表
+     *  读取章节列表
      * @param html String
      * @param source ReadSource?
      * @return ArrayList<Chapter>
@@ -314,8 +328,7 @@ object JsoupUtils {
         val chapters = ArrayList<Chapter>()
         val doc = Jsoup.parse(html)
         if (source != null) {
-            val chapterElement =
-                GsonUtil.fromJson<ChapterRuleBean>(source.chapterRule, ChapterRuleBean::class.java)
+            val chapterElement = GsonUtil.fromJson(source.chapterRule, ChapterRuleBean::class.java)
             if (chapterElement != null) {
                 val list = getElements(doc, chapterElement.chapterList)
                 if (list != null) {
@@ -340,7 +353,7 @@ object JsoupUtils {
     }
 
     /**
-     *  读取文章内容
+     *  解析文章内容
      * @param response String?
      * @param source ReadSource?
      * @return String
@@ -359,6 +372,25 @@ object JsoupUtils {
         }
         return ""
     }
+
+    /**
+     *  解析最新章节
+     * @param html String?
+     * @param book Book
+     * @return Book
+     */
+    fun getNewChapterFormHtml(html: String?, book: Book): Book {
+        LogUtils.e("-----------------------")
+        LogUtils.e("解析最新章节")
+        LogUtils.e(book.name)
+        LogUtils.e(book.sourceName)
+        val source = findSource(book.sourceName)
+        book.newestChapterTitle = JsoupUtils.getElementValue(Jsoup.parse(html), source?.newestChapter)
+        LogUtils.e("解析最新章节结束")
+        LogUtils.e("-----------------------")
+        return book;
+    }
+
 
 
 }

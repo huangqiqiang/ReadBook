@@ -14,19 +14,16 @@ import com.qq.readbook.weight.page.BookRecordBean
 object ReadRepository {
     @JvmStatic
     fun getBookRecord(book: Book): BookRecordBean? {
-        var list =
+        val list =
             RoomUtils.getChapterDataBase(book.name + "_" + book.author).bookRecordBeanDao().getAll()
         if (list.isNotEmpty()) {
             return list[0]
         }
-        return null;
+        return null
     }
 
     @JvmStatic
-    fun saveBookRecord(
-        book: Book,
-        mBookRecord: BookRecordBean
-    ) {
+    fun saveBookRecord(book: Book, mBookRecord: BookRecordBean) {
         RoomUtils.getChapterDataBase(book.name + "_" + book.author).bookRecordBeanDao().apply {
             if (mBookRecord.id > -1) {
                 update(mBookRecord)

@@ -2,18 +2,10 @@ package com.qq.readbook
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import com.google.gson.stream.JsonReader
-import com.qq.readbook.bean.ReadSource
-import com.qq.readbook.repository.JsoupUtils
-import com.qq.readbook.repository.SearchBookRepository
-import org.junit.Assert.*
+import com.qq.readbook.repository.read.JsoupUtils
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.io.IOException
 import java.io.InputStream
-import java.io.InputStreamReader
 
 /**
  * Instrumented test, which will execute on an Android device.

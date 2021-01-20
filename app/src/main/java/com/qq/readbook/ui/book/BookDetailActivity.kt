@@ -36,7 +36,6 @@ class BookDetailActivity : BaseVmActivity<BookDetailViewModel, ActivityBookeDeta
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
         if (resultCode == Activity.RESULT_OK) {
             val sourceName = data?.getStringExtra(Keys.BOOK_SOURCE_NAME)
         }

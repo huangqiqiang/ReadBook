@@ -6,7 +6,7 @@ import com.hqq.core.utils.log.LogUtils
 import com.qq.readbook.BookSourceUtils
 import com.qq.readbook.bean.BookContent
 import com.qq.readbook.bean.Chapter
-import com.qq.readbook.repository.read.TianlaiRead
+import com.qq.readbook.repository.read.JsoupUtils
 import com.qq.readbook.utils.room.RoomUtils
 
 /**

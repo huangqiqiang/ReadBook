@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.MutableLiveData
 import com.hqq.core.ui.base.BaseViewModel
+import com.qq.readbook.App
 import com.qq.readbook.Keys
 import com.qq.readbook.bean.Book
 import com.qq.readbook.bean.Chapter
 import com.qq.readbook.repository.BookChaptersRepository
+import com.qq.readbook.repository.BookDetailRepository
 import com.qq.readbook.repository.ReadRepository.getBookRecord
 import com.qq.readbook.utils.room.RoomUtils
 
@@ -43,20 +45,27 @@ class BookDetailViewModel : BaseViewModel() {
                         chapters.value = arrayList
                     }
                 })
-            val b = RoomUtils.getBook().bookDao().getBookById(it.bookId)
-            b?.let {
+            RoomUtils.getBook().bookDao().getBookById(it.bookId)?.let {
                 // t
-                book.value = b
+                book.value = it
                 //有查询到本地数据  那就是有收藏的 目前是真删除
                 addBookMenu.value = !(addBookMenu.value as Boolean)
-                getBookRecord(b)?.let {
+                getBookRecord(it)?.let {
                     if (chapters.value != null) {
                         currChapter.value = it.chapter
                     }
                 }
-
             }
 
+
+            var readSource = App.sourceList?.first { it1 ->
+                it1.bookSourceName == it.sourceName
+            }
+            readSource?.let { it1 ->
+                if (it1.searchDetail == 2) {
+                    BookDetailRepository.doChapterUrl()
+                }
+            }
         }
     }
 

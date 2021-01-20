@@ -3,7 +3,7 @@ package com.qq.readbook.repository
 import com.hqq.core.net.ok.OkHttp
 import com.hqq.core.net.ok.OkNetCallback
 import com.qq.readbook.bean.Book
-import com.qq.readbook.repository.read.TianlaiRead
+import com.qq.readbook.repository.read.JsoupUtils
 
 /**
  * @Author : huangqiqiang
@@ -14,17 +14,17 @@ import com.qq.readbook.repository.read.TianlaiRead
  */
 object NewestChapterRepository {
     fun doChapterUrl(book: Book, latestChapter: LatestChapter) {
-        OkHttp.newHttpCompat()
-            .getExecute(book.chapterUrl, OkHttp.newParamsCompat(), object : OkNetCallback {
-                override fun onSuccess(statusCode: String, response: String) {
-                    val b = TianlaiRead().getNewChapterFormHtml(response, book)
+        OkHttp.newHttpCompat().getExecute(book.chapterUrl, OkHttp.newParamsCompat(), object : OkNetCallback {
+            override fun onSuccess(statusCode: String, response: String) {
+                    val b = JsoupUtils.getNewChapterFormHtml(response, book)
                     latestChapter.onEnd(b, true)
 
-                }
-                override fun onFailure(statusCode: String?, errMsg: String?, response: String?) {
-                    latestChapter.onEnd(book, false)
-                }
-            })
+            }
+
+            override fun onFailure(statusCode: String?, errMsg: String?, response: String?) {
+                latestChapter.onEnd(book, false)
+            }
+        })
 
     }
 

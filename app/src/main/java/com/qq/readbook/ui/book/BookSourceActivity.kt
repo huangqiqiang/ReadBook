@@ -76,8 +76,8 @@ class BookSourceActivity : BaseListActivity() {
                 LogUtils.e("BookSourceAdapter   " + book.name + "---" + readSource.bookSourceName + " :   " + url)
                 CoroutineScope(Dispatchers.IO).launch {
                     BookDetailRepository.doChapterUrl(book,
-                        object : BookDetailRepository.LatestChapter {
-                            override fun onEnd(book: Book, isSuccess: Boolean) {
+                        object : BookDetailRepository.ILatestChapter {
+                            override fun onEndCall(book: Book, isSuccess: Boolean) {
                                 CoroutineScope(Dispatchers.Main).launch {
                                     baseViewHolder.getView<ProgressBar>(R.id.pb_bar).visibility = View.GONE
                                     hashMap.put(readSource.bookSourceName, true)

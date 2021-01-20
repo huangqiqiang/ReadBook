@@ -11,6 +11,7 @@ import com.qq.readbook.bean.Book
 import com.qq.readbook.bean.BookSources
 import com.qq.readbook.bean.ReadSource
 import com.qq.readbook.bean.SearchRuleBean
+import com.qq.readbook.repository.read.JsoupUtils
 import com.qq.readbook.utils.room.RoomUtils
 import org.jsoup.Jsoup
 import java.net.URLEncoder

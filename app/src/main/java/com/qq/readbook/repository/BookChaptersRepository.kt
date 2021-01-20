@@ -6,6 +6,7 @@ import com.hqq.core.utils.log.LogUtils
 import com.qq.readbook.BookSourceUtils
 import com.qq.readbook.bean.Book
 import com.qq.readbook.bean.Chapter
+import com.qq.readbook.repository.read.JsoupUtils
 import com.qq.readbook.utils.room.RoomUtils
 
 
@@ -32,7 +33,7 @@ object BookChaptersRepository {
 //                val method = clas.methods.firstOrNull {
 //                    it.name == "readChapters"
 //                }
-                val arrayList =JsoupUtils.readChapter(response,source,book)
+                val arrayList = JsoupUtils.readChapter(response,source,book)
 //                val arrayList = TianlaiRead().getChaptersFromHtml(response, book,source)
                 bookChaptersCall?.onSuccess(arrayList)
                 RoomUtils.getBook().run {

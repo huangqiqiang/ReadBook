@@ -45,12 +45,19 @@ class ReadSource {
      */
     var articleContent: JsonElement? = null
 
+    /**
+     *  最新章节
+     */
     var newestChapter: JsonElement? = null
 
     /**
      *  搜索详情
+     *  0 直接网页可以解析出所有数据
+     *  1 需要在搜索后执行详情
+     *  2 需要在详情界面爬取详情数据
+     *
      */
-    var searchDetail: Boolean = false
+    var searchDetail: Int = 0
 
 
 }
