@@ -62,6 +62,10 @@ public class Book implements Parcelable {
      */
     private String type;
     /**
+     * 字数
+     */
+    private String wordCount;
+    /**
      * 更新时间
      */
     private String updateDate;
@@ -82,10 +86,22 @@ public class Book implements Parcelable {
     boolean isUpdate = true;
 
     /**
+     * 本地刷新时间
+     */
+    private Long refreshTime = 0L;
+    /**
      * 章节列表
      */
     @Ignore
     List<Chapter> bookChapterList = new ArrayList();
+
+    public Long getRefreshTime() {
+        return refreshTime;
+    }
+
+    public void setRefreshTime(Long refreshTime) {
+        this.refreshTime = refreshTime;
+    }
 
     public String getBookDetailUrl() {
         return bookDetailUrl;
@@ -100,6 +116,14 @@ public class Book implements Parcelable {
             return new ArrayList<>();
         }
         return bookChapterList;
+    }
+
+    public String getWordCount() {
+        return wordCount;
+    }
+
+    public void setWordCount(String wordCount) {
+        this.wordCount = wordCount;
     }
 
     public void setBookChapterList(List<Chapter> bookChapterList) {
@@ -226,10 +250,12 @@ public class Book implements Parcelable {
         dest.writeString(this.imgUrl);
         dest.writeString(this.desc);
         dest.writeString(this.type);
+        dest.writeString(this.wordCount);
         dest.writeString(this.updateDate);
         dest.writeString(this.newestChapterTitle);
         dest.writeString(this.lastRead);
         dest.writeByte(this.isUpdate ? (byte) 1 : (byte) 0);
+        dest.writeValue(this.refreshTime);
         dest.writeTypedList(this.bookChapterList);
     }
 
@@ -244,10 +270,12 @@ public class Book implements Parcelable {
         this.imgUrl = in.readString();
         this.desc = in.readString();
         this.type = in.readString();
+        this.wordCount = in.readString();
         this.updateDate = in.readString();
         this.newestChapterTitle = in.readString();
         this.lastRead = in.readString();
         this.isUpdate = in.readByte() != 0;
+        this.refreshTime = (Long) in.readValue(Long.class.getClassLoader());
         this.bookChapterList = in.createTypedArrayList(Chapter.CREATOR);
     }
 

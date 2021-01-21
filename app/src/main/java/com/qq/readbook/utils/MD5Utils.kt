@@ -20,8 +20,8 @@ internal object MD5Utils {
      * @param sourceStr
      * @return
      */
-    fun getStringMD5(sourceStr: String): String? {
-        var s: String? = null
+    fun getStringMD5(sourceStr: String): String {
+        var s: String = ""
         try {
             val md = MessageDigest.getInstance("MD5")
             //这两行代码的作用是：

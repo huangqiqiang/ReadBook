@@ -2,10 +2,6 @@ package com.qq.readbook.ui
 
 import android.view.inputmethod.EditorInfo
 import androidx.lifecycle.Observer
-import com.chad.library.adapter.base.BaseQuickAdapter
-import com.chad.library.adapter.base.viewholder.BaseViewHolder
-import com.hqq.core.glide.ImageLoadUtils
-import com.hqq.core.toolbar.BaseToolBarSearch
 import com.hqq.core.ui.list.BaseVmListActivity
 import com.hqq.core.utils.log.LogUtils
 import com.qq.readbook.BR
@@ -27,7 +23,7 @@ class SearchActivity : BaseVmListActivity<SearchViewModel, ActivitySearchBinding
     override val bindingViewModelId: Int = BR.vm
     override val adapter: BookAdapter = BookAdapter().apply {
         setOnItemClickListener { _, _, position ->
-            BookDetailActivity.open(activity, getItem(position))
+            BookDetailActivity.open(activity, (getItem(position) as Book))
         }
     }
 

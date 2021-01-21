@@ -1,71 +1,32 @@
 [
   {
-    "bookSourceName": "丹书铁卷⑫",
-    "bookSearchUrl": "https://www.dstiejuan.com/search.html@searchkey",
-    "bookSourceUrl": "https://www.dstiejuan.com",
-    "searchDetail": 2,
-    "searchRule": {
-      "ruleSearchList": [
+    "bookSourceName": "天籁小说",
+    "bookSearchUrl": "https://www.23txt.com/search.php?q=%s",
+    "bookSourceUrl": "https://www.23txt.com/",
+    "ruleSearch": {
+      "newestChapterTitle": [
         {
           "elementType": "class",
-          "elementValue": "library",
-          "ruleChild": {
-            "elementType": "tag",
-            "elementValue": "li"
-          }
+          "elementValue": "result-game-item-info-tag-item",
+          "attrValue": "text"
         }
       ],
       "ruleBookName": [
         {
           "elementType": "class",
-          "elementValue": "bookname",
-          "attrValue": "text"
-        }
-      ],
-      "ruleDesc": [
-        {
-          "elementType": "class",
-          "elementValue": "intro",
-          "attrValue": "text"
+          "elementValue": "result-game-item-title-link",
+          "attrValue": "title"
         }
       ],
       "ruleAuthor": [
         {
           "elementType": "class",
-          "elementValue": "author",
-          "attrValue": "text"
-        }
-      ],
-      "newestChapterTitle": [
-        {
-          "elementType": "class",
-          "elementValue": "chapter",
-          "attrValue": "text"
-        }
-      ],
-      "chapterUrl": [
-        {
-          "elementType": "class",
-          "elementValue": "bookimg",
-          "attrValue": "href",
-          "formatRule": {
-            "elementType": "replaceEnd",
-            "elementValue": ".html",
-            "formatRule": {
-              "elementType": "addStart",
-              "elementValue": "https://www.dstiejuan.com"
-            }
-          }
-        }
-      ],
-      "bookDetailUrl": [
-        {
-          "elementType": "class",
-          "elementValue": "bookimg",
-          "attrValue": "href",
-          "formatRule": {
-            "elementType": "addStart",
-            "elementValue": "https://www.dstiejuan.com"
+          "elementValue": "result-game-item-info-tag",
+          "ruleChild": {
+            "elementType": "tag",
+            "elementValue": "span",
+            "position": 1,
+            "attrValue": "text"
           }
         }
       ],
@@ -77,61 +38,40 @@
           "position": 0
         }
       ],
-      "ruleType": {
-        "elementType": "tag",
-        "elementValue": "p",
-        "ruleChild": {
-          "elementType": "tag",
-          "elementValue": "a",
-          "position": 1
+      "ruleDesc": [
+        {
+          "elementType": "class",
+          "elementValue": "result-game-item-desc",
+          "attrValue": "text"
         }
-      }
-    },
-    "chapterRule": {
-      "chapterList": {
-        "elementType": "class",
-        "elementValue": "read",
-        "ruleChild": {
-          "elementType": "tag",
-          "elementValue": "dl",
-          "position": 1
+      ],
+      "bookDetailUrl": [
+        {
+          "elementType": "class",
+          "elementValue": "result-game-item-info-tag-title",
+          "attrValue": "href"
         }
-      },
-      "title": {
-        "elementType": "tag",
-        "elementValue": "dd",
-        "attrValue": "text"
-      },
-      "url": {
-        "elementType": "tag",
-        "elementValue": "a",
-        "attrValue": "href",
-        "formatRule": {
-          "elementValue": "https://www.dstiejuan.com",
-          "elementType": "addStart"
+      ],
+      "chapterUrl": [
+        {
+          "elementType": "class",
+          "elementValue": "result-game-item-pic-link",
+          "attrValue": "href"
         }
-      }
-    },
-    "newestChapter": {
-      "elementType": "class",
-      "elementValue": "read",
-      "ruleChild": {
-        "elementType": "tag",
-        "elementValue": "dl",
-        "ruleChild": {
-          "elementType": "tag",
-          "elementValue": "dd",
-          "ruleChild": {
-            "elementType": "tag",
-            "elementValue": "a",
-            "attrValue": "text"
-          }
+      ],
+      "ruleSearchList": [
+        {
+          "elementType": "class",
+          "elementValue": "result-list"
         }
-      }
-    },
-    "articleContent": {
-      "elementType": "id",
-      "elementValue": "content"
+      ],
+      "ruleType": [
+        {
+          "elementType": "class",
+          "elementValue": "result-game-item-info-tag-title",
+          "attrValue": "text"
+        }
+      ]
     }
   }
 ]

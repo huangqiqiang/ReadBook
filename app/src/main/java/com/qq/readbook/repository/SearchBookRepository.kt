@@ -10,7 +10,7 @@ import com.qq.readbook.Keys
 import com.qq.readbook.bean.Book
 import com.qq.readbook.bean.BookSources
 import com.qq.readbook.bean.ReadSource
-import com.qq.readbook.bean.SearchRuleBean
+import com.qq.readbook.bean.RuleSearchBean
 import com.qq.readbook.repository.read.JsoupUtils
 import com.qq.readbook.utils.room.RoomUtils
 import org.jsoup.Jsoup
@@ -35,7 +35,6 @@ object SearchBookRepository {
         val call = object : OkNetCallback {
             override fun onSuccess(statusCode: String?, response: String?) {
                 response?.let { it ->
-
                     LogUtils.d("-------------start-------------------")
                     LogUtils.d(GsonUtil.toJsonString(source))
                     LogUtils.d("--------------------------------")
@@ -63,7 +62,7 @@ object SearchBookRepository {
     }
 
     fun doReadBookList(html: String, source: ReadSource): ArrayList<Book> {
-        val searchRuleBean = GsonUtil.fromJson<SearchRuleBean>(source.searchRule, SearchRuleBean::class.java)
+        val searchRuleBean = GsonUtil.fromJson<RuleSearchBean>(source.ruleSearch, RuleSearchBean::class.java)
         val books = doReadBookList4Source(searchRuleBean, html)
         for (book in books) {
             book.sourceName = source.bookSourceName
@@ -72,7 +71,7 @@ object SearchBookRepository {
         return books
     }
 
-    fun doReadBookList4Source(searchElement: SearchRuleBean?, html: String): ArrayList<Book> {
+    fun doReadBookList4Source(searchElement: RuleSearchBean?, html: String): ArrayList<Book> {
         val books: ArrayList<Book> = ArrayList<Book>()
         val doc = Jsoup.parse(html)
         searchElement?.let { it ->

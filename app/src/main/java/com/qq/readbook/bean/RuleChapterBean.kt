@@ -9,7 +9,7 @@ import com.google.gson.JsonElement
  * @Email : qiqiang213@gmail.com
  * @Describe :
  */
-class ChapterRuleBean {
+class RuleChapterBean {
     /**
      * chapterList : {"elementType":"class","elementValue":"read","ruleChild":{"elementType":"tag","elementValue":"dl","position":1}}
      * title : {"elementType":"tag","elementValue":"dd","attrValue":"text"}

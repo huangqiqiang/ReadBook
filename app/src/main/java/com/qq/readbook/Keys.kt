@@ -10,6 +10,9 @@ package com.qq.readbook
 object Keys {
 
 
+    const val TITLE = "title"
+    const val TEXT_NODE="textNode"
+    const val REPLACE_START="replaceStart"
     const val BOOK_SOURCE_NAME = "bookSourceName"
 
     /***********************Json value***********************************/

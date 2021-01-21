@@ -4,7 +4,12 @@ import com.hqq.core.net.ok.OkHttp
 import com.hqq.core.net.ok.OkNetCallback
 import com.hqq.core.utils.log.LogUtils
 import com.qq.readbook.bean.Book
+import com.qq.readbook.bean.ReadSource
 import com.qq.readbook.repository.read.JsoupUtils
+import com.qq.readbook.utils.room.RoomUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * @Author : huangqiqiang
@@ -14,22 +19,26 @@ import com.qq.readbook.repository.read.JsoupUtils
  * @Describe :
  */
 object BookDetailRepository {
-    fun doChapterUrl(book: Book, latestChapter: ILatestChapter) {
-        LogUtils.e("最新章节:  " + book.chapterUrl)
-        OkHttp.newHttpCompat()
-            .getExecute(book.bookDetailUrl, OkHttp.newParamsCompat(), object : OkNetCallback {
-                override fun onSuccess(statusCode: String, response: String) {
-                    val b = JsoupUtils.getNewChapterFormHtml(response, book)
-                    latestChapter.onEndCall(b, true)
-                }
-
-                override fun onFailure(statusCode: String?, errMsg: String?, response: String?) {
-                    latestChapter.onEndCall(book, false)
-                }
-            })
-
+    fun readBookDetail(book: Book, readSource: ReadSource, latestChapter: ILatestChapter) {
+        CoroutineScope(Dispatchers.IO).launch {
+            LogUtils.e("详情页面:  " + book.bookDetailUrl)
+            OkHttp.newHttpCompat()
+                .getExecute(book.bookDetailUrl, OkHttp.newParamsCompat(), object : OkNetCallback {
+                    override fun onSuccess(statusCode: String, response: String) {
+                        val b = JsoupUtils.getBookDetail(response, book, readSource)
+                        b.refreshTime=System.currentTimeMillis()
+                        // 更新书籍
+                        RoomUtils.getBook().bookDao().update(b)
+                        CoroutineScope(Dispatchers.Main).launch {
+                            latestChapter.onEndCall(b, true)
+                        }
+                    }
+                    override fun onFailure(statusCode: String?, errMsg: String?, response: String?) {
+                        latestChapter.onEndCall(book, false)
+                    }
+                })
+        }
     }
-
 
 
     interface ILatestChapter {

@@ -31,26 +31,6 @@ class ReadSource {
     var searchEncode = ""
 
     /**
-     *  搜索规则
-     */
-    var searchRule: JsonElement? = null
-
-    /**
-     *  章节规则
-     */
-    var chapterRule: JsonElement? = null
-
-    /**
-     *  解析文章详情
-     */
-    var articleContent: JsonElement? = null
-
-    /**
-     *  最新章节
-     */
-    var newestChapter: JsonElement? = null
-
-    /**
      *  搜索详情
      *  0 直接网页可以解析出所有数据
      *  1 需要在搜索后执行详情
@@ -58,6 +38,31 @@ class ReadSource {
      *
      */
     var searchDetail: Int = 0
+
+    /**
+     *  搜索规则
+     */
+    var ruleSearch: JsonElement? = null
+
+    /**
+     *  章节规则
+     */
+    var ruleChapter: JsonElement? = null
+
+    /**
+     *  解析文章详情
+     */
+    var ruleArticleContent: JsonElement? = null
+
+    /**
+     *  最新章节
+     */
+    var ruleNewestChapter: JsonElement? = null
+
+    /**
+     *  详情的爬取规则
+     */
+    var ruleBookDetail: JsonElement? = null
 
 
 }

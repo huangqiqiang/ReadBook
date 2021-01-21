@@ -1,0 +1,161 @@
+[
+  {
+    "bookSourceName": "丹书铁卷⑫",
+    "bookSearchUrl": "https://www.dstiejuan.com/search.html@searchkey",
+    "bookSourceUrl": "https://www.dstiejuan.com",
+    "searchDetail": 2,
+    "ruleSearch": {
+      "ruleSearchList": [
+        {
+          "elementType": "class",
+          "elementValue": "library",
+          "ruleChild": {
+            "elementType": "tag",
+            "elementValue": "li"
+          }
+        }
+      ],
+      "ruleBookName": [
+        {
+          "elementType": "class",
+          "elementValue": "bookname",
+          "attrValue": "text"
+        }
+      ],
+      "ruleDesc": [
+        {
+          "elementType": "class",
+          "elementValue": "intro",
+          "attrValue": "text"
+        }
+      ],
+      "ruleAuthor": [
+        {
+          "elementType": "class",
+          "elementValue": "author",
+          "attrValue": "text"
+        }
+      ],
+      "newestChapterTitle": [
+        {
+          "elementType": "class",
+          "elementValue": "chapter",
+          "attrValue": "text"
+        }
+      ],
+      "chapterUrl": [
+        {
+          "elementType": "class",
+          "elementValue": "bookimg",
+          "attrValue": "href",
+          "formatRule": {
+            "elementType": "replaceEnd",
+            "elementValue": ".html",
+            "formatRule": {
+              "elementType": "addStart",
+              "elementValue": "https://www.dstiejuan.com"
+            }
+          }
+        }
+      ],
+      "bookDetailUrl": [
+        {
+          "elementType": "class",
+          "elementValue": "bookimg",
+          "attrValue": "href",
+          "formatRule": {
+            "elementType": "addStart",
+            "elementValue": "https://www.dstiejuan.com"
+          }
+        }
+      ],
+      "ruleImg": [
+        {
+          "elementType": "tag",
+          "elementValue": "img",
+          "attrValue": "src",
+          "position": 0
+        }
+      ],
+      "ruleType": {
+        "elementType": "tag",
+        "elementValue": "p",
+        "ruleChild": {
+          "elementType": "tag",
+          "elementValue": "a",
+          "position": 1,
+          "attrValue": "text"
+        }
+      },
+      "wordCount": {
+        "elementType": "tag",
+        "elementValue": "p",
+        "ruleChild": {
+          "elementType": "textNode",
+          "position": 1
+        }
+      }
+    },
+    "ruleChapter": {
+      "chapterList": {
+        "elementType": "class",
+        "elementValue": "read",
+        "ruleChild": {
+          "elementType": "tag",
+          "elementValue": "dl",
+          "position": 1
+        }
+      },
+      "title": {
+        "elementType": "tag",
+        "elementValue": "dd",
+        "attrValue": "text"
+      },
+      "url": {
+        "elementType": "tag",
+        "elementValue": "a",
+        "attrValue": "href",
+        "formatRule": {
+          "elementValue": "https://www.dstiejuan.com",
+          "elementType": "addStart"
+        }
+      }
+    },
+    "ruleNewestChapter": {
+      "elementType": "class",
+      "elementValue": "read",
+      "ruleChild": {
+        "elementType": "tag",
+        "elementValue": "dl",
+        "ruleChild": {
+          "elementType": "tag",
+          "elementValue": "dd",
+          "ruleChild": {
+            "elementType": "tag",
+            "elementValue": "a",
+            "attrValue": "text"
+          }
+        }
+      }
+    },
+    "ruleArticleContent": {
+      "elementType": "id",
+      "elementValue": "content"
+    },
+    "ruleBookDetail": {
+      "updateTime": {
+        "elementType": "class",
+        "elementValue": "light",
+        "attrValue": "text",
+        "formatRule": {
+          "elementType": "replaceEnd",
+          "elementValue": ")",
+          "formatRule": {
+            "elementType": "replaceStart",
+            "elementValue": "("
+          }
+        }
+      }
+    }
+  }
+]

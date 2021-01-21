@@ -29,17 +29,16 @@ class SearchViewModel : BaseListViewModel() {
             }
         }
     }
+
     private suspend fun doSearch(readSource: ReadSource, key: String) {
         withContext(Dispatchers.IO) {
-            SearchBookRepository.doSearch(
-                readSource, key,
-                object : SearchBookRepository.SearchRepositoryCallback {
-                    override fun onSearchBook(book: ArrayList<Book>?, isSuccess: Boolean) {
-                        GlobalScope.launch(Dispatchers.Main) {
-                            liveBooks.value = book
-                        }
+            SearchBookRepository.doSearch(readSource, key, object : SearchBookRepository.SearchRepositoryCallback {
+                override fun onSearchBook(book: ArrayList<Book>?, isSuccess: Boolean) {
+                    GlobalScope.launch(Dispatchers.Main) {
+                        liveBooks.value = book
                     }
-                })
+                }
+            })
         }
     }
 

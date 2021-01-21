@@ -11,6 +11,7 @@ import com.qq.readbook.bean.Chapter
 import com.qq.readbook.repository.BookChaptersRepository
 import com.qq.readbook.repository.BookDetailRepository
 import com.qq.readbook.repository.ReadRepository.getBookRecord
+import com.qq.readbook.utils.CommentUtils
 import com.qq.readbook.utils.room.RoomUtils
 
 /**
@@ -35,6 +36,7 @@ class BookDetailViewModel : BaseViewModel() {
 
     override fun onCrete() {
         book.value?.let {
+            // 读取本地章节
             RoomUtils.getChapterDataBase(it.name + "_" + it.author).chapterDao().apply {
                 chapters.value = it.sourceName?.let { it1 -> getAll(it1) }
             }
@@ -45,27 +47,30 @@ class BookDetailViewModel : BaseViewModel() {
                         chapters.value = arrayList
                     }
                 })
-            RoomUtils.getBook().bookDao().getBookById(it.bookId)?.let {
-                // t
-                book.value = it
+            RoomUtils.getBook().bookDao().getBookById(it.bookId)?.let { it1->
+                book.value = it1
                 //有查询到本地数据  那就是有收藏的 目前是真删除
                 addBookMenu.value = !(addBookMenu.value as Boolean)
-                getBookRecord(it)?.let {
+                getBookRecord(it1)?.let { it2->
                     if (chapters.value != null) {
-                        currChapter.value = it.chapter
+                        currChapter.value = it2.chapter
                     }
                 }
             }
-
-
-            var readSource = App.sourceList?.first { it1 ->
+            // 爬取详情页面
+            val readSource = App.sourceList?.first { it1 ->
                 it1.bookSourceName == it.sourceName
             }
             readSource?.let { it1 ->
-                if (it1.searchDetail == 2) {
-                    BookDetailRepository.doChapterUrl()
+                if (CommentUtils.isRefresh(it, it1.searchDetail)) {
+                    BookDetailRepository.readBookDetail(it, readSource, object : BookDetailRepository.ILatestChapter {
+                        override fun onEndCall(b: Book, isSuccess: Boolean) {
+                            book.postValue(b)
+                        }
+                    })
                 }
             }
+
         }
     }
 

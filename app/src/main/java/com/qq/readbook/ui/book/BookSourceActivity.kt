@@ -14,6 +14,7 @@ import com.qq.readbook.R
 import com.qq.readbook.bean.Book
 import com.qq.readbook.bean.ReadSource
 import com.qq.readbook.repository.BookDetailRepository
+import com.qq.readbook.repository.NewestChapterRepository
 import com.qq.readbook.utils.room.RoomUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -75,9 +76,9 @@ class BookSourceActivity : BaseListActivity() {
                 // 请求url   查询源是否可用
                 LogUtils.e("BookSourceAdapter   " + book.name + "---" + readSource.bookSourceName + " :   " + url)
                 CoroutineScope(Dispatchers.IO).launch {
-                    BookDetailRepository.doChapterUrl(book,
-                        object : BookDetailRepository.ILatestChapter {
-                            override fun onEndCall(book: Book, isSuccess: Boolean) {
+                    NewestChapterRepository.doChapterUrl(book,
+                        object : NewestChapterRepository.LatestChapter {
+                            override fun onEnd(book: Book, isSuccess: Boolean) {
                                 CoroutineScope(Dispatchers.Main).launch {
                                     baseViewHolder.getView<ProgressBar>(R.id.pb_bar).visibility = View.GONE
                                     hashMap.put(readSource.bookSourceName, true)

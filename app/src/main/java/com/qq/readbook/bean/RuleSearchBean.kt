@@ -9,7 +9,7 @@ import com.google.gson.JsonElement
  * @Email : qiqiang213@gmail.com
  * @Describe :
  */
-class SearchRuleBean {
+class RuleSearchBean {
     /**
      * ruleSearchList : [{"elementType":"class","elementValue":"library","ruleChild":{"elementType":"tag","elementValue":"li"}}]
      * ruleBookName : [{"elementType":"class","elementValue":"bookname","attrValue":"text"}]
@@ -29,4 +29,5 @@ class SearchRuleBean {
     var chapterUrl: JsonElement? = null
     var ruleImg: JsonElement? = null
     var bookDetailUrl: JsonElement? = null
+    var wordCount: JsonElement? = null
 }
