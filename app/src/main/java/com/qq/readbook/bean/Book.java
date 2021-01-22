@@ -67,6 +67,7 @@ public class Book implements Parcelable {
     private String wordCount;
     /**
      * 更新时间
+     * 目前这把只用于显示 格式并不统一
      */
     private String updateDate;
 

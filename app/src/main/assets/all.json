@@ -36,14 +36,14 @@
           "attrValue": "text"
         }
       ],
-      "newestChapterTitle": [
+      "ruleNewestChapterTitle": [
         {
           "elementType": "class",
           "elementValue": "chapter",
           "attrValue": "text"
         }
       ],
-      "chapterUrl": [
+      "ruleChapterUrl": [
         {
           "elementType": "class",
           "elementValue": "bookimg",
@@ -58,7 +58,7 @@
           }
         }
       ],
-      "bookDetailUrl": [
+      "ruleBookDetailUrl": [
         {
           "elementType": "class",
           "elementValue": "bookimg",
@@ -87,7 +87,7 @@
           "attrValue": "text"
         }
       },
-      "wordCount": {
+      "ruleWordCount": {
         "elementType": "tag",
         "elementValue": "p",
         "ruleChild": {
@@ -143,7 +143,7 @@
       "elementValue": "content"
     },
     "ruleBookDetail": {
-      "updateTime": {
+      "ruleUpdateData": {
         "elementType": "class",
         "elementValue": "light",
         "attrValue": "text",

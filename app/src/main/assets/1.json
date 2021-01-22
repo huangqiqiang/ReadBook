@@ -4,7 +4,7 @@
     "bookSearchUrl": "https://www.23txt.com/search.php?q=%s",
     "bookSourceUrl": "https://www.23txt.com/",
     "ruleSearch": {
-      "newestChapterTitle": [
+      "ruleNewestChapterTitle": [
         {
           "elementType": "class",
           "elementValue": "result-game-item-info-tag-item",
@@ -45,18 +45,26 @@
           "attrValue": "text"
         }
       ],
-      "bookDetailUrl": [
+      "ruleBookDetailUrl": [
         {
           "elementType": "class",
-          "elementValue": "result-game-item-info-tag-title",
-          "attrValue": "href"
+          "elementValue": "result-game-item-title-link",
+          "attrValue": "href",
+          "formatRule": {
+            "elementType": "addStart",
+            "elementValue": "https://www.23txt.com"
+          }
         }
       ],
-      "chapterUrl": [
+      "ruleChapterUrl": [
         {
           "elementType": "class",
           "elementValue": "result-game-item-pic-link",
-          "attrValue": "href"
+          "attrValue": "href",
+          "formatRule": {
+            "elementType": "addStart",
+            "elementValue": "https://www.23txt.com"
+          }
         }
       ],
       "ruleSearchList": [
@@ -69,9 +77,215 @@
         {
           "elementType": "class",
           "elementValue": "result-game-item-info-tag-title",
+          "position": 2,
+          "attrValue": "text"
+        }
+      ],
+      "ruleUpdateData": [
+        {
+          "elementType": "class",
+          "elementValue": "result-game-item-info-tag-title",
+          "position": 4,
           "attrValue": "text"
         }
       ]
+    },
+    "ruleChapter": {
+      "chapterList": {
+        "elementType": "id",
+        "elementValue": "list",
+        "ruleChild": {
+          "elementType": "tag",
+          "elementValue": "dd"
+        }
+      },
+      "title": {
+        "elementType": "tag",
+        "elementValue": "a",
+        "attrValue": "text"
+      },
+      "url": {
+        "elementType": "tag",
+        "elementValue": "a",
+        "attrValue": "href",
+        "formatRule": {
+          "elementValue": "https://www.23txt.com",
+          "elementType": "addStart"
+        }
+      }
+    },
+    "ruleNewestChapter": {
+      "elementType": "id",
+      "elementValue": "info",
+      "ruleChild": {
+        "elementType": "tag",
+        "elementValue": "a",
+        "position": 2,
+        "attrValue": "text"
+      }
+    },
+    "ruleArticleContent": {
+      "elementType": "id",
+      "elementValue": "content"
+    }
+  },
+  {
+    "bookSourceName": "丹书铁卷⑫",
+    "bookSearchUrl": "https://www.dstiejuan.com/search.html@searchkey",
+    "bookSourceUrl": "https://www.dstiejuan.com",
+    "searchDetail": 2,
+    "ruleSearch": {
+      "ruleSearchList": [
+        {
+          "elementType": "class",
+          "elementValue": "library",
+          "ruleChild": {
+            "elementType": "tag",
+            "elementValue": "li"
+          }
+        }
+      ],
+      "ruleBookName": [
+        {
+          "elementType": "class",
+          "elementValue": "bookname",
+          "attrValue": "text"
+        }
+      ],
+      "ruleDesc": [
+        {
+          "elementType": "class",
+          "elementValue": "intro",
+          "attrValue": "text"
+        }
+      ],
+      "ruleAuthor": [
+        {
+          "elementType": "class",
+          "elementValue": "author",
+          "attrValue": "text"
+        }
+      ],
+      "ruleNewestChapterTitle": [
+        {
+          "elementType": "class",
+          "elementValue": "chapter",
+          "attrValue": "text"
+        }
+      ],
+      "ruleChapterUrl": [
+        {
+          "elementType": "class",
+          "elementValue": "bookimg",
+          "attrValue": "href",
+          "formatRule": {
+            "elementType": "replaceEnd",
+            "elementValue": ".html",
+            "formatRule": {
+              "elementType": "addStart",
+              "elementValue": "https://www.dstiejuan.com"
+            }
+          }
+        }
+      ],
+      "ruleBookDetailUrl": [
+        {
+          "elementType": "class",
+          "elementValue": "bookimg",
+          "attrValue": "href",
+          "formatRule": {
+            "elementType": "addStart",
+            "elementValue": "https://www.dstiejuan.com"
+          }
+        }
+      ],
+      "ruleImg": [
+        {
+          "elementType": "tag",
+          "elementValue": "img",
+          "attrValue": "src",
+          "position": 0
+        }
+      ],
+      "ruleType": {
+        "elementType": "tag",
+        "elementValue": "p",
+        "ruleChild": {
+          "elementType": "tag",
+          "elementValue": "a",
+          "position": 1,
+          "attrValue": "text"
+        }
+      },
+      "ruleWordCount": {
+        "elementType": "tag",
+        "elementValue": "p",
+        "ruleChild": {
+          "elementType": "textNode",
+          "position": 1
+        }
+      }
+    },
+    "ruleChapter": {
+      "chapterList": {
+        "elementType": "class",
+        "elementValue": "read",
+        "ruleChild": {
+          "elementType": "tag",
+          "elementValue": "dl",
+          "position": 1
+        }
+      },
+      "title": {
+        "elementType": "tag",
+        "elementValue": "dd",
+        "attrValue": "text"
+      },
+      "url": {
+        "elementType": "tag",
+        "elementValue": "a",
+        "attrValue": "href",
+        "formatRule": {
+          "elementValue": "https://www.dstiejuan.com",
+          "elementType": "addStart"
+        }
+      }
+    },
+    "ruleNewestChapter": {
+      "elementType": "class",
+      "elementValue": "read",
+      "ruleChild": {
+        "elementType": "tag",
+        "elementValue": "dl",
+        "ruleChild": {
+          "elementType": "tag",
+          "elementValue": "dd",
+          "ruleChild": {
+            "elementType": "tag",
+            "elementValue": "a",
+            "attrValue": "text"
+          }
+        }
+      }
+    },
+    "ruleArticleContent": {
+      "elementType": "id",
+      "elementValue": "content"
+    },
+    "ruleBookDetail": {
+      "ruleUpdateData": {
+        "elementType": "class",
+        "elementValue": "light",
+        "attrValue": "text",
+        "formatRule": {
+          "elementType": "replaceEnd",
+          "elementValue": ")",
+          "formatRule": {
+            "elementType": "replaceStart",
+            "elementValue": "("
+          }
+        }
+      }
     }
   }
 ]

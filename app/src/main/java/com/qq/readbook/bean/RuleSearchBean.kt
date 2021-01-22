@@ -25,9 +25,11 @@ class RuleSearchBean {
     var ruleBookName: JsonElement? = null
     var ruleDesc: JsonElement? = null
     var ruleAuthor: JsonElement? = null
-    var newestChapterTitle: JsonElement? = null
-    var chapterUrl: JsonElement? = null
+    var ruleNewestChapterTitle: JsonElement? = null
+    var ruleChapterUrl: JsonElement? = null
     var ruleImg: JsonElement? = null
-    var bookDetailUrl: JsonElement? = null
-    var wordCount: JsonElement? = null
+    var ruleBookDetailUrl: JsonElement? = null
+    var ruleWordCount: JsonElement? = null
+    var ruleUpdateData: JsonElement? = null
+
 }

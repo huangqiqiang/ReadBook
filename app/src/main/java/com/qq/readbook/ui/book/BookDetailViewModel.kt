@@ -36,41 +36,65 @@ class BookDetailViewModel : BaseViewModel() {
 
     override fun onCrete() {
         book.value?.let {
-            // 读取本地章节
-            RoomUtils.getChapterDataBase(it.name + "_" + it.author).chapterDao().apply {
-                chapters.value = it.sourceName?.let { it1 -> getAll(it1) }
+            readChapters(it)
+            readLocalBook(it)
+            getBookDetail(it)
+        }
+    }
+
+    /**
+     *  获取章节信息
+     * @param it Book
+     */
+    private fun readChapters(it: Book) {
+        // 读取本地章节
+        RoomUtils.getChapterDataBase(it.name + "_" + it.author).chapterDao().apply {
+            chapters.value = it.sourceName?.let { it1 -> getAll(it1) }
+        }
+        // 爬取新目录
+        BookChaptersRepository.getBookChapters(it, object : BookChaptersRepository.BookChaptersCall {
+            override fun onSuccess(arrayList: List<Chapter>) {
+                chapters.value = arrayList
             }
-            // 爬取最新目录
-            BookChaptersRepository.getBookChapters(it,
-                object : BookChaptersRepository.BookChaptersCall {
-                    override fun onSuccess(arrayList: List<Chapter>) {
-                        chapters.value = arrayList
+        })
+    }
+
+    /**
+     * 加载本地书本信息
+     * @param it Book
+     */
+    private fun readLocalBook(it: Book) {
+        RoomUtils.getBook().bookDao().getBookById(it.bookId)?.let { it1 ->
+            //id是唯一主键  其他内容 还是用上个界面传递的  避免数据混乱
+            book.value?.id = it1.id
+
+            //有查询到本地数据  那就是有收藏的 目前是真删除
+            addBookMenu.value = !(addBookMenu.value as Boolean)
+            getBookRecord(it1)?.let { it2 ->
+                if (chapters.value != null) {
+                    currChapter.value = it2.chapter
+                }
+            }
+        }
+    }
+
+    /**
+     * 判断是否需要加载详情 部分搜索页面获取的书籍是完整的
+     * @param it Book
+     */
+    private fun getBookDetail(it: Book) {
+        // 爬取详情页面
+        val readSource = App.sourceList?.first { it1 ->
+            it1.bookSourceName == it.sourceName
+        }
+        readSource?.let { it1 ->
+            if (CommentUtils.isRefresh(it, it1.searchDetail)) {
+                BookDetailRepository.readBookDetail(it, readSource, object : BookDetailRepository.ILatestChapter {
+                    override fun onEndCall(b: Book, isSuccess: Boolean) {
+                        book.postValue(b)
                     }
                 })
-            RoomUtils.getBook().bookDao().getBookById(it.bookId)?.let { it1->
-                book.value = it1
-                //有查询到本地数据  那就是有收藏的 目前是真删除
-                addBookMenu.value = !(addBookMenu.value as Boolean)
-                getBookRecord(it1)?.let { it2->
-                    if (chapters.value != null) {
-                        currChapter.value = it2.chapter
-                    }
-                }
             }
-            // 爬取详情页面
-            val readSource = App.sourceList?.first { it1 ->
-                it1.bookSourceName == it.sourceName
-            }
-            readSource?.let { it1 ->
-                if (CommentUtils.isRefresh(it, it1.searchDetail)) {
-                    BookDetailRepository.readBookDetail(it, readSource, object : BookDetailRepository.ILatestChapter {
-                        override fun onEndCall(b: Book, isSuccess: Boolean) {
-                            book.postValue(b)
-                        }
-                    })
-                }
-            }
-
         }
     }
 

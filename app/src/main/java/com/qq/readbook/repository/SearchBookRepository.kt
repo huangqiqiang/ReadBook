@@ -110,8 +110,12 @@ object SearchBookRepository {
         bookSources.bookChapterUrl = book.chapterUrl
         RoomUtils.getBook().bookSources().apply {
             book.sourceName?.let { it1 ->
-                if (getBookSource(it1, book.bookId) == null) {
+                val b = getBookSource(it1, book.bookId)
+                if (b == null) {
                     insertAll(bookSources);
+                } else {
+                    bookSources.id = b.id
+                    update(bookSources)
                 }
             }
         }

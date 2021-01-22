@@ -362,11 +362,12 @@ object JsoupUtils {
             book.author = getElementValue(element, ruleAuthor)
             book.imgUrl = getElementValue(element, ruleImg)
             book.desc = getElementValue(element, ruleDesc)
-            book.chapterUrl = getElementValue(element, chapterUrl)
-            book.bookDetailUrl = getElementValue(element, bookDetailUrl)
-            book.newestChapterTitle = getElementValue(element, newestChapterTitle)
+            book.chapterUrl = getElementValue(element, ruleChapterUrl)
+            book.bookDetailUrl = getElementValue(element, ruleBookDetailUrl)
+            book.newestChapterTitle = getElementValue(element, ruleNewestChapterTitle)
             book.type = getElementValue(element, ruleType)
-            book.wordCount = getElementValue(element, wordCount)
+            book.wordCount = getElementValue(element, ruleWordCount)
+            book.updateDate = getElementValue(element,ruleUpdateData )
             book.bookId = MD5Utils.getStringMD5(book.name + book.author)
         }
         if (book.name.isEmpty() && book.author.isEmpty()) {
@@ -422,7 +423,7 @@ object JsoupUtils {
         LogUtils.e(book.sourceName)
         val source = findSource(book.sourceName)
         book.newestChapterTitle = getElementValue(Jsoup.parse(html), source?.ruleNewestChapter)
-        LogUtils.e("解析最新章节结束")
+        LogUtils.e("解析最新章节结束 "+ book.newestChapterTitle)
         LogUtils.e("-----------------------")
         return book
     }
@@ -435,9 +436,9 @@ object JsoupUtils {
      * @return Book
      */
     fun getBookDetail(html: String, book: Book, readSource: ReadSource): Book {
-        val bookDetail = GsonUtil.fromJson(readSource.ruleBookDetail.toString(), RuleBookDetail::class.java)
+        val bookDetail = GsonUtil.fromJson(readSource.ruleBookDetail.toString(), RuleSearchBean::class.java)
         val element = Jsoup.parse(html)
-        book.updateDate = getElementValue(element, bookDetail?.updateTime)
+        book.updateDate = getElementValue(element, bookDetail?.ruleUpdateData)
         return book
     }
 

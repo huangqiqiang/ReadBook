@@ -47,6 +47,9 @@ interface BookSourcesDao {
 
     @Insert
     fun insertAll(vararg source: BookSources)
+
+    @Update
+    fun update(source: BookSources)
 }
 
 
@@ -158,7 +161,7 @@ object RoomUtils {
     }
 
     fun getChapterDataBase(
-        name: String,
+            name: String,
     ): ChapterDatabase {
         var dataBase = chapterDatabase.get(name)
         if (dataBase == null) {
