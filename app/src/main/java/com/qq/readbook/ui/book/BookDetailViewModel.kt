@@ -1,5 +1,7 @@
 package com.qq.readbook.ui.book
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.MutableLiveData
@@ -42,6 +44,19 @@ class BookDetailViewModel : BaseViewModel() {
         }
     }
 
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            val sourceName = data?.getStringExtra(Keys.BOOK_SOURCE_NAME)
+            book.value?.sourceName = sourceName
+            // 更新信息
+            book.value?.let { readChapters(it) }
+            book.value=book.value
+
+        }
+    }
+
     /**
      *  获取章节信息
      * @param it Book
@@ -67,7 +82,6 @@ class BookDetailViewModel : BaseViewModel() {
         RoomUtils.getBook().bookDao().getBookById(it.bookId)?.let { it1 ->
             //id是唯一主键  其他内容 还是用上个界面传递的  避免数据混乱
             book.value?.id = it1.id
-
             //有查询到本地数据  那就是有收藏的 目前是真删除
             addBookMenu.value = !(addBookMenu.value as Boolean)
             getBookRecord(it1)?.let { it2 ->
@@ -131,7 +145,7 @@ class BookDetailViewModel : BaseViewModel() {
     fun onOtherSources(view: View) {
         startActivity(BookSourceActivity::class.java, Bundle().apply {
             putParcelable(Keys.BOOK, book.value)
-        })
+        },1)
     }
 
 }
