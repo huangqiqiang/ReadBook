@@ -2,7 +2,6 @@
 
 buildscript {
     repositories {
-
         // 添加阿里云 maven 地址
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
         maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
@@ -19,8 +18,6 @@ buildscript {
 
 allprojects {
     repositories {
-
-
         // 添加阿里云 maven 地址
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
         maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }

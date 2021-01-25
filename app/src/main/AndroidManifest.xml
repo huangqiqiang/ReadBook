@@ -36,7 +36,6 @@
         <activity
             android:name=".ui.book.ReadBookActivity"
             android:label="阅读" />
-
         <activity
             android:name=".ui.book.BookSourceActivity"
             android:label="其他源" />

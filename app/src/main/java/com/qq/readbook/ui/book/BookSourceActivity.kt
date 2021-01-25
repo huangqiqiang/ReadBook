@@ -41,11 +41,10 @@ class BookSourceActivity : BaseListActivity() {
                 hashMap.get(getItem(position).bookSourceName)?.let {
                     if (it) {
                         putExtra(Keys.BOOK_SOURCE_NAME, getItem(position).bookSourceName)
-                        finish()
                     }
                 }
-
             })
+            finish()
         }
     }
 

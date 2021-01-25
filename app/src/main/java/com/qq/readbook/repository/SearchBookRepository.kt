@@ -71,6 +71,12 @@ object SearchBookRepository {
         return books
     }
 
+    /**
+     *
+     * @param searchElement RuleSearchBean?
+     * @param html String
+     * @return ArrayList<Book>
+     */
     fun doReadBookList4Source(searchElement: RuleSearchBean?, html: String): ArrayList<Book> {
         val books: ArrayList<Book> = ArrayList<Book>()
         val doc = Jsoup.parse(html)
