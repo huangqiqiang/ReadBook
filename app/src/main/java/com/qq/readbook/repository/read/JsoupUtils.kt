@@ -5,12 +5,8 @@ import com.google.gson.*
 import com.hqq.core.utils.GsonUtil
 import com.hqq.core.utils.log.LogUtils
 import com.qq.readbook.BookSourceUtils
-import com.qq.readbook.Keys
 import com.qq.readbook.bean.*
 import com.qq.readbook.utils.MD5Utils
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Element
-import org.jsoup.select.Elements
 import org.seimicrawler.xpath.JXDocument
 import org.seimicrawler.xpath.JXNode
 import java.util.*
@@ -51,7 +47,7 @@ object JsoupUtils {
         if (ruleBookName.isNullOrEmpty() || element == null) {
             return "";
         }
-        val value = element.selOne(ruleBookName)
+        val value = element.selOne(ruleBookName) ?: return ""
         if (value is String) {
             if (value.isNullOrEmpty()) {
                 return "";
@@ -161,7 +157,7 @@ object JsoupUtils {
         val source = findSource(book.sourceName)
         book.newestChapterTitle = getValue4key(JXDocument.create(html), source?.ruleNewestChapter)
 
-        LogUtils.e( book.newestChapterTitle)
+        LogUtils.e(book.newestChapterTitle)
         LogUtils.e("解析最新章节结束 " + book.newestChapterTitle)
         LogUtils.e("-----------------------")
 

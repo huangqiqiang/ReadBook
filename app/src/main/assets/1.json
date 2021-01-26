@@ -6,17 +6,17 @@
     "ruleSearch": {
       "ruleNewestChapterTitle": "//*[@class=\"result-game-item-info-tag-item\"]/text()",
       "ruleBookName": "//*[@class=\"result-game-item-title-link\"]\/@title",
-      "ruleAuthor": "//*[@class=\"result-game-item-info-tag\"]/span[1]/text()",
+      "ruleAuthor": "//*[@class=\"result-game-item-info-tag\"]/span[2]/text()",
       "ruleImg": "//img/@src",
       "ruleDesc": "//*[@class=\"result-game-item-desc\"]/text()",
       "ruleBookDetailUrl": "concat('https://www.23txt.com',//*[@class=\"result-game-item-title-link\"]/@href)",
       "ruleChapterUrl": "concat('https://www.23txt.com',//*[@class=\"result-game-item-pic-link\"]/@href)",
       "ruleSearchList": "//*[@class=\"result-list\"]",
-      "ruleType": "//*[@class=\"result-game-item-info-tag-title\"][2]/text()",
+      "ruleType": "//*[@class=\"result-game-item-info-tag-title\"][1]/text()",
       "ruleUpdateData": "//*[@class=\"result-game-item-info-tag-title\"][4]/text()"
     },
     "ruleChapter": {
-      "chapterList": "//*[@id=\"list\"]/dd",
+      "chapterList": "//*[@id=\"list\"]/dl/dd",
       "title": "//a/text()",
       "url": "concat('https://www.23txt.com',//a/@href)"
     },
