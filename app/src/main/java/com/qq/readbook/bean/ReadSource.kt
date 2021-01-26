@@ -57,7 +57,7 @@ class ReadSource {
     /**
      *  最新章节
      */
-    var ruleNewestChapter: JsonElement? = null
+    var ruleNewestChapter: String? = null
 
     /**
      *  详情的爬取规则

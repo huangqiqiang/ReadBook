@@ -1,32 +1,28 @@
 [
   {
-    "bookSourceName": "丹书铁卷⑫",
-    "bookSearchUrl": "https://www.dstiejuan.com/search.html@searchkey",
-    "bookSourceUrl": "https://www.dstiejuan.com",
-    "searchDetail": 2,
+    "bookSourceName": "天籁小说",
+    "bookSearchUrl": "https://www.23txt.com/search.php?q=%s",
+    "bookSourceUrl": "https://www.23txt.com/",
     "ruleSearch": {
-      "ruleSearchList": "//ul[@class=\"library\"]//li",
-      "ruleBookName": ".\/a[@class=\"bookname\"]\/text()",
-      "ruleDesc": ".\/p[@class=\"intro\"]\/text()",
-      "ruleAuthor": ".\/p[1]\/a[@class=\"author\"]\/text()",
-      "ruleNewestChapterTitle": "./a[@class=\"chapter\"]/text()",
-      "ruleChapterUrl": "concat('https://www.dstiejuan.com',substring-before(./a[2]/@href,'.html'))",
-      "ruleBookDetailUrl": "concat('https://www.dstiejuan.com',./a[2]/@href)",
-      "ruleImg": ".\/a[@class=\"bookimg\"]\/img\/@src",
-      "ruleType": "./p/a[2]/text()",
-      "ruleWordCount": ".\/p[1]\/text()[2]"
+      "ruleNewestChapterTitle": "//*[@class=\"result-game-item-info-tag-item\"]/text()",
+      "ruleBookName": "//*[@class=\"result-game-item-title-link\"]\/@title",
+      "ruleAuthor": "//*[@class=\"result-game-item-info-tag\"]/span[1]/text()",
+      "ruleImg": "//img/@src",
+      "ruleDesc": "//*[@class=\"result-game-item-desc\"]/text()",
+      "ruleBookDetailUrl": "concat('https://www.23txt.com',//*[@class=\"result-game-item-title-link\"]/@href)",
+      "ruleChapterUrl": "concat('https://www.23txt.com',//*[@class=\"result-game-item-pic-link\"]/@href)",
+      "ruleSearchList": "//*[@class=\"result-list\"]",
+      "ruleType": "//*[@class=\"result-game-item-info-tag-title\"][2]/text()",
+      "ruleUpdateData": "//*[@class=\"result-game-item-info-tag-title\"][4]/text()"
     },
     "ruleChapter": {
-      "chapterList": "\/\/div[@class=\"read\"]\/dl[2]\/\/dd",
-      "title": ".\/a\/text()",
-      "url": "concat('https://www.dstiejuan.com',.\/a\/@href)"
+      "chapterList": "//*[@id=\"list\"]/dd",
+      "title": "//a/text()",
+      "url": "concat('https://www.23txt.com',//a/@href)"
     },
-    "ruleNewestChapter": "substring-after(substring-before(//p/span[@class='light']/text(),')'),'(')",
+    "ruleNewestChapter": "\/\/*[@id=\"info\"]/a[2]/text()",
     "ruleArticleContent": {
       "content": "\/\/div[@id=\"content\"]"
-    },
-    "ruleBookDetail": {
-      "ruleUpdateData": "substring-after(substring-before(//p/span[@class='light']/text(),')'),'(')"
     }
   }
 ]

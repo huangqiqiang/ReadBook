@@ -36,296 +36,33 @@ object JsoupUtils {
     }
 
 
-    /**
-     *  转义成节点对象
-     * @param jsonElement JsonElement?
-     * @return NodeBean?
-     */
-    fun getNodeBean(jsonElement: JsonElement?): NodeBean? {
-        return GsonUtil.fromJson(jsonElement.toString(), NodeBean::class.java)
+    private fun getValue4key(element: JXNode?, ruleBookName: String?): String {
+        if (ruleBookName.isNullOrEmpty() || element == null) {
+            return "";
+        }
+        val value = element.selOne(ruleBookName)?.asString()
+        if (value.isNullOrEmpty()) {
+            return "";
+        }
+        return value
     }
 
-    /**
-     * 转义成JsonObject
-     * @param ruleJson String
-     * @return JsonElement?
-     */
-    fun getJsonElement(ruleJson: String): JsonElement? {
-        try {
-            return JsonParser.parseString(ruleJson)
-        } catch (e: JsonSyntaxException) {
+    private fun getValue4key(element: JXDocument?, ruleBookName: String?): String {
+        if (ruleBookName.isNullOrEmpty() || element == null) {
+            return "";
         }
-        return null
+        val value = element.selOne(ruleBookName)
+        if (value is String) {
+            if (value.isNullOrEmpty()) {
+                return "";
+            }
+            return value
+        }
+        return value.toString()
     }
 
-
-    /**
-     *  读取List数据  JsonArray
-     * @param doc Document
-     * @param rule JsonElement
-     * @return Elements?
-     */
-    fun getElements(doc: Element?, rule: JsonElement?): Elements? {
-        if (rule != null && doc != null) {
-            if (rule is JsonArray) {
-                val jsonArray = rule.asJsonArray
-                for (jsonElement in jsonArray) {
-                    val nodeBean = getNodeBean(jsonElement)
-                    if (nodeBean != null) {
-                        return doElements(doc, nodeBean)
-                    }
-                }
-            } else if (rule is JsonObject) {
-                val nodeBean = getNodeBean(rule)
-                if (nodeBean != null) {
-                    return doElements(doc, nodeBean)
-                }
-
-            }
-        }
-        return null
-    }
-
-    /**
-     *  读取逻辑
-     * @param doc Document
-     * @param jsonElement JsonElement
-     * @return Elements?
-     */
-    private fun doElements(doc: Element, jsonElement: NodeBean): Elements? {
-        val elements: Elements? = getElements4Value(jsonElement, doc)
-        //  判断是否需要迭代数据
-        val child = jsonElement.ruleChild
-        if (child != null) {
-            val element = elements?.first()
-            // 递归调用
-            return getElements(element, child)
-        } else {
-            return elements
-        }
-    }
-
-    /**
-     *  根据 Value 读取数据
-     * @param jsonElement JsonElement
-     * @param doc Document
-     * @return Elements?
-     */
-    private fun getElements4Value(jsonElement: NodeBean, doc: Element): Elements? {
-        val type = jsonElement.elementType
-        val value = jsonElement.elementValue
-        var elements: Elements? = null
-        when (type) {
-            Keys.ATTR_CLASS -> {
-                elements = doc.getElementsByClass(value)
-            }
-            Keys.LABEL_TAG -> {
-                elements = doc.getElementsByTag(value)
-            }
-            Keys.ID -> {
-                val element = doc.getElementById(value)
-                elements = Elements(element)
-
-            }
-        }
-        val position = jsonElement.position
-        if (position > 0) {
-            val positionValue = elements?.get(position)
-            if (positionValue is Elements) {
-                return positionValue
-            } else {
-                elements = positionValue?.children()
-            }
-        }
-
-        return elements
-    }
-
-
-    /**
-     *  获取 Element 的value值
-     * @param element Element?
-     * @param rule JsonElement?
-     * @return String
-     */
-    fun getElementValue(element: Element?, rule: JsonElement?): String {
-        if (rule != null && element != null) {
-            if (rule is JsonArray) {
-                val jsonArray = rule.asJsonArray
-                for (jsonElement in jsonArray) {
-                    return doElementValue(element, getNodeBean(jsonElement.asJsonObject))
-                }
-            } else if (rule is JsonObject) {
-                return doElementValue(element, getNodeBean(rule.asJsonObject))
-            }
-        }
-        return "";
-    }
-
-    /**
-     *  根据 TYPE 分类读取
-     * @param element Element
-     * @param nodeBean JsonObject?
-     * @return String
-     */
-    fun doElementValue(element: Element, nodeBean: NodeBean?): String {
-        val jsonElement = nodeBean?.ruleChild
-        if (jsonElement != null && jsonElement is JsonObject) {
-            val elements = getElements4Value(nodeBean, element)
-            if (!elements.isNullOrEmpty()) {
-                val position = nodeBean.position as? Int
-                if (position != null && position > 0) {
-                    if (elements.size > position) {
-                        return doElementValue(elements.get(position), getNodeBean(jsonElement))
-                    }
-                } else {
-                    return doElementValue(elements.get(0), getNodeBean(jsonElement))
-                }
-            }
-        } else {
-            when (nodeBean?.elementType) {
-                Keys.ATTR_CLASS -> {
-                    return getElementValue4Class(element, nodeBean)
-                }
-                Keys.LABEL_TAG -> {
-                    return getElementValue4Tag(element, nodeBean)
-                }
-                Keys.TEXT_NODE -> {
-                    return getElementValue4TextNode(element, nodeBean)
-                }
-            }
-        }
-
-        return ""
-    }
-
-    private fun getElementValue4TextNode(element: Element, nodeBean: NodeBean): String {
-        val nodes = element.textNodes()
-        for (node in nodes.withIndex()) {
-            if (node.index == nodeBean.position) {
-                return node.value.text()
-            }
-        }
-        return "";
-    }
-
-    /**
-     *  读取 tag  标签的值
-     * @param element Element
-     * @param rule JsonObject
-     * @return String
-     */
-    fun getElementValue4Tag(element: Element, rule: NodeBean): String {
-        val values = element.getElementsByTag(rule.elementValue)
-        return doElementValue4Format(values, rule)
-    }
-
-    /**
-     *  根据Class读取类型
-     * @param element Element?
-     * @param rule JsonObject?
-     * @return String
-     */
-    fun getElementValue4Class(element: Element?, rule: NodeBean?): String {
-        val values = element?.getElementsByClass(rule?.elementValue)
-        return doElementValue4Format(values, rule)
-    }
-
-    /**
-     *  统一转String
-     * @param values Elements?
-     * @param rule NodeBean?
-     * @return String
-     */
-    private fun doElementValue4Format(values: Elements?, rule: NodeBean?): String {
-        if (values == null) {
-            return ""
-        } else if (rule == null) {
-            return ""
-        }
-        when (rule.attrValue) {
-            Keys.ATTR_SRC, Keys.TITLE, Keys.ATTR_HREF -> {
-                val str = values.attr(rule.attrValue)?.toString()
-                if (str.isNullOrEmpty()) {
-                    return ""
-                }
-                return formatString(rule, str)
-            }
-            Keys.ATTR_TEXT -> {
-                return formatText(values, rule)
-            }
-        }
-        return ""
-    }
-
-    /**
-     *  格式化 text
-     * @param elements Elements?
-     * @param rule NodeBean?
-     * @return String
-     */
-    private fun formatText(elements: Elements?, rule: NodeBean?): String {
-        var text = ""
-        if (elements != null) {
-            if (rule != null) {
-                if (rule.position <= 0) {
-                    text = elements.first()?.text().toString()
-                } else {
-                    for ((index, element) in elements.withIndex()) {
-                        if (index == rule.position) {
-                            text = element.text()
-                        }
-                    }
-                }
-            } else {
-                text = elements.text()
-            }
-        }
-        if (rule?.formatRule == null) {
-            return text
-        } else {
-            return formatString(rule, text)
-        }
-    }
-
-    /**
-     *  格式化 Url
-     * @param rule JsonObject
-     * @param url String
-     * @return String
-     */
-    private fun formatString(rule: NodeBean, url: String): String {
-        var url1 = url
-        val jsonElement = rule.formatRule
-        if (true == jsonElement?.toString()?.isNotEmpty()) {
-            val jsonObject = getNodeBean(jsonElement.asJsonObject)
-            when (jsonObject?.elementType) {
-                Keys.REPLACE_END -> {
-                    val value = jsonObject.elementValue
-                    if (value != null) {
-                        url1 = url1.replace(value, "")
-                    }
-                }
-                Keys.REPLACE_START -> {
-                    val value = jsonObject.elementValue
-                    if (value != null) {
-                        url1 = url1.replace(value, "")
-                    }
-                }
-                Keys.ADD_START -> {
-                    url1 = (jsonObject.elementValue + url1)
-                }
-            }
-        }
-        if (rule.formatRule != null) {
-            if (rule.formatRule is JsonObject) {
-                val nodeBean = getNodeBean(rule.formatRule)
-                if (nodeBean != null) {
-                    return formatString(nodeBean, url1)
-                }
-            }
-        }
-        return url1
+    private fun getElementValue(element: JXNode?, rule: String?): String {
+        return getValue4key(element, rule)
     }
 
 
@@ -375,31 +112,6 @@ object JsoupUtils {
         return book
     }
 
-    private fun getValue4key(element: JXNode?, ruleBookName: String?): String {
-        if (ruleBookName.isNullOrEmpty() || element == null) {
-            return "";
-        }
-        val value = element.selOne(ruleBookName)?.asString()
-        if (value.isNullOrEmpty()) {
-            return "";
-        }
-        return value
-    }
-
-    private fun getValue4key(element: JXDocument?, ruleBookName: String?): String {
-        if (ruleBookName.isNullOrEmpty() || element == null) {
-            return "";
-        }
-        val value = element.selOne(ruleBookName)
-        if (value is String) {
-            if (value.isNullOrEmpty()) {
-                return "";
-            }
-            return value
-        }
-        return value.toString()
-    }
-
     /**
      *  读取章节列表
      * @param html String
@@ -433,9 +145,6 @@ object JsoupUtils {
         return chapters
     }
 
-    private fun getElementValue(element: JXNode?, rule: String?): String {
-        return getValue4key(element, rule)
-    }
 
     /**
      *  解析最新章节
@@ -448,10 +157,14 @@ object JsoupUtils {
         LogUtils.e("解析最新章节")
         LogUtils.e(book.name)
         LogUtils.e(book.sourceName)
+
         val source = findSource(book.sourceName)
-        book.newestChapterTitle = getElementValue(Jsoup.parse(html), source?.ruleNewestChapter)
+        book.newestChapterTitle = getValue4key(JXDocument.create(html), source?.ruleNewestChapter)
+
+        LogUtils.e( book.newestChapterTitle)
         LogUtils.e("解析最新章节结束 " + book.newestChapterTitle)
         LogUtils.e("-----------------------")
+
         return book
     }
 
