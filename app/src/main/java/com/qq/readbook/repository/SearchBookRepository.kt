@@ -1,19 +1,16 @@
 package com.qq.readbook.repository
 
-import com.google.gson.JsonArray
-import com.google.gson.JsonObject
 import com.hqq.core.net.ok.OkHttp
 import com.hqq.core.net.ok.OkNetCallback
 import com.hqq.core.utils.GsonUtil
 import com.hqq.core.utils.log.LogUtils
-import com.qq.readbook.Keys
 import com.qq.readbook.bean.Book
 import com.qq.readbook.bean.BookSources
 import com.qq.readbook.bean.ReadSource
 import com.qq.readbook.bean.RuleSearchBean
 import com.qq.readbook.repository.read.JsoupUtils
 import com.qq.readbook.utils.room.RoomUtils
-import org.jsoup.Jsoup
+import org.seimicrawler.xpath.JXDocument
 import java.net.URLEncoder
 import java.util.*
 
@@ -37,10 +34,8 @@ object SearchBookRepository {
                 response?.let { it ->
                     LogUtils.d("-------------start-------------------")
                     LogUtils.d(GsonUtil.toJsonString(source))
-                    LogUtils.d("--------------------------------")
                     LogUtils.d("--------------Html------------------")
                     LogUtils.d(response)
-                    LogUtils.d("--------------------------------")
                     LogUtils.d("----------------end----------------")
                     val books = doReadBookList(it, source)
                     callback.onSearchBook(books as ArrayList<Book>?, true)
@@ -79,24 +74,13 @@ object SearchBookRepository {
      */
     fun doReadBookList4Source(searchElement: RuleSearchBean?, html: String): ArrayList<Book> {
         val books: ArrayList<Book> = ArrayList<Book>()
-        val doc = Jsoup.parse(html)
-        searchElement?.let { it ->
-            val array = it.ruleSearchList
-            if (array is JsonArray) {
-                for (jsonElement in array.asJsonArray) {
-                    if (jsonElement is JsonObject) {
-                        val nodeBean = JsoupUtils.getNodeBean(jsonElement)
-                        if (nodeBean?.elementType == Keys.ATTR_CLASS) {
-                            JsoupUtils.getElements(doc, jsonElement)?.let {
-                                for (child in it) {
-                                    val book = JsoupUtils.doReadBook(child, searchElement)
-                                    book?.let { it1 ->
-                                        books.add(it1)
-                                    }
-                                }
-                            }
-                        }
-                    }
+        if (null != searchElement) {
+            val array = searchElement.ruleSearchList
+            val list = JXDocument.create(html).selN(array)
+            for (child in list) {
+                val book = JsoupUtils.doReadBook(child, searchElement)
+                if (book != null) {
+                    books.add(book)
                 }
             }
         }

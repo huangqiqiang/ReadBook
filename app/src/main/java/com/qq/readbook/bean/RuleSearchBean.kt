@@ -20,16 +20,16 @@ class RuleSearchBean {
      * ruleImg : [{"elementType":"tag","elementValue":"img","attrValue":"src","position":0}]
      * ruleType : {"elementType":"tag","elementValue":"p","ruleChild":{"elementType":"tag","elementValue":"a","position":1}}
      */
-    var ruleType: JsonElement? = null
-    var ruleSearchList: JsonElement? = null
-    var ruleBookName: JsonElement? = null
-    var ruleDesc: JsonElement? = null
-    var ruleAuthor: JsonElement? = null
-    var ruleNewestChapterTitle: JsonElement? = null
-    var ruleChapterUrl: JsonElement? = null
-    var ruleImg: JsonElement? = null
-    var ruleBookDetailUrl: JsonElement? = null
-    var ruleWordCount: JsonElement? = null
-    var ruleUpdateData: JsonElement? = null
+    var ruleType: String? = null
+    var ruleSearchList: String? = null
+    var ruleBookName: String? = null
+    var ruleDesc: String? = null
+    var ruleAuthor: String? = null
+    var ruleNewestChapterTitle: String? = null
+    var ruleChapterUrl: String? = null
+    var ruleImg: String? = null
+    var ruleBookDetailUrl: String? = null
+    var ruleWordCount: String? = null
+    var ruleUpdateData: String? = null
 
 }

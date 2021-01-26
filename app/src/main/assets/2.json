@@ -11,4 +11,136 @@
     "bookSourceUrl": "https://www.23txt.com/",
     "searchRule": "{\"ruleSearchList\":[{\"elementType\":\"class\",\"elementValue\":\"novelslistss\",\"ruleChild\":{\"elementType\":\"tag\",\"elementValue\":\"li\"}}],\"ruleBookName\":[{\"elementType\":\"class\",\"elementValue\":\"s2\",\"ruleChild\":{\"elementType\":\"tag\",\"elementValue\":\"s2\",\"attrValue\":\"text\"}}],\"ruleAuthor\":[{\"elementType\":\"class\",\"elementValue\":\"s4\",\"attrValue\":\"text\"}],\"newestChapterTitle\":[{\"elementType\":\"class\",\"elementValue\":\"s3\",\"attrValue\":\"text\"}],\"chapterUrl\":[{\"elementType\":\"class\",\"elementValue\":\"s2\",\"ruleChild\":{\"elementType\":\"tag\",\"elementValue\":\"a\",\"attrValue\":\"href\"}}]}",
     "searchEncode": "gb2312"
-  }]
+  },
+
+  {
+    "bookSourceName": "天籁小说",
+    "bookSearchUrl": "https://www.23txt.com/search.php?q=%s",
+    "bookSourceUrl": "https://www.23txt.com/",
+    "ruleSearch": {
+      "ruleNewestChapterTitle": [
+        {
+          "elementType": "class",
+          "elementValue": "result-game-item-info-tag-item",
+          "attrValue": "text"
+        }
+      ],
+      "ruleBookName": [
+        {
+          "elementType": "class",
+          "elementValue": "result-game-item-title-link",
+          "attrValue": "title"
+        }
+      ],
+      "ruleAuthor": [
+        {
+          "elementType": "class",
+          "elementValue": "result-game-item-info-tag",
+          "ruleChild": {
+            "elementType": "tag",
+            "elementValue": "span",
+            "position": 1,
+            "attrValue": "text"
+          }
+        }
+      ],
+      "ruleImg": [
+        {
+          "elementType": "tag",
+          "elementValue": "img",
+          "attrValue": "src",
+          "position": 0
+        }
+      ],
+      "ruleDesc": [
+        {
+          "elementType": "class",
+          "elementValue": "result-game-item-desc",
+          "attrValue": "text"
+        }
+      ],
+      "ruleBookDetailUrl": [
+        {
+          "elementType": "class",
+          "elementValue": "result-game-item-title-link",
+          "attrValue": "href",
+          "formatRule": {
+            "elementType": "addStart",
+            "elementValue": "https://www.23txt.com"
+          }
+        }
+      ],
+      "ruleChapterUrl": [
+        {
+          "elementType": "class",
+          "elementValue": "result-game-item-pic-link",
+          "attrValue": "href",
+          "formatRule": {
+            "elementType": "addStart",
+            "elementValue": "https://www.23txt.com"
+          }
+        }
+      ],
+      "ruleSearchList": [
+        {
+          "elementType": "class",
+          "elementValue": "result-list"
+        }
+      ],
+      "ruleType": [
+        {
+          "elementType": "class",
+          "elementValue": "result-game-item-info-tag-title",
+          "position": 2,
+          "attrValue": "text"
+        }
+      ],
+      "ruleUpdateData": [
+        {
+          "elementType": "class",
+          "elementValue": "result-game-item-info-tag-title",
+          "position": 4,
+          "attrValue": "text"
+        }
+      ]
+    },
+    "ruleChapter": {
+      "chapterList": {
+        "elementType": "id",
+        "elementValue": "list",
+        "ruleChild": {
+          "elementType": "tag",
+          "elementValue": "dd"
+        }
+      },
+      "title": {
+        "elementType": "tag",
+        "elementValue": "a",
+        "attrValue": "text"
+      },
+      "url": {
+        "elementType": "tag",
+        "elementValue": "a",
+        "attrValue": "href",
+        "formatRule": {
+          "elementValue": "https://www.23txt.com",
+          "elementType": "addStart"
+        }
+      }
+    },
+    "ruleNewestChapter": {
+      "elementType": "id",
+      "elementValue": "info",
+      "ruleChild": {
+        "elementType": "tag",
+        "elementValue": "a",
+        "position": 2,
+        "attrValue": "text"
+      }
+    },
+    "ruleArticleContent": {
+      "elementType": "id",
+      "elementValue": "content"
+    }
+  }
+]

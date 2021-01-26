@@ -15,7 +15,7 @@ class RuleChapterBean {
      * title : {"elementType":"tag","elementValue":"dd","attrValue":"text"}
      * url : {"elementType":"tag","elementValue":"a","attrValue":"href","formatRule":{"elementValue":"https://www.dstiejuan.com","elementType":"addStart"}}
      */
-    var chapterList: JsonElement? = null
-    var title: JsonElement? = null
-    var url: JsonElement? = null
+    var chapterList: String? = null
+    var title: String? = null
+    var url: String? = null
 }

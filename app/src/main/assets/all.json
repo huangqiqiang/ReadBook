@@ -280,7 +280,7 @@
         "bookName": ".\/td[1]\/a\/\/text()",
         "statusText": ".\/td[6]",
         "lastUpdateDate": ".\/td[5]"
-      },;
+      };
       "forGetMethod": true,
       "params": {
         "searchtype": "keywords",

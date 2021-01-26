@@ -41,7 +41,7 @@ class DownService : BaseService() {
                 }
             }
         })
-       mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
+        mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
         return taskBuilder
     }
 
@@ -51,7 +51,10 @@ class DownService : BaseService() {
      */
     suspend fun doGet(chapter: Chapter, book: Book?) {
         withContext(Dispatchers.IO) {
-            LogUtils.e("----- 开始请求 : " + chapter.number + "----" + chapter.title)
+            LogUtils.e("------------------- 开始请求 ------------------- ")
+            LogUtils.e(chapter.number.toString() + "----" + chapter.title)
+            LogUtils.e(chapter.url)
+            LogUtils.e("-------------------  ------------------- ")
             BookArticleRepository.getChapterContent(
                 chapter, book?.name + "_" + book?.author,
                 object : BookArticleRepository.ArticleNetCallBack {

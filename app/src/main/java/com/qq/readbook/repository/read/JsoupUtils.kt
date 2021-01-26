@@ -11,6 +11,8 @@ import com.qq.readbook.utils.MD5Utils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
+import org.seimicrawler.xpath.JXDocument
+import org.seimicrawler.xpath.JXNode
 import java.util.*
 
 /**
@@ -333,17 +335,14 @@ object JsoupUtils {
      * @param source ReadSource?
      * @return String
      */
-    fun getArticleDetail(response: String?, source: ReadSource?): String {
-        val doc = Jsoup.parse(response)
-        val jsonElement = source?.ruleArticleContent
-        val nodeBoolean = getNodeBean(jsonElement)
+    fun getArticleDetail(html: String?, source: ReadSource?): String {
+        val ruleArticleContent =
+            GsonUtil.fromJson(source?.ruleArticleContent.toString(), RuleArticleContent::class.java)
+        val nodeBoolean = getValue4key(JXDocument.create(html), ruleArticleContent?.content)
         if (nodeBoolean != null) {
-            val divContent = getElements4Value(nodeBoolean, doc)
-            if (divContent != null) {
-                var content = Html.fromHtml(divContent.html()).toString()
-                content = content.replace(" ", "  ")
-                return content
-            }
+            var content = Html.fromHtml(nodeBoolean).toString()
+            content = content.replace(" ", "  ")
+            return content
         }
         return ""
     }
@@ -355,25 +354,50 @@ object JsoupUtils {
      * @param jsonElement JsonElement  key
      * @return Book
      */
-    fun doReadBook(element: Element, jsonElement: RuleSearchBean): Book? {
+    fun doReadBook(element: JXNode, jsonElement: RuleSearchBean): Book? {
         val book = Book()
         jsonElement.apply {
-            book.name = getElementValue(element, ruleBookName)
-            book.author = getElementValue(element, ruleAuthor)
-            book.imgUrl = getElementValue(element, ruleImg)
-            book.desc = getElementValue(element, ruleDesc)
-            book.chapterUrl = getElementValue(element, ruleChapterUrl)
-            book.bookDetailUrl = getElementValue(element, ruleBookDetailUrl)
-            book.newestChapterTitle = getElementValue(element, ruleNewestChapterTitle)
-            book.type = getElementValue(element, ruleType)
-            book.wordCount = getElementValue(element, ruleWordCount)
-            book.updateDate = getElementValue(element,ruleUpdateData )
+            book.name = getValue4key(element, ruleBookName)
+            book.author = getValue4key(element, ruleAuthor)
+            book.imgUrl = getValue4key(element, ruleImg)
+            book.desc = getValue4key(element, ruleDesc)
+            book.chapterUrl = getValue4key(element, ruleChapterUrl)
+            book.bookDetailUrl = getValue4key(element, ruleBookDetailUrl)
+            book.newestChapterTitle = getValue4key(element, ruleNewestChapterTitle)
+            book.type = getValue4key(element, ruleType)
+            book.wordCount = getValue4key(element, ruleWordCount)
+            book.updateDate = getValue4key(element, ruleUpdateData)
             book.bookId = MD5Utils.getStringMD5(book.name + book.author)
         }
         if (book.name.isEmpty() && book.author.isEmpty()) {
             return null
         }
         return book
+    }
+
+    private fun getValue4key(element: JXNode?, ruleBookName: String?): String {
+        if (ruleBookName.isNullOrEmpty() || element == null) {
+            return "";
+        }
+        val value = element.selOne(ruleBookName)?.asString()
+        if (value.isNullOrEmpty()) {
+            return "";
+        }
+        return value
+    }
+
+    private fun getValue4key(element: JXDocument?, ruleBookName: String?): String {
+        if (ruleBookName.isNullOrEmpty() || element == null) {
+            return "";
+        }
+        val value = element.selOne(ruleBookName)
+        if (value is String) {
+            if (value.isNullOrEmpty()) {
+                return "";
+            }
+            return value
+        }
+        return value.toString()
     }
 
     /**
@@ -384,11 +408,10 @@ object JsoupUtils {
      */
     fun readChapter(html: String, source: ReadSource?, book: Book): ArrayList<Chapter> {
         val chapters = ArrayList<Chapter>()
-        val doc = Jsoup.parse(html)
         if (source != null) {
             val chapterElement = GsonUtil.fromJson(source.ruleChapter, RuleChapterBean::class.java)
             if (chapterElement != null) {
-                val list = getElements(doc, chapterElement.chapterList)
+                val list = JXDocument.create(html).selN(chapterElement.chapterList)
                 if (list != null) {
                     for ((index, child) in list.withIndex()) {
                         val chapter = Chapter()
@@ -410,6 +433,10 @@ object JsoupUtils {
         return chapters
     }
 
+    private fun getElementValue(element: JXNode?, rule: String?): String {
+        return getValue4key(element, rule)
+    }
+
     /**
      *  解析最新章节
      * @param html String?
@@ -423,7 +450,7 @@ object JsoupUtils {
         LogUtils.e(book.sourceName)
         val source = findSource(book.sourceName)
         book.newestChapterTitle = getElementValue(Jsoup.parse(html), source?.ruleNewestChapter)
-        LogUtils.e("解析最新章节结束 "+ book.newestChapterTitle)
+        LogUtils.e("解析最新章节结束 " + book.newestChapterTitle)
         LogUtils.e("-----------------------")
         return book
     }
@@ -437,8 +464,7 @@ object JsoupUtils {
      */
     fun getBookDetail(html: String, book: Book, readSource: ReadSource): Book {
         val bookDetail = GsonUtil.fromJson(readSource.ruleBookDetail.toString(), RuleSearchBean::class.java)
-        val element = Jsoup.parse(html)
-        book.updateDate = getElementValue(element, bookDetail?.ruleUpdateData)
+        book.updateDate = getValue4key(JXDocument.create(html), bookDetail?.ruleUpdateData)
         return book
     }
 

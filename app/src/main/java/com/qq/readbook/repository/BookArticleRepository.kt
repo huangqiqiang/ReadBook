@@ -21,39 +21,53 @@ object BookArticleRepository {
      * 获取章节正文
      * @param url
      */
-    fun getChapterContent(chapter: Chapter, s: String, param: ArticleNetCallBack) {
-        OkHttp.newHttpCompat().getExecute(
-            chapter.url, OkHttp.newParamsCompat(), object : OkNetCallback {
-                override fun onSuccess(statusCode: String?, response: String?) {
+    fun getChapterContent(chapter: Chapter, bookName: String, param: ArticleNetCallBack) {
+        try {
+            OkHttp.newHttpCompat().getExecute(
+                chapter.url, OkHttp.newParamsCompat(), object : OkNetCallback {
+                    override fun onSuccess(statusCode: String?, response: String?) {
+                        var source = BookSourceUtils.getInstance().sourceList?.first {
+                            it.bookSourceName == chapter.sources
+                        }
 
-                    var source = BookSourceUtils.getInstance().sourceList?.first {
-                        it.bookSourceName == chapter.sources
+                        var content = JsoupUtils.getArticleDetail(response, source)
+
+                        if (!content.isNullOrBlank()) {
+                            var bookContent = BookContent().apply {
+                                number = chapter.number
+                                this.content = content
+                            }
+                            chapter.isCache = true
+                            RoomUtils.getChapterDataBase(bookName).bookContentDao().insert(bookContent)
+                            RoomUtils.getChapterDataBase(bookName).chapterDao().update(chapter)
+                            param.onSuccess(true)
+                        } else {
+                            LogUtils.d(chapter.title + "   :  " + chapter.url)
+                            param.onSuccess(false)
+                        }
                     }
 
-                    var content= JsoupUtils.getArticleDetail(response,source)
-
-                    if (!content.isNullOrBlank()) {
-                        var bookContent = BookContent().apply {
-                            number = chapter.number
-                            this.content = content
-                        }
-                        chapter.isCache = true
-                        RoomUtils.getChapterDataBase(s).bookContentDao().insert(bookContent)
-                        RoomUtils.getChapterDataBase(s).chapterDao().update(chapter)
-                        param.onSuccess(true)
-                    } else {
-                        LogUtils.d(chapter.title + "   :  " + chapter.url)
+                    override fun onFailure(statusCode: String?, errMsg: String?, response: String?) {
                         param.onSuccess(false)
                     }
-                }
 
-                override fun onFailure(statusCode: String?, errMsg: String?, response: String?) {
-                    param.onSuccess(false)
                 }
+            )
 
+        } catch (e: Exception) {
+            if (e.message == "Expected URL scheme 'http' or 'https' but no colon was found") {
+                LogUtils.e("Expected URL scheme 'http' or 'https' but no colon was found")
+                LogUtils.e("删除当前对应的资源")
+                param.onSuccess(false)
+                RoomUtils.getBook().run {
+                    RoomUtils.getChapterDataBase(bookName).chapterDao().apply {
+                        // 删除所有的章节
+                        deleteAll()
+                    }
+                }
+                print("1")
             }
-        )
-
+        }
 
     }
 
