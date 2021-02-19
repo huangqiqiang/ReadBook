@@ -46,7 +46,6 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
     override val layoutId: Int = R.layout.activity_read_book
     override val bindingViewModelId: Int = BR.vm
 
-
     override fun initConfig() {
         super.initConfig()
         rootViewImpl.iToolBarBuilder.showToolBar = false
@@ -65,7 +64,35 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
             }// 监听分钟的变化
         }
     }
+    val service = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            taskBuilder = service as DownService.TaskBuilder
+            if (taskBuilder?.onDownloadListener == null) {
+                taskBuilder?.onDownloadListener = object : DownService.OnDownloadListener {
+                    override fun onSuccess(
+                            boolean: Boolean,
+                            int: Int,
+                            totalSize: Int,
+                            successSize: Int
+                    ) {
+                        LogUtils.e(" ----- 收到 service 回调  当前position: " + int + "      ---   总数量" + totalSize + "         已完成" + successSize)
+                        if (int == pageLoader.chapterPos) {
+                            hintMenu()
+                            if (boolean) {
+                                pageLoader.openChapter()
+                            } else {
+                                pageLoader.chapterError()
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
+        override fun onServiceDisconnected(name: ComponentName?) {
+        }
+
+    }
     var taskBuilder: DownService.TaskBuilder? = null;
 
     override fun initViews() {
@@ -131,35 +158,7 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
     private fun initService(book: Book?) {
         bindService(Intent(this, DownService::class.java).apply {
             putExtra(Keys.BOOK, book)
-        }, object : ServiceConnection {
-            override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-                taskBuilder = service as DownService.TaskBuilder
-                if (taskBuilder?.onDownloadListener == null) {
-                    taskBuilder?.onDownloadListener = object : DownService.OnDownloadListener {
-                        override fun onSuccess(
-                            boolean: Boolean,
-                            int: Int,
-                            totalSize: Int,
-                            successSize: Int
-                        ) {
-                            LogUtils.e(" ----- 收到 service 回调  当前position: " + int + "      ---   总数量" + totalSize + "         已完成" + successSize)
-                            if (int == pageLoader.chapterPos) {
-                                hintMenu()
-                                if (boolean) {
-                                    pageLoader.openChapter()
-                                } else {
-                                    pageLoader.chapterError()
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            override fun onServiceDisconnected(name: ComponentName?) {
-            }
-
-        }, BIND_AUTO_CREATE)
+        }, service, BIND_AUTO_CREATE)
     }
 
     private fun initClick(book: Book?) {
@@ -290,6 +289,7 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
 
     override fun onDestroy() {
         super.onDestroy()
+        unbindService(service)
         intent.getParcelableExtra<Book>(Keys.BOOK)?.apply {
             lastRead = DateUtils.nowDate
             RoomUtils.getBook().bookDao().update(this)

@@ -18,16 +18,12 @@ object NewestChapterRepository {
             override fun onSuccess(statusCode: String, response: String) {
                     val b = JsoupUtils.getNewChapterFormHtml(response, book)
                     latestChapter.onEnd(b, true)
-
             }
-
             override fun onFailure(statusCode: String?, errMsg: String?, response: String?) {
                 latestChapter.onEnd(book, false)
             }
         })
-
     }
-
 
     interface LatestChapter {
         fun onEnd(book: Book, isSuccess: Boolean)
