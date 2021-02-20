@@ -32,7 +32,7 @@ object JsoupUtils {
     }
 
 
-    private fun getValue4key(element: JXNode?, ruleBookName: String?): String {
+     fun getValue4key(element: JXNode?, ruleBookName: String?): String {
         if (ruleBookName.isNullOrEmpty() || element == null) {
             return "";
         }

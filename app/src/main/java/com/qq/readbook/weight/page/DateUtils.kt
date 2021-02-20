@@ -28,8 +28,8 @@ object DateUtils {
     }
 
 
-    fun dateConvert(timesamp: Long, flag: Int): String {
-        var time = timesamp
+    fun dateConvert(timeSamp: Long, flag: Int): String {
+        var time = timeSamp
         time *= 1000
         val result: String
         val todayCalendar = Calendar.getInstance()

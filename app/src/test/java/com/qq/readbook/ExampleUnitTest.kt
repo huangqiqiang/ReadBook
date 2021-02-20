@@ -33,8 +33,6 @@ class ExampleUnitTest {
         var tt = "{\"tt\":[{\"class\":\"library\"},{\"class\":\"library\"}]}";
         var t1= "{key:{\"class\":\"library\"},{\"class\":\"library\"}}";
         var list = GsonUtil.fromJson(tt, JsonObject::class.java)
-
-
         print("")
 
     }

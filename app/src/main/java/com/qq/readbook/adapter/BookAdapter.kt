@@ -23,7 +23,7 @@ class BookAdapter : BaseQuickAdapter<Book, BaseViewHolder>(R.layout.item_book), 
         holder.setText(R.id.tv_book_type, item.type)
         holder.setText(R.id.tv_sources, "来源: " + item.sourceName)
         item.imgUrl?.let {
-            ImageLoadUtils.with(item.imgUrl, holder.getView(R.id.iv_book_img))
+            ImageLoadUtils.withFillet(item.imgUrl, holder.getView(R.id.iv_book_img))
         }
     }
 }

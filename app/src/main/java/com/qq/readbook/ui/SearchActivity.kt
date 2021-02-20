@@ -38,20 +38,16 @@ class SearchActivity : BaseVmListActivity<SearchViewModel, ActivitySearchBinding
     override fun initData() {
         onClickInit()
         binding.edtSearch.setText("宠魅")
-        viewMode.liveBooks.observe(this, object : Observer<ArrayList<Book>> {
-            override fun onChanged(t: ArrayList<Book>?) {
-                t?.let {
-                    rawData.addAll(it)
-                    // 迭代 去除重复数据
-                    addData2Adapter(it)
-                }
+        viewMode.liveBooks.observe(this, { t ->
+            t?.let {
+                rawData.addAll(it)
+                // 迭代 去除重复数据
+                addData2Adapter(it)
             }
         })
-        viewMode.searchModel.observe(this, object : Observer<Boolean> {
-            override fun onChanged(t: Boolean) {
-                adapter.setNewInstance(ArrayList<Book>())
-                addData2Adapter(rawData)
-            }
+        viewMode.searchModel.observe(this, {
+            adapter.setNewInstance(ArrayList<Book>())
+            addData2Adapter(rawData)
         })
     }
 

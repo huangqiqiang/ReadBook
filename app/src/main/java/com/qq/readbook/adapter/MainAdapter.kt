@@ -31,7 +31,7 @@ class MainAdapter : BaseQuickAdapter<Book, BaseViewHolder>(R.layout.item_book_ma
                 0
             ) + "  " + item.newestChapterTitle
         )
-        ImageLoadUtils.with(item.imgUrl, holder.getView(R.id.iv_book_img))
+        ImageLoadUtils.withFillet(item.imgUrl, holder.getView(R.id.iv_book_img))
 
     }
 }

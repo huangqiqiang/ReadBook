@@ -43,65 +43,132 @@ import java.util.regex.Pattern;
 
 
 /**
- * Created by zlj
+ * @Author : huangqiqiang
+ * @Package : com.qq.readbook.weight.page.loader
+ * @FileName :   PageLoader
+ * @Date : 2021/2/20 0020  上午 11:39
+ * @Email :  qiqiang213@gmail.com
+ * @Describe : Created by zlj
  */
 public abstract class PageLoader {
-    private static final String TAG = "PageLoader";
+    /**************************** 当前页面的状态*****************************/
 
-    // 当前页面的状态
-    public static final int STATUS_LOADING = 1;         // 正在加载
-    public static final int STATUS_FINISH = 2;          // 加载完成
-    public static final int STATUS_ERROR = 3;           // 加载错误 (一般是网络加载情况)
-    public static final int STATUS_EMPTY = 4;           // 空数据
-    public static final int STATUS_PARING = 5;          // 正在解析 (装载本地数据)
-    public static final int STATUS_PARSE_ERROR = 6;     // 本地文件解析错误(暂未被使用)
-    public static final int STATUS_CATEGORY_EMPTY = 7;  // 获取到的目录为空
-    // 默认的显示参数配置
-    private static final int DEFAULT_MARGIN_HEIGHT = 45;
+    /**
+     * 正在加载
+     */
+    public static final int STATUS_LOADING = 1;
+    /**
+     * 加载完成
+     */
+    public static final int STATUS_FINISH = 2;
+    /**
+     * 加载错误 (一般是网络加载情况)
+     */
+    public static final int STATUS_ERROR = 3;
+    /**
+     * 空数据
+     */
+    public static final int STATUS_EMPTY = 4;
+    /**
+     * 正在解析 (装载本地数据)
+     */
+    public static final int STATUS_PARING = 5;
+    /**
+     * 本地文件解析错误(暂未被使用)
+     */
+    public static final int STATUS_PARSE_ERROR = 6;
+    /**
+     * 获取到的目录为空
+     */
+    public static final int STATUS_CATEGORY_EMPTY = 7;
+    /**************************** 默认的显示参数配置*****************************/
+    /**
+     * 高间距 显示的标题与底部的状态是覆盖上去的 这边需要设置一些距离才能正常显示
+     */
+    private static final int DEFAULT_MARGIN_HEIGHT = 20;
+    /**
+     * 宽间距
+     */
     private static final int DEFAULT_MARGIN_WIDTH = 15;
     private static final int DEFAULT_TIP_SIZE = 12;
     private static final int EXTRA_TITLE_SIZE = 4;
 
-    // 当前章节列表
+    /**
+     * 当前章节列表
+     */
     protected List<Chapter> mChapterList;
-    // 书本对象
+    /**
+     * 书本对象
+     */
     protected Book mCollBook;
-    // 监听器
+    /**
+     * 监听器
+     */
     protected OnPageChangeListener mPageChangeListener;
     private Context mContext;
-    // 页面显示类
+    /**
+     * 页面显示类
+     */
     private PageView mPageView;
-    // 当前显示的页
+    /**
+     * 当前显示的页
+     */
     private TxtPage mCurPage;
-    // 上一章的页面列表缓存
+    /**
+     * 上一章的页面列表缓存
+     */
     private List<TxtPage> mPrePageList;
-    // 当前章节的页面列表
+    /**
+     * 当前章节的页面列表
+     */
     private List<TxtPage> mCurPageList;
-    // 下一章的页面列表缓存
+    /**
+     * 下一章的页面列表缓存
+     */
     private List<TxtPage> mNextPageList;
 
-    // 绘制电池的画笔
+    /**
+     * 绘制电池的画笔
+     */
     private Paint mBatteryPaint;
-    // 绘制提示的画笔
+    /**
+     * 绘制提示的画笔
+     */
     private Paint mTipPaint;
-    // 绘制标题的画笔
+    /**
+     * 绘制标题的画笔
+     */
     private Paint mTitlePaint;
-    // 绘制背景颜色的画笔(用来擦除需要重绘的部分)
+    /**
+     * 绘制背景颜色的画笔(用来擦除需要重绘的部分)
+     */
     private Paint mBgPaint;
-    // 绘制小说内容的画笔
+    /**
+     * 绘制小说内容的画笔
+     */
     private TextPaint mTextPaint;
     private Paint mSelectPaint;
-    // 阅读器的配置选项
+    /**
+     * 阅读器的配置选项
+     */
     private ReadSettingManager mSettingManager;
-    // 被遮盖的页，或者认为被取消显示的页
+    /**
+     * 被遮盖的页，或者认为被取消显示的页
+     */
     private TxtPage mCancelPage;
-    // 存储阅读记录类
+    /**
+     * 存储阅读记录类
+     */
     private BookRecordBean mBookRecord;
 
     /*****************params**************************/
-    // 当前的状态
+    /**
+     * 当前的状态
+     */
     protected int mStatus = STATUS_LOADING;
-    // 判断章节列表是否加载完成
+    /**
+     * 判断章节列表是否加载完成
+     */
     protected boolean isChapterListPrepare;
 
     /**
@@ -110,42 +177,73 @@ public abstract class PageLoader {
     private boolean isChapterOpen;
     private boolean isFirstOpen = true;
     private boolean isClose;
-    // 页面的翻页效果模式
+    /**
+     * 页面的翻页效果模式
+     */
     private PageMode mPageMode;
-    // 加载器的颜色主题
+    /**
+     * 加载器的颜色主题
+     */
     private PageStyle mPageStyle;
-    //当前是否是夜间模式
+    /**
+     * 当前是否是夜间模式
+     */
     private boolean isNightMode;
-    //书籍绘制区域的宽高
+    /**
+     * 书籍绘制区域的宽高
+     */
     private int mVisibleWidth;
     private int mVisibleHeight;
-    //应用的宽高
+    /**
+     * 应用的宽高
+     */
     private int mDisplayWidth;
     private int mDisplayHeight;
-    //间距
+    /**
+     * 间距
+     */
     private int mMarginWidth;
     private int mMarginHeight;
-    //字体的颜色
+    /**
+     * 字体的颜色
+     */
     private int mTextColor;
-    //标题的大小
+    /**
+     * 标题的大小
+     */
     private int mTitleSize;
-    //字体的大小
+    /**
+     * 字体的大小
+     */
     private int mTextSize;
-    //行间距
+    /**
+     * 行间距
+     */
     private int mTextInterval;
-    //标题的行间距
+    /**
+     * 标题的行间距
+     */
     private int mTitleInterval;
-    //段落距离(基于行间距的额外距离)
+    /**
+     * 段落距离(基于行间距的额外距离)
+     */
     private int mTextPara;
+
     private int mTitlePara;
-    //电池的百分比
+    /**
+     * 电池的百分比
+     */
     private int mBatteryLevel;
-    //当前页面的背景
+
     private int mBgColor;
 
-    // 当前章
+    /**
+     * 当前章
+     */
     protected int mCurChapterPos = 0;
-    //上一章的记录
+    /**
+     * 上一章的记录
+     */
     private int mLastChapterPos = 0;
 
     /*****************************init params*******************************/
@@ -470,12 +568,10 @@ public abstract class PageLoader {
     public void setMargin(int marginWidth, int marginHeight) {
         mMarginWidth = marginWidth;
         mMarginHeight = marginHeight;
-
         // 如果是滑动动画，则需要重新创建了
         if (mPageMode == PageMode.SCROLL) {
             mPageView.setPageMode(PageMode.SCROLL);
         }
-
         mPageView.drawCurPage(false);
     }
 
@@ -603,7 +699,7 @@ public abstract class PageLoader {
      */
     public void openChapter() {
         isFirstOpen = false;
-        if (mPageView == null ||!mPageView.isPrepare()) {
+        if (mPageView == null || !mPageView.isPrepare()) {
             return;
         }
 
@@ -847,7 +943,6 @@ public abstract class PageLoader {
                     break;
                 default:
             }
-
             //将提示语句放到正中间
             drawCenter(tip, canvas);
         } else {
@@ -932,7 +1027,12 @@ public abstract class PageLoader {
         }
     }
 
-    //中心文字绘制
+    /**
+     * 中心文字绘制
+     *
+     * @param tip
+     * @param canvas
+     */
     private void drawCenter(String tip, Canvas canvas) {
         Paint.FontMetrics fontMetrics = mTextPaint.getFontMetrics();
         float textHeight = fontMetrics.top - fontMetrics.bottom;
@@ -942,8 +1042,12 @@ public abstract class PageLoader {
         canvas.drawText(tip, pivotX, pivotY, mTextPaint);
     }
 
-
-    //图片缩放
+    /**
+     * 图片缩放
+     *
+     * @param origin
+     * @return
+     */
     private Bitmap scaleBitmap(Bitmap origin) {
         if (origin == null) {
             return null;
@@ -952,11 +1056,8 @@ public abstract class PageLoader {
         int height = origin.getHeight();
         Matrix matrix = new Matrix();
         matrix.preScale((float) 0.5, (float) 0.5);
-        Bitmap newBM = Bitmap.createBitmap(origin, 0, 0, width, height, matrix, false);
-        if (newBM.equals(origin)) {
-            return newBM;
-        }
-        return newBM;
+        Bitmap newBm = Bitmap.createBitmap(origin, 0, 0, width, height, matrix, false);
+        return newBm;
     }
 
     public void prepareDisplay(int w, int h) {
@@ -1185,36 +1286,13 @@ public abstract class PageLoader {
         }
 
         try {
-            //todo  需要异步加载
+            //todo  需要异步加载 取消之前的加载
             mNextPageList = loadPageList(nextChapter);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
 
-        //如果之前正在加载则取消
-//        if (mPreLoadDisp != null) {
-//            mPreLoadDisp.dispose();
-//        }
-//
-//        //调用异步进行预加载加载
-//        Single.create((SingleOnSubscribe<List<TxtPage>>) e -> e.onSuccess(loadPageList(nextChapter))).compose(RxUtils::toSimpleSingle)
-//                .subscribe(new SingleObserver<List<TxtPage>>() {
-//                    @Override
-//                    public void onSubscribe(Disposable d) {
-//                        mPreLoadDisp = d;
-//                    }
-//
-//                    @Override
-//                    public void onSuccess(List<TxtPage> pages) {
-//                        mNextPageList = pages;
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        //无视错误
-//                    }
-//                });
     }
 
     /**
@@ -1311,7 +1389,7 @@ public abstract class PageLoader {
                 if (!showTitle) {
                     paragraph = paragraph.replaceAll("\\s", "");
                     // 如果只有换行符，那么就不执行
-                    if (paragraph.equals("")) {
+                    if ("".equals(paragraph)) {
                         continue;
                     }
                     paragraph = StringUtils.INSTANCE.halfToFull("  " + paragraph + "\n");
@@ -1356,7 +1434,7 @@ public abstract class PageLoader {
                     }
 
                     subStr = paragraph.substring(0, wordCount);
-                    if (!subStr.equals("\n")) {
+                    if (!"\n".equals(subStr)) {
                         //将一行字节，存储到lines中
                         lines.add(subStr);
 
@@ -1431,8 +1509,8 @@ public abstract class PageLoader {
         Pattern p_image;
         Matcher m_image;
         List<String> images = new ArrayList<>();
-        String regEx_img = "(<img.*src\\s*=\\s*(.*?)[^>]*?>)";
-        p_image = Pattern.compile(regEx_img, Pattern.CASE_INSENSITIVE);
+        String regExImg = "(<img.*src\\s*=\\s*(.*?)[^>]*?>)";
+        p_image = Pattern.compile(regExImg, Pattern.CASE_INSENSITIVE);
         m_image = p_image.matcher(content);
         while (m_image.find()) {
             img = m_image.group();

@@ -1,8 +1,38 @@
 [
   {
+    "bookSourceName": "丹书铁卷⑫",
+    "bookSearchUrl": "https://www.dstiejuan.com/search.html@searchkey",
+    "bookSourceUrl": "https://www.dstiejuan.com",
+    "searchDetail": 2,
+    "ruleSearch": {
+      "ruleSearchList": "//ul[@class=\"library\"]//li",
+      "ruleBookName": ".\/a[@class=\"bookname\"]\/text()",
+      "ruleDesc": ".\/p[@class=\"intro\"]\/text()",
+      "ruleAuthor": ".\/p[1]\/a[@class=\"author\"]\/text()",
+      "ruleNewestChapterTitle": "./a[@class=\"chapter\"]/text()",
+      "ruleChapterUrl": "concat('https://www.dstiejuan.com',substring-before(./a[2]/@href,'.html'))",
+      "ruleBookDetailUrl": "concat('https://www.dstiejuan.com',./a[2]/@href)",
+      "ruleImg": ".\/a[@class=\"bookimg\"]\/img\/@src",
+      "ruleType": "./p/a[2]/text()",
+      "ruleWordCount": ".\/p[1]\/text()[2]"
+    },
+    "ruleChapter": {
+      "chapterList": "\/\/div[@class=\"read\"]\/dl[2]\/\/dd",
+      "title": ".\/a\/text()",
+      "url": "concat('https://www.dstiejuan.com',.\/a\/@href)"
+    },
+    "ruleNewestChapter": "substring-after(substring-before(//p/span[@class='light']/text(),')'),'(')",
+    "ruleArticleContent": {
+      "content": "\/\/div[@id=\"content\"]"
+    },
+    "ruleBookDetail": {
+      "ruleUpdateData": "substring-after(substring-before(//p/span[@class='light']/text(),')'),'(')"
+    }
+  },
+  {
     "bookSourceName": "天籁小说",
-    "bookSearchUrl": "https://www.23txt.com/search.php?q=%s",
     "bookSourceUrl": "https://www.23txt.com/",
+    "bookSearchUrl": "https://www.23txt.com/search.php?q=%s",
     "ruleSearch": {
       "ruleNewestChapterTitle": "//*[@class=\"result-game-item-info-tag-item\"]/text()",
       "ruleBookName": "//*[@class=\"result-game-item-title-link\"]\/@title",
@@ -24,5 +54,31 @@
     "ruleArticleContent": {
       "content": "\/\/div[@id=\"content\"]"
     }
+  }, {
+  "bookSourceName": "笔趣阁",
+  "bookSourceUrl": "https://www.52bqg.net/",
+  "bookSearchUrl": "https://www.52bqg.net/modules/article/search.php?searchkey=%s",
+  "searchEncode": "gb2312",
+  "ruleSearch": {
+    "ruleSearchList": "//*[@class=\"novelslistss\"]/li",
+    "ruleBookName": "//*[@class=\"s2\"]/a/text()",
+    "ruleAuthor": "//*[@class=\"s4\"]/text()",
+    "ruleNewestChapterTitle": "//*[@class=\"s3\"]/a/text()",
+    "ruleImg": "//img/@src",
+    "ruleDesc": "//*[@class=\"result-game-item-desc\"]/text()",
+    "ruleBookDetailUrl": "//*[@class=\"s2\"]/a/@href",
+    "ruleChapterUrl": "//*[@class=\"s2\"]/a/@href",
+    "ruleType": "//*[@class=\"s1\"]/text()",
+    "ruleUpdateData": "//*[@class=\"s5\"][4]/text()"
+  },
+  "ruleChapter": {
+    "chapterList": "//*[@id=\"list\"]/dl/dd",
+    "title": "//a/text()",
+    "url": "concat('https://www.23txt.com',//a/@href)"
+  },
+  "ruleNewestChapter": "\/\/*[@id=\"info\"]/a[2]/text()",
+  "ruleArticleContent": {
+    "content": "\/\/div[@id=\"content\"]"
   }
+}
 ]
