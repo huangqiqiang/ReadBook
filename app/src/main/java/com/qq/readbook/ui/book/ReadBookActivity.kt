@@ -16,6 +16,7 @@ import com.qq.readbook.R
 import com.qq.readbook.bean.Book
 import com.qq.readbook.bean.Chapter
 import com.qq.readbook.databinding.ActivityReadBookBinding
+import com.qq.readbook.repository.BookChaptersRepository
 import com.qq.readbook.utils.room.RoomUtils
 import com.qq.readbook.weight.page.BrightnessUtils
 import com.qq.readbook.weight.page.PageView
@@ -64,7 +65,7 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
             }// 监听分钟的变化
         }
     }
-    val service = object : ServiceConnection {
+    private val service = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             taskBuilder = service as DownService.TaskBuilder
             if (taskBuilder?.onDownloadListener == null) {
@@ -94,11 +95,12 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
 
     }
     var taskBuilder: DownService.TaskBuilder? = null;
+    lateinit var book: Book
 
     override fun initViews() {
-        var book = intent.getParcelableExtra<Book>(Keys.BOOK)
+        book = intent.getParcelableExtra<Book>(Keys.BOOK)!!
         initService(book)
-        binding.tvBarTitle.text = book?.name
+        binding.tvBarTitle.text = book.name
         pageLoader = binding.pageView.getPageLoader(book)
         pageLoader.refreshChapterList()
         pageLoader.setOnPageChangeListener(object :
@@ -139,7 +141,7 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
                     }
                     finish()
                 } else {
-                    book?.bookChapterList = charpters
+                    book.bookChapterList = charpters
                     pageLoader.refreshChapterList()
                 }
                 loadingView.dismiss()
@@ -222,10 +224,22 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
         }
         binding.flLayout.setOnClickListener {}
         binding.tvRight.setOnClickListener {
-
+            BookSourceActivity.open(activity, book)
         }
 
     }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            val sourceName = data?.getStringExtra(Keys.BOOK_SOURCE_NAME)
+            book.sourceName = sourceName
+            // 更新信息
+            readChapters(book)
+        }
+    }
+
 
     /**
      * 执行缓存
@@ -241,27 +255,27 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
      *  获取需要缓存的章节
      */
     private fun getCacheList(book: Book?, size: Int): MutableList<Chapter>? {
-        var newChacheList = ArrayList<Chapter>()
+        val newChapterList = ArrayList<Chapter>()
         book?.bookChapterList?.let {
-            var position = pageLoader.chapterPos
-            var start = if (position < it.size) position else {
+            val position = pageLoader.chapterPos
+            val start = if (position < it.size) position else {
                 ToastUtils.showToast("全部已缓存完毕")
                 return@let
             }
-            var end = if ((position + size) < it.size) {
+            val end = if ((position + size) < it.size) {
                 (position + size)
             } else it.size
             // 截取部分集合
-            var list = it.subList(start, end)
+            val list = it.subList(start, end)
             LogUtils.e("---" + list.size)
             for (chapter in list) {
                 if (!chapter.isCache) {
-                    newChacheList.add(chapter)
+                    newChapterList.add(chapter)
                 }
             }
-            return newChacheList
+            return newChapterList
         }
-        return newChacheList;
+        return newChapterList;
     }
 
     /**
@@ -297,5 +311,21 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
         }
         pageLoader.closeBook()
         unregisterReceiver(mReceiver)
+    }
+
+    /**
+     *  获取章节信息
+     * @param it Book
+     */
+    private fun readChapters(it: Book) {
+        // 爬取新目录
+        loadingView.show()
+        BookChaptersRepository.getBookChapters(it, object : BookChaptersRepository.BookChaptersCall {
+            override fun onSuccess(arrayList: List<Chapter>) {
+                book.bookChapterList = arrayList
+                loadingView.dismiss()
+
+            }
+        })
     }
 }

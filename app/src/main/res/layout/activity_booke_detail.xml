@@ -10,7 +10,6 @@
             name="vm"
             type="com.qq.readbook.ui.book.BookDetailViewModel" />
 
-
     </data>
 
     <LinearLayout

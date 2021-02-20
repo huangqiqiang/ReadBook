@@ -32,7 +32,7 @@ object JsoupUtils {
     }
 
 
-     fun getValue4key(element: JXNode?, ruleBookName: String?): String {
+    fun getValue4key(element: JXNode?, ruleBookName: String?): String {
         if (ruleBookName.isNullOrEmpty() || element == null) {
             return "";
         }
@@ -118,6 +118,7 @@ object JsoupUtils {
         val chapters = ArrayList<Chapter>()
         if (source != null) {
             val chapterElement = GsonUtil.fromJson(source.ruleChapter, RuleChapterBean::class.java)
+            LogUtils.d("解析: " + chapterElement.toString())
             if (chapterElement != null) {
                 val list = JXDocument.create(html).selN(chapterElement.chapterList)
                 if (list != null) {
@@ -149,18 +150,19 @@ object JsoupUtils {
      * @return Book
      */
     fun getNewChapterFormHtml(html: String?, book: Book): Book {
-        LogUtils.e("-----------------------")
-        LogUtils.e("解析最新章节")
-        LogUtils.e(book.name)
-        LogUtils.e(book.sourceName)
-
+        LogUtils.d("-----------------------")
+        LogUtils.d("解析最新章节")
+        LogUtils.d(book.name + "    :   " + book.sourceName)
+        LogUtils.d("-----------------------")
+        LogUtils.d(html)
         val source = findSource(book.sourceName)
+        LogUtils.d("-----------------------")
+        LogUtils.d(source?.ruleNewestChapter)
+
         book.newestChapterTitle = getValue4key(JXDocument.create(html), source?.ruleNewestChapter)
-
-        LogUtils.e(book.newestChapterTitle)
-        LogUtils.e("解析最新章节结束 " + book.newestChapterTitle)
-        LogUtils.e("-----------------------")
-
+        LogUtils.d(book.newestChapterTitle)
+        LogUtils.d("解析最新章节结束 " + book.newestChapterTitle)
+        LogUtils.d("-----------------------")
         return book
     }
 

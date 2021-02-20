@@ -28,7 +28,10 @@ object BookChaptersRepository {
         LogUtils.d("加载目录  :   " + book.chapterUrl)
         OkHttp.newHttpCompat()[book.chapterUrl, OkHttp.newParamsCompat(), object : OkNetCallback {
             override fun onSuccess(statusCode: String, response: String) {
-                val arrayList = JsoupUtils.readChapter(response,source,book)
+                LogUtils.d("-----目录-------")
+                LogUtils.d(response)
+                LogUtils.d("-----结束-------")
+                val arrayList = JsoupUtils.readChapter(response, source, book)
                 bookChaptersCall?.onSuccess(arrayList)
                 RoomUtils.getBook().run {
                     RoomUtils.getChapterDataBase(book.name + "_" + book.author).chapterDao().apply {

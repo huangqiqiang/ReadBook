@@ -1,8 +1,11 @@
 package com.qq.readbook.ui.book
 
+import android.app.Activity
+import android.content.Intent
 import android.view.View
 import androidx.lifecycle.MutableLiveData
 import com.hqq.core.ui.base.BaseViewModel
+import com.qq.readbook.Keys
 
 /**
  * @Author : huangqiqiang
@@ -46,5 +49,7 @@ class ReadBookViewModel : BaseViewModel() {
     fun onLayoutMenu(view: View) {
 
     }
+
+
 
 }

@@ -40,7 +40,6 @@ object BookDetailRepository {
         }
     }
 
-
     interface ILatestChapter {
         fun onEndCall(book: Book, isSuccess: Boolean)
     }

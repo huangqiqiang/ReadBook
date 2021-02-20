@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.view.View
 import android.widget.ProgressBar
+import android.widget.TextView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.hqq.core.ui.list.BaseListActivity
@@ -13,7 +14,6 @@ import com.qq.readbook.Keys
 import com.qq.readbook.R
 import com.qq.readbook.bean.Book
 import com.qq.readbook.bean.ReadSource
-import com.qq.readbook.repository.BookDetailRepository
 import com.qq.readbook.repository.NewestChapterRepository
 import com.qq.readbook.utils.room.RoomUtils
 import kotlinx.coroutines.CoroutineScope
@@ -28,10 +28,13 @@ import kotlinx.coroutines.launch
  * @Describe :
  */
 class BookSourceActivity : BaseListActivity() {
+    override val layoutViewId: Int = R.layout.activity_booke_source
 
     companion object {
-        fun open(context: Activity) {
-            context.startActivityForResult(Intent(context, BookSourceActivity::class.java), -1)
+        fun open(context: Activity, book: Book?) {
+            context.startActivityForResult(Intent(context, BookSourceActivity::class.java).apply {
+                putExtra(Keys.BOOK, book)
+            }, 0x2)
         }
     }
 
@@ -39,9 +42,7 @@ class BookSourceActivity : BaseListActivity() {
         setOnItemClickListener { _, _, position ->
             setResult(Activity.RESULT_OK, Intent().apply {
                 hashMap.get(getItem(position).bookSourceName)?.let {
-                    if (it) {
-                        putExtra(Keys.BOOK_SOURCE_NAME, getItem(position).bookSourceName)
-                    }
+                    putExtra(Keys.BOOK_SOURCE_NAME, getItem(position).bookSourceName)
                 }
             })
             finish()
@@ -52,18 +53,25 @@ class BookSourceActivity : BaseListActivity() {
 
     override fun initData() {
         book = intent.getParcelableExtra<Book>(Keys.BOOK)!!
+        findViewById<TextView>(R.id.tv_currSource).text = "当前源:" + book.sourceName
 
-        getInstance().sourceList?.let { listModel.fillingData(it) }
+        val list = ArrayList<ReadSource>()
+        getInstance().sourceList?.let {
+            for (readSource in it) {
+                if (readSource.bookSourceName != book.sourceName) {
+                    list.add(readSource)
+                }
+            }
+        }
+        listModel.fillingData(list)
     }
 
     inner class BookSourceAdapter : BaseQuickAdapter<ReadSource, BaseViewHolder>(R.layout.item_book_source) {
         val hashMap = HashMap<String, Boolean>()
-
         override fun convert(baseViewHolder: BaseViewHolder, readSource: ReadSource) {
             baseViewHolder.setText(R.id.tv_title, readSource.bookSourceName)
             val url =
                 RoomUtils.getBook().bookSources().getBookSource(readSource.bookSourceName, book.bookId)?.bookDetailUrl
-
             doNet(url, readSource, baseViewHolder)
         }
 

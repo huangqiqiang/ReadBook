@@ -42,7 +42,6 @@ class ExampleInstrumentedTest {
             object : TypeToken<ReadSource>() {}.type
         )
         val searchRuleBean = GsonUtil.fromJson<RuleSearchBean>(sourceList.ruleSearch, RuleSearchBean::class.java)
-
         println("---开始------")
         var list = JXDocument.create(doc).selN(searchRuleBean?.ruleSearchList)
         for (jxNode in list) {

@@ -53,7 +53,6 @@ class BookDetailViewModel : BaseViewModel() {
             // 更新信息
             book.value?.let { readChapters(it) }
             book.value=book.value
-
         }
     }
 
