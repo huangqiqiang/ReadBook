@@ -234,9 +234,13 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             val sourceName = data?.getStringExtra(Keys.BOOK_SOURCE_NAME)
-            book.sourceName = sourceName
-            // 更新信息
-            readChapters(book)
+            sourceName?.let {
+                book.sourceName = sourceName
+                val bookSources = RoomUtils.getBook().bookSources().getBookSource(it, book.bookId)
+                book.chapterUrl= bookSources?.bookChapterUrl
+                // 更新信息
+                readChapters(book)
+            }
         }
     }
 

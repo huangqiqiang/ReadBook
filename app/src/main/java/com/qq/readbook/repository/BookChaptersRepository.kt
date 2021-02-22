@@ -20,16 +20,19 @@ import com.qq.readbook.utils.room.RoomUtils
 object BookChaptersRepository {
     /**
      *  读取数据量 目录列表
+     *  根据源名称 查询对应的url
+     *  爬取目录列表
      */
     fun getBookChapters(book: Book, bookChaptersCall: BookChaptersCall?) {
-        var source = BookSourceUtils.getInstance().sourceList?.find {
+        // 解析规则
+        val source = BookSourceUtils.getInstance().sourceList?.find {
             it.bookSourceName == book.sourceName
         }
-        LogUtils.d("加载目录  :   " + book.chapterUrl)
+        LogUtils.d(source?.bookSourceName + "     加载目录  :   " + book.chapterUrl)
         OkHttp.newHttpCompat()[book.chapterUrl, OkHttp.newParamsCompat(), object : OkNetCallback {
             override fun onSuccess(statusCode: String, response: String) {
                 LogUtils.d("-----目录-------")
-                LogUtils.d(response)
+//                LogUtils.d(response.replace(Regex("\r|\n\t"), ""))
                 LogUtils.d("-----结束-------")
                 val arrayList = JsoupUtils.readChapter(response, source, book)
                 bookChaptersCall?.onSuccess(arrayList)

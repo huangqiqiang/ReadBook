@@ -151,13 +151,14 @@ object JsoupUtils {
      */
     fun getNewChapterFormHtml(html: String?, book: Book): Book {
         LogUtils.d("-----------------------")
-        LogUtils.d("解析最新章节")
+        LogUtils.d("解析最新章节:")
         LogUtils.d(book.name + "    :   " + book.sourceName)
         LogUtils.d("-----------------------")
-        LogUtils.d(html)
-        val source = findSource(book.sourceName)
+        LogUtils.d(html?.replace(Regex("\r|\n|\t"), ""))
         LogUtils.d("-----------------------")
+        val source = findSource(book.sourceName)
         LogUtils.d(source?.ruleNewestChapter)
+        LogUtils.d("-----------------------")
 
         book.newestChapterTitle = getValue4key(JXDocument.create(html), source?.ruleNewestChapter)
         LogUtils.d(book.newestChapterTitle)
@@ -178,7 +179,6 @@ object JsoupUtils {
         book.updateDate = getValue4key(JXDocument.create(html), bookDetail?.ruleUpdateData)
         return book
     }
-
 
 }
 

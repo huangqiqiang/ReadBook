@@ -26,14 +26,12 @@ object BookArticleRepository {
             OkHttp.newHttpCompat().getExecute(
                 chapter.url, OkHttp.newParamsCompat(), object : OkNetCallback {
                     override fun onSuccess(statusCode: String?, response: String?) {
-                        var source = BookSourceUtils.getInstance().sourceList?.first {
+                        val source = BookSourceUtils.getInstance().sourceList?.first {
                             it.bookSourceName == chapter.sources
                         }
-
-                        var content = JsoupUtils.getArticleDetail(response, source)
-
+                        val content = JsoupUtils.getArticleDetail(response, source)
                         if (!content.isNullOrBlank()) {
-                            var bookContent = BookContent().apply {
+                            val bookContent = BookContent().apply {
                                 number = chapter.number
                                 this.content = content
                             }
@@ -65,15 +63,10 @@ object BookArticleRepository {
                         deleteAll()
                     }
                 }
-                print("1")
             }
         }
-
     }
-
-
     interface ArticleNetCallBack {
-
         fun onSuccess(boolean: Boolean);
     }
 

@@ -1,12 +1,16 @@
 package com.qq.readbook
 
+import android.content.Context
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.google.gson.stream.JsonReader
 import com.hqq.core.utils.GsonUtil
+import com.hqq.core.utils.log.LogUtils
+import com.qq.readbook.bean.Chapter
 import com.qq.readbook.bean.ReadSource
+import com.qq.readbook.bean.RuleChapterBean
 import com.qq.readbook.bean.RuleSearchBean
 import com.qq.readbook.repository.read.JsoupUtils
 import org.jsoup.Jsoup
@@ -24,23 +28,38 @@ import java.io.InputStreamReader
 @RunWith(AndroidJUnit4::class)
 class ExampleInstrumentedTest {
     @Test
-    fun useAppContext() {
-        // Context of the app under test.
+    fun testChapter() {
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        val inputStream: InputStream = appContext.getAssets().open("testSearch.html")
-        val lenght: Int = inputStream.available()
-        val buffer = ByteArray(lenght)
-        inputStream.read(buffer)
-        val result = String(buffer)
-        val doc = Jsoup.parse(result)
+        val result = readHtml(appContext, "testChapter.html")
+        val html = Jsoup.parse(result)
+        var sourceList = readJson(appContext)
+        val chapterElement = GsonUtil.fromJson(sourceList.ruleChapter, RuleChapterBean::class.java)
 
-        val inputStream2 = appContext.assets.open("testSearch.json")
-        val inputStreamReader = InputStreamReader(inputStream2)
-        val jsonReader = JsonReader(inputStreamReader)
-        var sourceList = Gson().fromJson<ReadSource>(
-            jsonReader,
-            object : TypeToken<ReadSource>() {}.type
-        )
+        val list = JXDocument.create(html).selN(chapterElement?.chapterList)
+
+        if (list != null) {
+            for ((index, child) in list.withIndex()) {
+                val chapter = Chapter()
+                chapter.apply {
+                    title = JsoupUtils.getValue4key(child, chapterElement?.title)
+                    url = JsoupUtils.getValue4key(child, chapterElement?.url)
+                    LogUtils.e(title + url)
+                }
+            }
+        }
+
+
+    }
+
+
+    @Test
+    fun useAppContext() {
+        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+
+        // Context of the app under test.
+        val result = readHtml(appContext, "testSearch.html")
+        val doc = Jsoup.parse(result)
+        var sourceList = readJson(appContext)
         val searchRuleBean = GsonUtil.fromJson<RuleSearchBean>(sourceList.ruleSearch, RuleSearchBean::class.java)
         println("---开始------")
         var list = JXDocument.create(doc).selN(searchRuleBean?.ruleSearchList)
@@ -91,13 +110,29 @@ class ExampleInstrumentedTest {
                 println(JsoupUtils.getValue4key(jxNode, ruleUpdateData))
                 println("   ")
             }
-
             println("---结束单个书籍------")
-
         }
-
         println("---结束------")
+    }
 
+    private fun readJson(appContext: Context): ReadSource {
+        val inputStream2 = appContext.assets.open("testSearch.json")
+        val inputStreamReader = InputStreamReader(inputStream2)
+        val jsonReader = JsonReader(inputStreamReader)
+        var sourceList = Gson().fromJson<ReadSource>(
+            jsonReader,
+            object : TypeToken<ReadSource>() {}.type
+        )
+        return sourceList
+    }
+
+    private fun readHtml(appContext: Context, fileName: String): String {
+        val inputStream: InputStream = appContext.getAssets().open(fileName)
+        val lenght: Int = inputStream.available()
+        val buffer = ByteArray(lenght)
+        inputStream.read(buffer)
+        val result = String(buffer)
+        return result
     }
 
 

@@ -9,6 +9,7 @@ import com.qq.readbook.bean.BookSources
 import com.qq.readbook.bean.ReadSource
 import com.qq.readbook.bean.RuleSearchBean
 import com.qq.readbook.repository.read.JsoupUtils
+import com.qq.readbook.utils.MD5Utils
 import com.qq.readbook.utils.room.RoomUtils
 import org.seimicrawler.xpath.JXDocument
 import java.net.URLEncoder
@@ -35,7 +36,7 @@ object SearchBookRepository {
                     LogUtils.d("-------------start-------------------")
                     LogUtils.d(GsonUtil.toJsonString(source))
                     LogUtils.d("--------------Html------------------")
-                    LogUtils.d(response)
+                    LogUtils.d(response.replace(Regex("\r|\n\t"), ""))
                     LogUtils.d("----------------end----------------")
                     val books = doReadBookList(it, source)
                     callback.onSearchBook(books as ArrayList<Book>?, true)

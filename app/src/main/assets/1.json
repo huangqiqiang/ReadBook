@@ -1,32 +1,5 @@
 [
   {
-    "bookSourceName": "笔趣阁",
-    "bookSourceUrl": "https://www.52bqg.net/",
-    "bookSearchUrl": "https://www.52bqg.net/modules/article/search.php?searchkey=%s",
-    "searchEncode": "gb2312",
-    "ruleSearch": {
-      "ruleSearchList": "//*[@class=\"novelslistss\"]/li",
-      "ruleBookName": "//*[@class=\"s2\"]/a/text()",
-      "ruleAuthor": "//*[@class=\"s4\"]/text()",
-      "ruleNewestChapterTitle": "//*[@class=\"s3\"]/a/text()",
-      "ruleImg": "//img/@src",
-      "ruleDesc": "//*[@class=\"result-game-item-desc\"]/text()",
-      "ruleBookDetailUrl": "//*[@class=\"s2\"]/a/@href",
-      "ruleChapterUrl": "//*[@class=\"s2\"]/a/@href",
-      "ruleType": "//*[@class=\"s1\"]/text()",
-      "ruleUpdateData": "//*[@class=\"s5\"][4]/text()"
-    },
-    "ruleChapter": {
-      "chapterList": "//*[@id=\"list\"]/dl/dd",
-      "title": "//a/text()",
-      "url": "concat('https://www.52bqg.net',//a/@href)"
-    },
-    "ruleNewestChapter": "//*[@id=\"info\"]/a[2]/text()",
-    "ruleArticleContent": {
-      "content": "//div[@id=\"content\"]"
-    }
-  },
-  {
     "bookSourceName": "丹书铁卷⑫",
     "bookSearchUrl": "https://www.dstiejuan.com/search.html@searchkey",
     "bookSourceUrl": "https://www.dstiejuan.com",
@@ -54,6 +27,33 @@
     },
     "ruleBookDetail": {
       "ruleUpdateData": "substring-after(substring-before(//p/span[@class='light']/text(),')'),'(')"
+    }
+  },
+  {
+    "bookSourceName": "笔趣阁",
+    "bookSourceUrl": "https://www.52bqg.net/",
+    "bookSearchUrl": "https://www.52bqg.net/modules/article/search.php?searchkey=%s",
+    "searchEncode": "gb2312",
+    "ruleSearch": {
+      "ruleSearchList": "//*[@class=\"novelslistss\"]/li",
+      "ruleBookName": "//*[@class=\"s2\"]/a/text()",
+      "ruleAuthor": "//*[@class=\"s4\"]/text()",
+      "ruleNewestChapterTitle": "//*[@class=\"s3\"]/a/text()",
+      "ruleImg": "//img/@src",
+      "ruleDesc": "//*[@class=\"result-game-item-desc\"]/text()",
+      "ruleBookDetailUrl": "//*[@class=\"s2\"]/a/@href",
+      "ruleChapterUrl": "//*[@class=\"s2\"]/a/@href",
+      "ruleType": "//*[@class=\"s1\"]/text()",
+      "ruleUpdateData": "//*[@class=\"s5\"][4]/text()"
+    },
+    "ruleChapter": {
+      "chapterList": "//*[@id=\"list\"]/dl/dd",
+      "title": "//a/text()",
+      "url": "concat('https://www.52bqg.net',//a/@href)"
+    },
+    "ruleNewestChapter": "//*[@id=\"info\"]/a[2]/text()",
+    "ruleArticleContent": {
+      "content": "//div[@id=\"content\"]"
     }
   },
   {
