@@ -11,8 +11,6 @@ import com.qq.readbook.databinding.ActivityMainBinding
 import com.qq.readbook.ui.book.BookDetailActivity
 import com.qq.readbook.ui.book.ReadBookActivity
 import com.qq.readbook.utils.room.RoomUtils
-import kotlinx.coroutines.*
-import org.jsoup.nodes.Document
 
 class MainActivity : BaseVmListActivity<MainViewModel, ActivityMainBinding>() {
 
@@ -44,14 +42,14 @@ class MainActivity : BaseVmListActivity<MainViewModel, ActivityMainBinding>() {
 
     override fun initData() {
         (iToolBar as DefToolBar).leftView.visibility = View.GONE
-        (iToolBar as DefToolBar).addRightImageView(R.mipmap.ic_search) {
-            startActivity(Intent(this@MainActivity, SearchActivity::class.java))
-        }
+        (iToolBar as DefToolBar).addRightImageView(R.mipmap.ic_search,
+            View.OnClickListener {
+                startActivity(Intent(this@MainActivity, SearchActivity::class.java))
+            })
         startActivity(Intent(this@MainActivity, SearchActivity::class.java))
     }
 
-    private fun readSearch(doucument: Document?, className: String) {
-        var list = doucument?.getElementsByClass(className)?.first()?.children()
-
-    }
+//    private fun readSearch(document: Document?, className: String) {
+//        var list = document?.getElementsByClass(className)?.first()?.children()
+//    }
 }

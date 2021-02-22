@@ -5,6 +5,7 @@ import android.content.*
 import android.os.IBinder
 import android.view.View
 import android.widget.SeekBar
+import androidx.lifecycle.observe
 import com.hqq.core.ui.base.BaseVmActivity
 import com.hqq.core.utils.DateUtils
 import com.hqq.core.utils.ToastUtils
@@ -17,6 +18,7 @@ import com.qq.readbook.bean.Book
 import com.qq.readbook.bean.Chapter
 import com.qq.readbook.databinding.ActivityReadBookBinding
 import com.qq.readbook.repository.BookChaptersRepository
+import com.qq.readbook.ui.dialog.SettingDialog
 import com.qq.readbook.utils.room.RoomUtils
 import com.qq.readbook.weight.page.BrightnessUtils
 import com.qq.readbook.weight.page.PageView
@@ -187,7 +189,6 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
         binding.sbBrightness.progress = ReadSettingManager.getInstance().brightness
         binding.sbBrightness.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -200,15 +201,14 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
                 //存储亮度的进度条
                 ReadSettingManager.getInstance().brightness = progress
             }
-
         })
+        // 设置
         binding.tvSetting.setOnClickListener {
-            // 设置
             SettingDialog(pageLoader).show(supportFragmentManager)
             binding.llBottomMenu.visibility = View.GONE
         }
+        // 目录
         binding.tvCategory.setOnClickListener {
-            // 目录
             ChaptersDialog(pageLoader, book?.bookChapterList).show(supportFragmentManager)
         }
 
@@ -226,7 +226,9 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
         binding.tvRight.setOnClickListener {
             BookSourceActivity.open(activity, book)
         }
-
+        viewMode.themeMode.observe(this){
+                pageLoader.setNightMode(!it)
+        }
     }
 
 
@@ -237,7 +239,7 @@ class ReadBookActivity : BaseVmActivity<ReadBookViewModel, ActivityReadBookBindi
             sourceName?.let {
                 book.sourceName = sourceName
                 val bookSources = RoomUtils.getBook().bookSources().getBookSource(it, book.bookId)
-                book.chapterUrl= bookSources?.bookChapterUrl
+                book.chapterUrl = bookSources?.bookChapterUrl
                 // 更新信息
                 readChapters(book)
             }

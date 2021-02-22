@@ -26,12 +26,12 @@
 
         <!--        顶部 Bar-->
         <FrameLayout
-            app:layout_constraintTop_toTopOf="parent"
             android:id="@+id/fl_layout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/x88"
             android:background="@color/white"
             android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
             tools:visibility="visible">
 
             <ImageView
@@ -93,11 +93,11 @@
             android:layout_gravity="bottom"
             android:background="@color/read_menu_color"
             android:gravity="bottom"
-            android:padding="5dp"
             android:orientation="horizontal"
+            android:padding="5dp"
             android:visibility="@{vm.showCache?View.VISIBLE :View.GONE}"
             app:layout_constraintBottom_toTopOf="@+id/ll_bottom_menu"
-            tools:visibility="visible">
+            tools:visibility="gone">
 
             <androidx.appcompat.widget.AppCompatRadioButton
                 android:id="@+id/tv_cache50"
@@ -114,6 +114,7 @@
                 android:textSize="14sp" />
 
             <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/tv_cache100"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -122,13 +123,12 @@
                 android:button="@null"
                 android:gravity="center"
                 android:padding="5dp"
-                android:id="@+id/tv_cache100"
-
                 android:text="后面100"
                 android:textColor="@drawable/text_color"
                 android:textSize="14sp" />
 
             <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/tv_cacheAll"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -137,7 +137,6 @@
                 android:button="@null"
                 android:gravity="center"
                 android:padding="5dp"
-                android:id="@+id/tv_cacheAll"
                 android:text="后面全部"
                 android:textColor="@drawable/text_color"
                 android:textSize="14sp" />
@@ -179,9 +178,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
-                android:drawableTop="@mipmap/ic_menu_mode_night_normal"
+                android:drawableTop="@{vm.themeMode?@drawable/ic_read_menu_night : @drawable/ic_menu_mode_night_normal }"
                 android:gravity="center"
-                android:text="@string/book_read_mode_day"
+                android:onClick="@{vm::onThemeMode}"
+                android:text='@{vm.themeMode?"夜间": "日间"}'
                 android:textColor="@color/smallColor"
                 android:textSize="16sp" />
 
@@ -232,8 +232,8 @@
                 android:layout_weight="1"
                 android:drawableTop="@mipmap/ic_cache"
                 android:gravity="center"
-                android:text="@string/cache"
                 android:onClick="@{vm::onCache}"
+                android:text="@string/cache"
                 android:textColor="@color/smallColor"
                 android:textSize="12sp" />
 

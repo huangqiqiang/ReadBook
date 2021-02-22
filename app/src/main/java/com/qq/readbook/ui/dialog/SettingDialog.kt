@@ -1,14 +1,17 @@
-package com.qq.readbook.ui.book
+package com.qq.readbook.ui.dialog
 
 import android.view.Gravity
 import android.view.WindowManager
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.hqq.core.ui.dialog.BaseDialog
 import com.hqq.core.utils.ScreenUtils
 import com.qq.readbook.R
 import com.qq.readbook.weight.page.PageMode
+import com.qq.readbook.weight.page.PageStyle
 import com.qq.readbook.weight.page.ReadSettingManager
 import com.qq.readbook.weight.page.loader.PageLoader
 
@@ -22,11 +25,9 @@ import com.qq.readbook.weight.page.loader.PageLoader
 class SettingDialog(private var mPageLoader: PageLoader) : BaseDialog() {
     override val layoutId: Int = R.layout.dialog_setting
     override val gravity: Int = Gravity.BOTTOM
-
     override val weight: Int = WindowManager.LayoutParams.WRAP_CONTENT
-
     override val height: Int = WindowManager.LayoutParams.MATCH_PARENT
-    var settingManager = ReadSettingManager.getInstance();
+    var settingManager = ReadSettingManager.getInstance()
     override fun initView() {
         var tvSize = rootView?.findViewById<TextView>(R.id.tv_size)
 
@@ -51,6 +52,19 @@ class SettingDialog(private var mPageLoader: PageLoader) : BaseDialog() {
             mPageLoader.setTextSize(fontSize)
             tvSize?.text = "$fontSize"
         }
+
+        rootView?.findViewById<RecyclerView>(R.id.rc_bg)?.apply {
+            layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+            adapter = BgAdapter().apply {
+                settingManager.pageStyle.bgColor
+                setOnItemClickListener { adapter, view, position ->
+                    mPageLoader.setPageStyle(PageStyle.values()[position])
+                    settingManager.pageStyle = PageStyle.values()[position]
+                    adapter.notifyDataSetChanged()
+                }
+            }
+        }
+
         when (settingManager.pageMode) {
             PageMode.SIMULATION -> {
                 rootView?.findViewById<RadioButton>(R.id.rb_simulation)?.isChecked = true

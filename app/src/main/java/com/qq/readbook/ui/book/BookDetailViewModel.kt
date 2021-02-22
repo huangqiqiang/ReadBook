@@ -49,10 +49,16 @@ class BookDetailViewModel : BaseViewModel() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             val sourceName = data?.getStringExtra(Keys.BOOK_SOURCE_NAME)
-            book.value?.sourceName = sourceName
-            // 更新信息
-            book.value?.let { readChapters(it) }
-            book.value=book.value
+            if (sourceName != null) {
+                book.value?.let {
+                    it.sourceName = sourceName
+                    val bookSources = RoomUtils.getBook().bookSources().getBookSource(sourceName, it.bookId)
+                    it.chapterUrl = bookSources?.bookChapterUrl
+                    // 更新信息
+                    readChapters(it)
+                    book.value = book.value
+                }
+            }
         }
     }
 
@@ -144,7 +150,7 @@ class BookDetailViewModel : BaseViewModel() {
     fun onOtherSources(view: View) {
         startActivity(BookSourceActivity::class.java, Bundle().apply {
             putParcelable(Keys.BOOK, book.value)
-        },1)
+        }, 1)
     }
 
 }

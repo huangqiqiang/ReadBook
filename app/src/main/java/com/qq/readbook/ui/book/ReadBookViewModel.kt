@@ -32,6 +32,16 @@ class ReadBookViewModel : BaseViewModel() {
         showLight.value = !(showLight.value as Boolean)
     }
 
+
+    /**
+     *  是否是日间模式
+     */
+    val themeMode = MutableLiveData<Boolean>(true)
+
+    /**
+     * 是否显示缓存
+     * @param view View
+     */
     fun onCache(view: View) {
         showCache.value = !(showCache.value as Boolean)
     }
@@ -44,12 +54,19 @@ class ReadBookViewModel : BaseViewModel() {
     }
 
     /**
+     * 切换主题
+     * @param view View
+     */
+    fun onThemeMode(view: View) {
+        themeMode.value = !(themeMode.value as Boolean)
+    }
+
+    /**
      *  按钮空白位置
      */
     fun onLayoutMenu(view: View) {
 
     }
-
 
 
 }

@@ -137,13 +137,10 @@ class ScrollPageAnim(
             /*          //擦除其Bitmap(重新创建会不会更好一点)
             eraseBitmap(view.bitmap,view.bitmap.getWidth(),view.bitmap.getHeight(),0,0);*/
             if (view == null) return
-
             val cancelBitmap = mNextBitmap
             mNextBitmap = view.bitmap
-
             if (!isRefresh) {
                 val hasNext = mListener.hasNext() //如果不成功则无法滑动
-                LogUtils.e("--------------------------------------" + hasNext.toString())
                 // 如果不存在next,则进行还原
                 if (!hasNext) {
                     mNextBitmap = cancelBitmap
