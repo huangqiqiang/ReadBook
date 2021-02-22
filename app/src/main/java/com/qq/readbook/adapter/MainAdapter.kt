@@ -32,6 +32,11 @@ class MainAdapter : BaseQuickAdapter<Book, BaseViewHolder>(R.layout.item_book_ma
             ) + "  " + item.newestChapterTitle
         )
         ImageLoadUtils.withFillet(item.imgUrl, holder.getView(R.id.iv_book_img))
+        if (item.topTime.isNullOrEmpty()) {
+            holder.setText(R.id.tv_top, "置顶")
+        } else {
+            holder.setText(R.id.tv_top, "取消置顶")
+        }
 
     }
 }

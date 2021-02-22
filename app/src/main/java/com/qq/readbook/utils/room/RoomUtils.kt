@@ -99,7 +99,7 @@ interface BookContentDao {
     fun insert(bookContent: BookContent)
 }
 
-@Database(entities = [Book::class, BookSources::class], version = 1, exportSchema = false)
+@Database(entities = [Book::class, BookSources::class], version = 2, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun bookDao(): BookDao
 
@@ -151,7 +151,22 @@ object RoomUtils {
 //                .addCallback()
             .build()
     }
-
+    private fun <T : RoomDatabase> getBase2(java: Class<T>, name: String): T {
+        return Room.databaseBuilder(
+            CoreConfig.get().application!!,
+            java, name
+        )
+            //设置是否允许在主线程做查询操作
+            .allowMainThreadQueries()
+            //设置数据库升级(迁移)的逻辑
+            //默认值是FrameworkSQLiteOpenHelperFactory，设置数据库的factory。比如我们想改变数据库的存储路径可以通过这个函数来实现
+//                .openHelperFactory {  }
+            //设置迁移数据库如果发生错误，将会重新创建数据库，而不是发生崩溃
+            .fallbackToDestructiveMigration()
+            //监听数据库，创建和打开的操作
+//                .addCallback()
+            .build()
+    }
     fun getBook(name: String = "books.db"): AppDatabase {
         if (bookDatabase == null) {
             bookDatabase = getBase(AppDatabase::class.java, name)
@@ -165,7 +180,7 @@ object RoomUtils {
     ): ChapterDatabase {
         var dataBase = chapterDatabase.get(name)
         if (dataBase == null) {
-            dataBase = getBase(ChapterDatabase::class.java, name);
+            dataBase = getBase2(ChapterDatabase::class.java, name);
             chapterDatabase.put(name, dataBase)
         }
 
@@ -178,6 +193,15 @@ object RoomUtils {
      */
     val MIGRATION_1_2: Migration = object : Migration(1, 2) {
         override fun migrate(database: SupportSQLiteDatabase) {
+            // 创建临时表
+            database.execSQL("CREATE TABLE Book_New (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, bookId TEXT, name TEXT, author TEXT, sourceName TEXT, bookDetailUrl TEXT, chapterUrl TEXT, imgUrl TEXT, `desc` TEXT, type TEXT, wordCount TEXT, updateDate TEXT, newestChapterTitle TEXT, lastRead TEXT, isUpdate INTEGER NOT NULL, refreshTime INTEGER ,topTime Text)");
+            // 拷贝数据
+            database.execSQL("INSERT INTO  Book_New (id  , bookId , name , author , sourceName , bookDetailUrl , chapterUrl , imgUrl ,`desc` , type , wordCount , updateDate , newestChapterTitle , lastRead , isUpdate  , refreshTime)" +
+                    "SELECT (id  , bookId , name , author , sourceName , bookDetailUrl , chapterUrl , imgUrl ,`desc` , type , wordCount , updateDate , newestChapterTitle , lastRead , isUpdate  , refreshTime)  FROM Book ")
+            // 删除老的表
+            database.execSQL("DROP TABLE Book");
+            // 改名
+            database.execSQL("ALTER TABLE Book_New RENAME TO Book");
         }
     }
 }

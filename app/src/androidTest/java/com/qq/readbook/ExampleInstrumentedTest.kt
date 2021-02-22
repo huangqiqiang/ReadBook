@@ -32,19 +32,20 @@ class ExampleInstrumentedTest {
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         val result = readHtml(appContext, "testChapter.html")
         val html = Jsoup.parse(result)
-        var sourceList = readJson(appContext)
+        val sourceList = readJson(appContext)
         val chapterElement = GsonUtil.fromJson(sourceList.ruleChapter, RuleChapterBean::class.java)
-
+        LogUtils.e(chapterElement?.chapterList)
         val list = JXDocument.create(html).selN(chapterElement?.chapterList)
-
+        LogUtils.e("----------------------")
         if (list != null) {
-            for ((index, child) in list.withIndex()) {
-                val chapter = Chapter()
-                chapter.apply {
-                    title = JsoupUtils.getValue4key(child, chapterElement?.title)
-                    url = JsoupUtils.getValue4key(child, chapterElement?.url)
-                    LogUtils.e(title + url)
-                }
+            for (child in list) {
+                val title = JsoupUtils.getValue4key(child, chapterElement?.title)
+                val url = JsoupUtils.getValue4key(child, chapterElement?.url)
+                LogUtils.e(chapterElement?.title)
+                LogUtils.e(title)
+                LogUtils.e(chapterElement?.url)
+                LogUtils.e(url)
+                return
             }
         }
 
@@ -119,7 +120,7 @@ class ExampleInstrumentedTest {
         val inputStream2 = appContext.assets.open("testSearch.json")
         val inputStreamReader = InputStreamReader(inputStream2)
         val jsonReader = JsonReader(inputStreamReader)
-        var sourceList = Gson().fromJson<ReadSource>(
+        val sourceList = Gson().fromJson<ReadSource>(
             jsonReader,
             object : TypeToken<ReadSource>() {}.type
         )

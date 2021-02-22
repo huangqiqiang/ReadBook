@@ -82,19 +82,33 @@ public class Book implements Parcelable {
      */
     String lastRead = "";
     /**
+     * 置顶时间
+     */
+    String topTime;
+
+    /**
      * 是否更新或未阅读
      */
     boolean isUpdate = true;
-
     /**
      * 本地刷新时间
      */
     private Long refreshTime = 0L;
+
     /**
      * 章节列表
      */
     @Ignore
     List<Chapter> bookChapterList = new ArrayList();
+
+
+    public String getTopTime() {
+        return topTime;
+    }
+
+    public void setTopTime(String topTime) {
+        this.topTime = topTime;
+    }
 
     public Long getRefreshTime() {
         return refreshTime;

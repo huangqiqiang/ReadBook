@@ -2,8 +2,10 @@ package com.qq.readbook.ui
 
 import android.content.Intent
 import android.view.View
+import androidx.room.Room
 import com.hqq.core.toolbar.DefToolBar
 import com.hqq.core.ui.list.BaseVmListActivity
+import com.hqq.core.utils.DateUtils
 import com.qq.readbook.BR
 import com.qq.readbook.R
 import com.qq.readbook.adapter.MainAdapter
@@ -30,6 +32,18 @@ class MainActivity : BaseVmListActivity<MainViewModel, ActivityMainBinding>() {
                 }
                 R.id.ll_content -> {
                     ReadBookActivity.open(activity, getItem(position))
+                }
+                R.id.tv_top -> {
+                    val book = getItem(position)
+                    if (book.topTime.isNullOrEmpty()) {
+                        // 置顶
+                        book.topTime = DateUtils.nowDate
+                    } else {
+                        // 取消置顶
+                        book.topTime = null
+                    }
+                    RoomUtils.getBook().bookDao().update(book)
+
                 }
                 else -> {
 

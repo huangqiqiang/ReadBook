@@ -39,9 +39,9 @@
                 android:src="@mipmap/no_image" />
 
             <LinearLayout
-                android:gravity="center_vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:gravity="center_vertical"
                 android:orientation="vertical"
                 android:paddingHorizontal="@dimen/x20">
 
@@ -106,6 +106,16 @@
                 android:background="@color/color_red"
                 android:gravity="center"
                 android:text="删除" />
+
+
+            <TextView
+                android:id="@+id/tv_top"
+                style="@style/def_text.34.white"
+                android:layout_width="@dimen/x120"
+                android:layout_height="match_parent"
+                android:background="@color/light_yellow"
+                android:gravity="center"
+                android:text="置顶" />
 
             <TextView
                 android:id="@+id/tv_detail"
